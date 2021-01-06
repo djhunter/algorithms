@@ -42,7 +42,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 
 # Other Resources
 
-- [Syllabus](tex/cs120s21.pdf) (PDF)
+- [Syllabus](tex/cs120S21.pdf) (PDF)
 
 All of the pages and slides on this site were authored in RMarkdown. The source code is available on GitHub: https://github.com/djhunter/algorithms
 
