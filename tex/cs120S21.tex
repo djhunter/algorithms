@@ -1,0 +1,149 @@
+\documentclass[10pt]{article}
+
+\pagestyle{myheadings}
+%\usepackage[dvips, letterpaper, total={6.5in,9.2in}]{geometry}
+\usepackage[dvips, letterpaper, margin=0.8in]{geometry}
+\parindent 0 in
+
+\usepackage{newpxtext, newpxmath}
+
+\usepackage{hyperref}
+
+\markright{CS-120, Hunter, Spring 2021}
+
+\let\origdescription\description
+\renewenvironment{description}{
+  \setlength{\leftmargini}{0em}
+  \origdescription
+  \setlength{\itemindent}{0em}
+}
+
+\begin{document}
+\begin{center} {\large CS 120 --- Space, Time, and Perfect Algorithms}
+\end{center}
+
+\begin{description}
+\item[Time and place:] 9:10--10:15am, MWF, synchronous hybrid, places TBA
+\item[Professor:] David J. Hunter, Ph.D.
+
+\hspace*{20pt}
+\begin{tabular}{ll}
+  e-mail: & \verb!dhunter@westmont.edu! \\
+  Office Phone: & x6075 \\
+  Office: & Winter Hall 303 \\
+  Student Hours: & T,Th 1:30--4:00pm, or by appointment. (Discord Seminar Room)
+\end{tabular}
+
+
+\item[Catalog Description:] (Four credit hours)  How fast is a fast algorithm? How do we determine if one algorithm is faster than another? How does the amount of memory used by an algorithm trade off against the time that algorithm takes? What is a perfect algorithm and how can we find one? These and other questions about the formal properties of algorithms and the classic data structures used by algorithms are the focus of this course.
+
+\item[Prerequisites:] MA/CS-015 and CS-030. For more details, see page ii of \href{http://jeffe.cs.illinois.edu/teaching/algorithms/book/Algorithms-JeffE.pdf}{the textbook}.
+
+\item[Overview:] This course explores the theoretical foundations of computer science that effective practitioners of the discipline should know. The study of algorithms on data structures has several purposes:
+    \begin{itemize}
+        \item To devise algorithms to solve common computational problems.
+        \item To understand general methods for designing algorithms.
+        \item To prove that an algorithm is correct.
+        \item To compute the time and space requirements of an algorithm.
+        \item To determine the complexity of a problem, independent of the algorithm chosen to solve it.
+    \end{itemize}
+At least half of the items on the above list require mathematics, and you should expect this course to seem more mathematical than most of your computer science courses. In particular, there will be no programming assignments in the traditional sense. When we describe algorithms, we will typically use pseudocode, though on occasion we may implement some examples in R. Analysis of algorithms is a mathematical technique, done using human reasoning, given a description of an algorithm (not a program). Understanding the logic of an algorithm apart from its implementation on a machine will make you a better programmer, and is an ability that distinguishes computer scientists from computer technicians.
+
+\item[Textbook:] We will cover a subset of chapters 1--12 of \emph{Algorithms}, by Jeff Erickson. This book is freely available at the following url: \url{http://jeffe.cs.illinois.edu/teaching/algorithms/book/Algorithms-JeffE.pdf}
+
+\item[Technology:]  The hybrid nature of this course means that you will need to use a computer with a microphone and webcam during class.  We will be using RStudio to typeset the written assignments. This software is freely available for Windows, Mac, and Linux. First, go to \url{https://cran.rstudio.com/} to get R, and then go to \url{https://rstudio.com/products/rstudio/download/#download} to get RStudio. Please also install the Discord client on your computer (\url{https://discord.com/download}), and optionally, install the Discord and Jamboard apps on your phone.
+
+\item[Pedagogical Structure:] Typically, our daily routine will consist of a single iteration of the following procedure:
+    \begin{enumerate}
+        \item The night before each class meeting, students hand in a \textit{Written Assignment}.
+        \item Class begins with discussion of the written assignment.
+        \item Professor presents new material in mini-lectures delimited by group activities.
+        \item Professor assigns problems due the night before the next class meeting.
+    \end{enumerate}
+Written assignments will be due on Canvas by 11:59pm, but I will accept them up to five hours late for 90\% credit. Assignments submitted more than five hours late will receive zero credit.
+
+\item[Grading:] Grades are weighted as follows.
+
+\begin{tabular}{ll}
+  Written Assignments: & 44\% \\
+  Exams: & 3 @ 14\% each \\
+  Final Exam: & 14\%
+\end{tabular}
+
+I will assign grades based on a 90/80/70/60 scale, with $+/-$'s within 2.5 percent of each letter-grade cutoff. You can keep track of your progress on Canvas. In borderline cases, I reserve the right to take into account consistency of attendance and participation.
+The final exam will be on
+Tuesday, May 4, from 8--10am.
+Finals will not be rescheduled to accommodate travel arrangements.
+
+\item[Attendance: ] I expect every student to attend every class during the scheduled class period. If you miss a significant number of classes, you will almost definitely do poorly in this class.  I consider it excessive to miss more than three classes during the course of the semester.  If you miss more than six classes without a valid excuse, I reserve the right to terminate you from the course with a grade of~F.\hspace{4pt}  Work missed (including tests) without a valid excuse will receive a zero.
+
+\item[Academic Integrity: ] Learning communities function best when students have academic integrity.  Cheating is primarily an offense against your classmates because it undermines our learning community.  Therefore, dishonesty of any kind may result in loss of credit for the work involved and the filing of a report with the Provost's Office. Major or repeated infractions may result in dismissal from the course with a grade of F. Be familiar with the College's plagiarism policy, found at \url{https://www.westmont.edu/office-provost/academic-program/academic-integrity-policy}.
+
+In particular, providing someone with an electronic copy of your work is a breach of the academic integrity policy. Do not email, post online, or otherwise disseminate any of the work that you do in this class. You may work with others on the assignments, but make sure that you type up your own answers yourself. You are on your honor that the work you hand in represents your own understanding.
+
+ \item[Tentative Schedule:] We will aspire to maintain the following schedule, which represents a rough first approximation of the material we would like to cover.
+  \begin{itemize}
+      \item Chapter 0: Introduction; Pseudocode and Asymptotic Notation
+      \item Chapter 1: Recursion
+      \item Chapter 2: Backtracking
+      \item Chapters 3: Dynamic Programming
+   \begin{quote}
+    \textit{Exam \#1}
+   \end{quote}
+      \item Chapter 4: Greedy Algorithms
+      \item Chapters 5--7: Graphs and Trees
+   \begin{quote}
+    \textit{Exam \#2}
+   \end{quote}
+      \item Chapters 8--9: Shortest Paths
+      \item Chapters 10--11: Flows and Cuts
+   \begin{quote}
+    \textit{Exam \#3}
+   \end{quote}
+      \item Chapter 12: NP-Hardness
+   \begin{quote}
+    \textit{Final Exam}
+   \end{quote}
+  \end{itemize}
+
+    \item[Program and Institutional Learning Outcomes:] The
+         mathematics and computer science department at Westmont College has formulated the
+         following learning outcomes for all of its classes. (PLO's)
+         \begin{enumerate}
+             \item Core Knowledge:  Students will know the core ideas and methods in the field of computer science.
+\item Communication: Students will be able to communicate information and ideas of computer science in writing or orally.
+\item Creativity: Students will be able to independently learn new ideas and techniques and to formulate and solve a novel problem in computer science.
+\item Christian Connection: Students will incorporate computer science knowledge and skill into a wider interdisciplinary framework and especially into a personal faith and its accompanying worldview.
+         \end{enumerate}
+         In addition, the faculty of Westmont College have established common
+         learning outcomes for all courses at the institution
+         (ILO's). These outcomes are summarized as follows:
+(1) Christian Understanding, Practices, and Affections,
+(2) Global Awareness and Diversity,
+(3) Critical Thinking,
+(4) Quantitative Literacy,
+(5) Written Communication,
+(6) Oral Communication, and
+(7) Information Literacy.
+
+\item[Course Learning Outcomes:] The above outcomes are reflected in the
+     particular learning outcomes for this course.
+     After taking this course, you should be able
+     to:
+    \begin{itemize}
+        \item Demonstrate understanding of algorithm analysis.
+             (PLO 1, ILOs 3,4)
+        \item Write and present mathematical arguments according to the
+             standards of the discipline. (PLO 2,
+              ILOs 3,5)
+        \item Construct solutions to novel problems,
+               demonstrating perseverance in the face of open-ended or
+               partially-defined contexts. (PLO 3, ILO 3)
+        \item Consider the ethical implications of the subject matter. (PLO 4, ILO 1)
+    \end{itemize}
+These outcomes will be assessed by written assignments and exams, as described above.
+
+\item[Accommodations for Students with Disabilities:] Students who have been diagnosed with a disability (learning, physical or psychological) are strongly encouraged to contact the Disability Services office as early as possible to discuss appropriate accommodations for this course. Formal accommodations will only be granted for students whose disabilities have been verified by the Disability Services office.  These accommodations may be necessary to ensure your equal access to this course.  Please contact Sheri Noble, Director of Disability Services (310A Voskuyl Library, 565-6186, \href{mailto:snoble@westmont.edu}{\tt snoble@westmont.edu}) or visit \url{https://www.westmont.edu/disability-services} for more information.
+
+\end{description}
+\end{document}
