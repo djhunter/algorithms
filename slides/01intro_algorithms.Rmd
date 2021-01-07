@@ -1,0 +1,208 @@
+---
+title: "Introduction: Space, Time, Perfection?"
+date: "January 12, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Algorithms
+
+## What is an Algorithm?
+
+From [our textbook](http://jeffe.cs.illinois.edu/teaching/algorithms/book/Algorithms-JeffE.pdf):
+
+> An algorithm is an *explicit*, precise, *unambiguous*, mechanically-executable sequence of elementary instructions, usually intended to *accomplish* a specific purpose.
+
+From \textit{Algorithms}, by Cormen, et. al. [CLRS]:
+
+> An algorithm is any *well-defined* computational procedure that takes some value, or set of values, as input and *produces* some value, or set of values, as output.
+
+## Example: Peasant Multiplication
+
+```
+PeasantMultiply(X, Y):
+    prod <- 0
+    x <- X
+    y <- Y
+    while x > 0
+        if x is odd
+             prod <- prod + y
+        x <- floor(x/2)         # mediation
+        y <- y + y              # duplation
+    return prod
+```
+
+- Does it work? (correctness)
+- How fast is it? (time)
+- How much storage does it require? (space)
+
+# Correctness
+
+```
+PeasantMultiply(X, Y):
+    prod <- 0
+    x <- X
+    y <- Y
+    while x > 0
+        if x is odd
+             prod <- prod + y
+        x <- floor(x/2)         # mediation
+        y <- y + y              # duplation
+    return prod
+```
+
+- "Easy" to show that **`XY == prod + xy`** is an *invariant* for the while loop.
+- At loop termination, **`x == 0`**, so **`prod == XY`**.
+- The algorithm *correctly* computes the product of `X` and `Y`.
+
+# Running Time
+
+```
+PeasantMultiply(X, Y):
+    prod <- 0
+    x <- X
+    y <- Y
+    while x > 0
+        if x is odd
+             prod <- prod + y
+        x <- floor(x/2)         # mediation
+        y <- y + y              # duplation
+    return prod
+```
+
+How many mediation and duplation operations does this algorithm require?
+
+- Answer the [poll question](https://forms.gle/Phu8bX9DtAZ7wQJVA).
+
+## Asymptotic notation (review)
+
+- **$f(n)$ is $O(g(n))$** if $f(n)$ is **less than or equal** to a constant multiple of $g(n)$ for large $n$.
+- **$f(n)$ is $\Omega(g(n))$** if $f(n)$ is **greater than or equal** to a constant multiple of $g(n)$ for large $n$.
+- **$f(n)$ is $\Theta(g(n))$** if $f(n)$ is **both** $O(g(n))$ and $\Omega(g(n))$. In this case, we say that $f$ and $g$ are *asymptotically* the same.
+
+We use big-$O$ to represent asymptotic upper bounds, and big-$\Omega$ for asymptotic lower bounds.
+
+## Big-Theta shortcuts
+
+- Symmetry Rule:  If $f \in\Theta(g)$, then $g\in \Theta(f)$. 
+- Reflexivity Rule:  $f \in \Theta(f)$. 
+- Transitivity Rule:  If $f\in \Theta(g)$ and $g\in \Theta(h)$, then $f\in \Theta(h)$. 
+- Sum Rule:  If $f\in O(g)$, then $f+g \in \Theta(g)$. 
+- Constant Multiple Rule:  If $c>0$ is a constant, then $cf \in \Theta(f)$. 
+- Product Rule:  If $f_1\in \Theta(g_1)$ and $f_2\in\Theta(g_2)$, then $f_1 \cdot f_2 \in \Theta(g_1 \cdot g_2)$.
+
+## Little-oh and little-omega
+
+- **$f(n)$ is $o(g(n))$** if $f(n)$ is $O(g(n))$ but not $\Theta(g(n))$.
+    - Little-$o$ gives an upper bound that is not "tight".
+    - Alternatively: $\displaystyle{\lim_{n\rightarrow \infty} \frac{f(n)}{g(n)} = 0}$
+    
+- **$f(n)$ is $\omega(g(n))$** if $f(n)$ is $\Omega(g(n))$ but not $\Theta(g(n))$.
+    - Little-$o$ gives a lower bound that is not "tight".
+    - Alternatively: $\displaystyle{\lim_{n\rightarrow \infty} \frac{f(n)}{g(n)} = \infty}$
+    
+## Join your table group
+
+Join the *voice channel* for your group. (Video on if possible.)
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Timothy", "Josiah", "Nathan")
+set.seed(1112021) 
+n <- length(roster)
+ngps <- 6
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+Complete the group exercise on the [Jamboard](). 
+
+## Asymptotic notation practice
+
+For each pair of expressions $(A,B)$, indicate whether $A$ is $O,o,\Omega,\omega,$ and/or $\Theta$ of $B$. Check all boxes that apply. Put a ? where you are not sure. Here $c>1$, $\epsilon>0$, and $k\geq 1$ represent constants.
+
+| $A$            | $B$            | $O$ | $o$ | $\Omega$ | $\omega$ | $\Theta$  | 
+|----------|----------|----------|----------|----------|----------|----------|
+| $100n^2 + 1000n$ | $n^3$  |     |     |          |          |           |
+| $\log_2 n$ | $\log_c n$  |     |     |          |          |           |
+| $n^k$          | $c^n$          |     |     |          |          |           |
+| $\sqrt{n}$     | $n^{\sin n}$   |     |     |          |          |           |
+| $2^n$          | $2^{n/2}$      |     |     |          |          |           |
+| $n^{\log_2 c}$ | $c^{\log_2 n}$ |     |     |          |          |           |
+| $\log_2(n!)$   | $\log_2(n^n)$  |     |     |          |          |           |
+| $(\log_2 n)^k$ | $n^\epsilon$   |     |     |          |          |           |
+
+# Class Structure
+
+## Daily Assignments on Canvas
+
+- Due night before each class, 11:59pm.
+- Questions posted in an RMarkdown file.
+- Edit the RMarkdown file using RStudio, and write up solutions.
+    - Use code blocks for pseudocode.
+    - Use LaTeX for mathematics.
+    - Markdown syntax works.
+    - RMarkdown can also execute R code blocks.
+- Knit to HTML, and upload `.html` file to Canvas.    
+    
+## Class Routine
+
+- Goal is to spend the majority of the time working in groups on problems.
+- Just-in-time mini-lectures.
+- Some slides, but they won't be comprehensive.
+- Can start by discussing assignment that was due the night before.
+
+## Exams and Grading
+
+| Task | % of total |
+|----------|----------|
+| Daily Assignments: | 44% |
+| Exams: | 3 @ 14% each |
+| Final Exam: | 14% |
+
+## Attendance
+
+- I expect every student to attend every class during the scheduled class period.  
+- If you miss a significant number of classes, you will almost definitely do poorly in this class. 
+- I consider it excessive to miss more than three classes during the course of the semester. 
+- If you miss more than six classes without a valid excuse, I reserve the right to terminate you from the course with a grade of F.
+
+## Academic integrity
+
+- Dishonesty of any kind may result in loss of credit for the work involved and the filing of a report with the Provost’s Office.  
+- Major or repeated infractions may result in dismissal from the course with a grade of F. 
+- Be familiar with the [College’s plagiarism policy](https://www.westmont.edu/office-provost/academic-program/academic-integrity-policy).
+- **Do not email, post online, or otherwise disseminate** any of the work that you do in this class.
+- You may work with others on the assignments, but make sure that you type up your own answers yourself. 
+- You are on your honor that the work you hand in represents your own understanding.
+
+## Course Materials on GitHub
+
+https://djhunter.github.io/algorithms/
+
+- Assignments and slides posted here.
+- Links to syllabus and textbook.
+- Also source code for everything, if you want to look at the repository.
