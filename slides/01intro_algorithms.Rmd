@@ -116,7 +116,7 @@ We use big-$O$ to represent asymptotic upper bounds, and big-$\Omega$ for asympt
     - Alternatively: $\displaystyle{\lim_{n\rightarrow \infty} \frac{f(n)}{g(n)} = 0}$
     
 - **$f(n)$ is $\omega(g(n))$** if $f(n)$ is $\Omega(g(n))$ but not $\Theta(g(n))$.
-    - Little-$o$ gives a lower bound that is not "tight".
+    - Little-$\omega$ gives a lower bound that is not "tight".
     - Alternatively: $\displaystyle{\lim_{n\rightarrow \infty} \frac{f(n)}{g(n)} = \infty}$
     
 ## Join your table group
@@ -138,7 +138,7 @@ rownames(groups) <- paste0("Table #", 1:nrow(groups))
 kable(t(groups))
 ```
 
-Complete the group exercise on the [Jamboard](). 
+Complete the group exercise on the [Jamboard](https://jamboard.google.com/d/1VvpZH1jAEqjosSKcXtEM1Fn8XbQ9e7SUwqkm_D3T5qw/edit?usp=sharing). 
 
 ## Asymptotic notation practice
 

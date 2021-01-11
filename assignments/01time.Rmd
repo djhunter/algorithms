@@ -29,7 +29,6 @@ You can include mathematical expressions using LaTeX. Just delimit them with dol
 
 ## Describing algorithms
 
-Describing algorithms in pseudocode is different from writing the code for an algorithm in a programming language. Read Section 0.4 of [E]. In particular, notice that it is OK to include things "that you've already learned how to do (like sorting, binary search, tree traversal, or singing '$n$
-Bottles of Beer on the Wall')" as commands in your pseudocode. You don't need to write pseudocode for these commands.
+Describing algorithms in pseudocode is different from writing the code for an algorithm in a programming language. Read Section 0.4 of [E]. In particular, notice that it is OK to include things "that you've already learned how to do (like sorting, binary search, tree traversal, or singing '$n$ Bottles of Beer on the Wall')" as commands in your pseudocode. You don't need to write the pseudocode for these subroutines; just invoke them.
 
-> 3. Describe an algorithm that inputs an array of $n$ integers and another integer $x$, and determines whether or not there are elements $a$ and $b$ in the array such that $a+b=x$, and give the running time of your algorithm. (You should be able to find an algorithm with running time $\Theta(n \log_2 n)$.)
+> 3. Describe an algorithm that inputs an array of $n$ integers and another integer $x$, and determines whether or not there are elements $a$ and $b$ in the array such that $a+b=x$. Give the running time of your algorithm. (You should be able to find an algorithm with running time $\Theta(n \log_2 n)$.)
