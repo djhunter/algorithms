@@ -1,0 +1,263 @@
+---
+title: "Recursion"
+date: "January 13, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## Describe algorithms properly
+
+- You can't analyze algorithms if you don't describe them properly.
+- Make sure you read the [Canvas announcement](https://westmont.instructure.com/courses/5960/discussion_topics/28735) about this.
+
+## $\Theta(n^3)$ songs
+
+Basic idea:
+
+```
+for i<-1 to n
+  sing verse i
+  for j<-1 to n
+    sing verse j
+    for k<-1 to n
+      sing verse k
+```
+
+## $\Theta(n^3)$ songs
+
+```
+for i ← 1 to n
+  Sing “And I was like”
+  for j ← i down to 1
+    Sing “Baby, Baby, Baby, oooh,”
+    for k ←  j down to 1
+      Sing "Baby, Baby, Baby, oooh,"
+  if i > 1
+    Sing “Thought you'd always be mine”
+  else Sing “Mine”
+  
+  
+for i <- 1 to n:
+  for j <- 1 to n:
+    for k <- n down to 1:
+      Sing "On the j'th bookshelf in the i'th bookstore 
+            on route to Kentucky, there were k Bibles 
+            left to distribute. The clerk sent a lad off 
+            to preach with one Bible."
+      if not the last verse:
+        Sing "So..."  
+```
+
+## Another idea:
+
+> Sing the twelve days of Christmas but for every type of gift, sing BottlesOfBeer(i) with i equal to how many gifts there are (e.g., instead of singing "5 golden rings", sing BottlesOfBeer(5)). Twelve days of Christmas is $\Theta(n^2)$, and bottles of beer is $\Theta(n)$ so it ends up being $\Theta(n^3)$.
+
+Not pseudocode, but clearly defines an algorithm.
+
+## Counting Syllables
+
+Estimate. Don't try to count things exactly.
+
+- 2a. $O(\log n)$: The number of syllables in $n$ is asymptotically equivalent to the number of digits in $n$, which is $O(\log n)$.
+
+- 2b. $O(n \log n)$: For $i = 1 \ldots n$, singing $i$ requires $O(\log n)$ syllables, and $i$ gets sung $O(n)$ times.
+
+- 2c. $O(n^2 \log n)$: (similar to 2b)
+
+## Two-element subset sum
+
+This **does not** specify an algorithm:
+
+> ... merge sort the numbers in the array, and then iterate through the array and check if the sum of the number and the number after it, and lastly print the result.
+
+- If your algorithm has a loop, write it as a loop, and explicitly describe what happens in an arbitrary iteration.
+- If your algorithm is recursive, write it recursively, and explicitly describe the case boundaries and what happens in each case.
+
+## Two-element subset sum
+
+Acceptable answer, if not great:
+
+```
+SumFromArr(intArray, x)
+  for each element a in intArray
+    for each of the other elements b
+      add a to b
+      if sum is x, return true 
+return false
+```
+
+Running time is $\Theta(n^2)$
+
+## Two-element subset sum
+
+$\Theta(n \log n)$ examples:
+
+
+```
+findSumInArr(arr, x):
+  arr = mergeSort(arr)
+  leftPointer <- 0
+  rightPointer <- (length of arr) - 1
+  while (leftPointer < rightPointer) {
+      if ((arr[leftPointer] + arr[rightPointer]) == x)
+          return 1
+      else if ((arr[leftPointer] + arr[rightPointer]) < x)
+          leftPointer <- leftPointer + 1
+      else
+          rightPointer <- rightPointer - 1
+  }
+  
+ 
+findsum(array arr, int x) :
+  mergeSort arr
+  for a in arr:
+    binary search arr for (x - a)
+    if (x - a) is found
+      return true;
+  return false
+```
+
+# The Recursion Fairy
+
+## Writing Recursive Functions
+
+> Your **only** task is to simplify the original problem, or to solve it directly when simplification is either unnecessary or impossible; the *Recursion Fairy* will solve all the simpler subproblems for you, using Methods That Are None Of Your Business...
+
+The Recursion Fairy is the inductive hypothesis.
+
+## Recursive Peasant Multiplication
+
+```
+PeasantMultiply(X, Y):
+    if X = 0
+        return 0
+    else
+        x <- floor(X/2)
+        y <- Y + Y
+        prod <- PeasantMultiply(x, y)  # Recursion Fairy does correctly
+        if X is odd
+            prod <- prod + Y
+        return prod
+```
+
+**Strong** inductive hypothesis: 
+
+`PeasantMultiply(x,y)` works for any `x` less than `X`.
+
+# Time and Recurrence Relations
+
+## {data-background="https://www.includehelp.com/data-structure-tutorial/images/tower-of-hanoi-1.png" data-background-size="contain"}
+
+## Towers of Hanoi
+
+```
+Hanoi(n, src, dst, tmp):
+    if n > 0
+        Hanoi(n − 1, src, tmp, dst) 
+        move disk n from src to dst
+        Hanoi(n − 1, tmp, dst, src) 
+```
+
+## Towers of Hanoi Time
+
+```
+Hanoi(n, src, dst, tmp):                # T(n) moves
+    if n > 0
+        Hanoi(n − 1, src, tmp, dst)     # T(n-1) moves
+        move disk n from src to dst     # 1 move
+        Hanoi(n − 1, tmp, dst, src)     # T(n-1) moves
+```
+
+$$
+T(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=0 \\
+               2T(n-1) +1 & \mbox{if } n>0
+               \end{array}
+              \right.
+$$
+
+## "Straightforward" induction proof
+
+Suppose that $T(n)$ is given by the recurrence relation:
+
+$$
+T(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=0 \\
+               2T(n-1) +1 & \mbox{if } n>0
+               \end{array}
+              \right.
+$$
+
+Prove that $T(n) = 2^n - 1$ for all $n\geq 0$.
+
+- Base case: $T(0) = 0 = 2^0 -1$. Check.
+- **Strong** induction hypothesis: Suppose as inductive hypothesis that $T(k) = 2^k - 1$ for all $k < n$.
+- Inductive step: 
+
+\begin{align}
+T(n) &= 2T(n-1) + 1 && \mbox{by the recurrence relation} \\
+     &= 2(2^{n-1} - 1) + 1 && \mbox{by inductive hypothesis} \\
+     &= 2^n - 1
+\end{align}
+
+# Another Recursive Puzzle
+
+## {data-background="https://i.pinimg.com/originals/9e/9d/77/9e9d773c7f91cc277708cd1b8d53357d.jpg" data-background-size="contain"}
+
+## Abstract Description
+
+- Puzzle is a sequence of $n$ bits.
+- Starts at $111\ldots 1$. Need to make it $000\ldots 0$.
+- You can always flip the rightmost bit. (i.e., bit #1)
+- If $z$ is the number of 0's on the right, you can flip the $(z+2)$th bit.
+
+Solution for $n=5$:
+
+```
+11111 -> 11110 -> 11010 -> 11011 -> 11001 -> 11000 -> 01000 -> 01001
+    -> 01011 -> 01010 -> 01110 -> 01111 -> 01101 -> 01100 -> 00100 
+    -> 00101 -> 00111 -> 00110 -> 00010 -> 00011 -> 00001 -> 00000
+```
+
+## Jamboard Questions
+
+1. Consider the case $n = 3$. Draw a graph whose nodes are the 8 possible states of the puzzle, and draw a directed edge between two states if there is a legal move between the states. Is there a directed path from 111 to 000? Is there more than one path?
+
+2. Describe a recursive algorithm for solving this puzzle. Your input is the number of rings $n$; your algorithm should print a reduced sequence of moves that solves the puzzle. For example, given the integer 5 as input, your algorithm should print the sequence 1, 3, 1, 2, 1, 5, 1, 2, 1, 3, 1, 2, 1, 4, 1, 2, 1, 3, 1, 2, 1. 
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Timothy", "Josiah", "Nathan")
+set.seed(1132021) 
+n <- length(roster)
+ngps <- 6
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```

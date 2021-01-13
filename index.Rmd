@@ -35,10 +35,12 @@ This site provides slides, assignments, and other resources that I use in my Spa
 # Slides 
 
 1. [Introduction: Space, Time, Perfection?](slides/01intro_algorithms.html) 
+2. [Recursion](slides/02recursion.html)
 
 # Written Assignments
 
 1. [Running Time Review](assignments/01time.html)
+2. [The Baguenaudier Puzzle](assignments/01baguenaudier.html)
 
 # Other Resources
 

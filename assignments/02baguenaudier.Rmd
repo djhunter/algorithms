@@ -1,0 +1,30 @@
+---
+title: "The Baguenaudier Puzzle"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](02baguenaudier.Rmd) for this assignment in RStudio. Enter your responses after each question. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+Read Exercise 2 on pages 45-46 of [E]. The following questions give a slightly rephrased version of this exercise. 
+
+> 1. Describe a recursive algorithm to solve the Baguenaudier puzzle. Your input is the number of rings $n$; your algorithm should print a reduced sequence of moves that solves the puzzle. For example, given the integer 5 as input, your algorithm should print the sequence 1, 3, 1, 2, 1, 5, 1, 2, 1, 3, 1, 2, 1, 4, 1, 2, 1, 3, 1, 2, 1. (This is question 2(b).)
+
+```
+Put your algorithm in this code block and describe it 
+using the appropriate level of detail.
+```
+
+> 2. Give a recurrence relation $M(n)$ for the number of moves made by your algorithm.
+
+
+
+> 3. Calculate $M(1), M(2), \ldots M(7)$, the first seven terms given by your recurrence relation. (Notice that $M(5)$ should be 21, according to the given example.) Then search for your sequence on the [The On-Line Encyclopedia of Integer Sequences](https://oeis.org/) and find a simple, non-recursive, closed form formula for $M(n)$.
+
+
+
+> 4. Prove, by induction, that the closed-form formula from 3 yields the same sequence as the recurrence relation from 2. Use a **strong** induction hypothesis: "Suppose as inductive hypothesis that $M(k)=$ [your closed-form formula] for all $k < n$."
+
