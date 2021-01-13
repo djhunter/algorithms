@@ -40,7 +40,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 # Written Assignments
 
 1. [Running Time Review](assignments/01time.html)
-2. [The Baguenaudier Puzzle](assignments/01baguenaudier.html)
+2. [The Baguenaudier Puzzle](assignments/02baguenaudier.html)
 
 # Other Resources
 
