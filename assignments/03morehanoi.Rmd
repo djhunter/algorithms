@@ -1,0 +1,36 @@
+---
+title: "Another Hanoi Puzzle"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](03morehanoi.Rmd) for this assignment in RStudio. Enter your responses after each question. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+Read Exercise 4a on pages 47 of [E]. The following questions give a slightly rephrased version of this exercise. 
+
+Consider the usual Towers of Hanoi puzzle (pp. 24ff) with $n$ disks and 3 pegs, numbered 0, 1, and 2. Now suppose you are forbidden to move any disk directly between peg 1 and peg 2; *every* move must involve peg 0.
+
+> 1. Give a psuedocode block for a recursive algorithm to solve this puzzle.
+
+```
+TODO: restricted hanoi algorithm
+```
+
+> 2. Explain why (prove that) your algorithm never moves a disk between peg 1 and peg 2. (Use a *strong* induction hypothesis.)
+
+
+
+> 3. Give a recurrence relation $V(n)$ for the number of moves made by your algorithm.
+
+
+
+> 4. Find a closed-form formula for $V(n)$ (using [The On-Line Encyclopedia of Integer Sequences](https://oeis.org/) if necessary).
+
+
+
+> 5. Prove, by induction, that the closed-form formula from 4 yields the same sequence as the recurrence relation from 3. Use a **strong** induction hypothesis (even if you don't have to).
+
+

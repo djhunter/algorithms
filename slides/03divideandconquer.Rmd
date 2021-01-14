@@ -1,0 +1,177 @@
+---
+title: "Divide and Conquer"
+date: "January 15, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## Baguenaudier solver
+
+## Recurrence Relation
+
+## Closed-form formula
+
+## Inductive verification
+
+# Divide and Conquer
+
+## Recall: Writing recursive functions
+
+> Your **only** task is to simplify the original problem, or to solve it directly when simplification is either unnecessary or impossible; the *Recursion Fairy* will solve all the simpler subproblems for you, using Methods That Are None Of Your Business...
+
+## Divide and Conquer
+
+- When the problem domain *partitions* into smaller subproblems, the recursive paradigm is called **divide and conquer**.
+    - Towers of Hanoi isn't really divide and conquer.
+    - Binary search *is* divide and conquer. The search space partitions into two halves.
+
+## Merge Sort
+
+```
+Merge(A[1..n], m):                        MergeSort(A[1..n]):
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)]..m)
+        else if i > m                             Merge(A[1..n],m)
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+## Merge Sort recurrence
+
+```
+Merge(A[1..n], m):   # O(n) comparisons   MergeSort(A[1..n]):  # C(n) comparisons
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])      # C(n/2) comparisons (approx)
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)]..m)  # C(n/2) comparisons (approx)
+        else if i > m                             Merge(A[1..n],m)        # O(n) comparisons
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+## Merge Sort time
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+As a tree, we can model $C(n)$ as:
+
+```
+          O(n)
+         /    \
+     C(n/2)   C(n/2)
+```
+
+Expanding recursively, we get the following *recursion tree:*
+
+```
+                             n
+                    /                 \
+                n/2                      n/2
+            /        \              /          \
+          n/4        n/4           n/4          n/4
+        /    \       /    \       /   \        /    \
+      n/8    n/8   n/8   n/8    n/8   n/8    n/8    n/8
+    ... and so on
+```
+
+## Merge Sort time
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+Total up each level in the recursion tree:
+
+```
+                                                            level total
+                             n                                   n
+                    /                 \
+                n/2                      n/2                     n
+            /        \              /          \ 
+          n/4        n/4           n/4          n/4              n
+        /    \       /    \       /   \        /    \
+      n/8    n/8   n/8   n/8    n/8   n/8    n/8    n/8          n
+    ... and so on
+```
+
+There are $\log n$ levels in this tree, so $C(n) \in O(n \log n)$.
+
+(More to come.)
+
+# Another Hanoi Puzzle
+
+## Jamboard Questions
+
+Consider the usual Towers of Hanoi puzzle (pp. 24ff) with $n$ disks and 3 pegs, numbered 0, 1, and 2. Now suppose you are forbidden to move any disk directly between peg 1 and peg 2; *every* move must involve peg 0.
+
+1. Give a pseudocode block for a recursive algorithm to solve this puzzle.
+
+2. Explain why (prove that) your algorithm never moves a disk between peg 1 and peg 2. (Use a *strong* induction hypothesis.)
+
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Timothy", "Josiah", "Nathan")
+set.seed(1152021) 
+n <- length(roster)
+ngps <- 6
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
