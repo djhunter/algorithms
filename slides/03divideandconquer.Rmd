@@ -25,21 +25,187 @@ knitr::opts_chunk$set(comment = NA)
 
 # Assignment Comments, Sample Solutions
 
+## More tips on describing algorithms (from pp. 11ff)
+
+>- **Algorithms are not programs.** Please don't write code (e.g., C, Python, Java, Haskell, R, ...). 
+>    - Use a combination of pseudocode and structured English. 
+>        - Pseudocode uses the structure of formal programming languages to break algorithms into primitive steps.
+>        - The primitive steps themselves can be written using math, English, or a mixture of the two, whatever is clearest.
+>    - A good algorithm description is closer to what we should write in the comments of a real program than the code itself. Code is a poor medium for storytelling.
+>    - On the other hand, conditionals, loops, function calls, and recursion should be stated explicitly.
+
+## Who is the audience?
+
+>- Imagine you are writing pseudocode for a competent but skeptical programmer who is *not as clever as you are*.
+>    - This programmer should be able to quickly and correctly implement the algorithm in *their* favorite programming language.
+>- **Goal:** include every detail necessary to fully specify the algorithm, prove its correctness, and analyze its running time.
+
+
 ## Baguenaudier solver
+
+Pseudocode and English: It is clear what it's doing and *why it works*:
+
+```
+solve(n):
+
+If n=1, 
+    flip(1)
+If n=2
+    flip(2)
+    flip(1)
+else (when n>2)
+    solve(n-2) on the rightmost n-2 bits
+    flip(n), the nth bit                            << legal, b/c there are n-2 0's at the end >>
+    solve(n-2) in reverse on the rightmost n-2 bits << makes Puzzle look like 0111...111 >>
+    solve(n-1) on rightmost (n-1) bits
+```
+
+## Baguenaudier solver, but a little too code-y
+
+Psuedocode only. It's correct, but it doesn't communicate as well:
+
+```
+B(int n){
+        if(n == 0){
+            print nothing
+        }
+        else if (n==1){
+            print 1
+        }
+        else {
+            B(n-2)
+            print n
+            B(n-2), but printed backwards 
+            B(n-1)
+        }
+    }
+```
 
 ## Recurrence Relation
 
-## Closed-form formula
+The recurrence relation should match the algorithm:
+
+```
+solve(n):
+
+If n=1, 
+    flip(1)
+If n=2
+    flip(2)
+    flip(1)
+else (when n>2)
+    solve(n-2) on the rightmost n-2 bits
+    flip(n), the nth bit                            << legal, b/c there are n-2 0's at the end >>
+    solve(n-2) in reverse on the rightmost n-2 bits << makes Puzzle look like 0111...111 >>
+    solve(n-1) on rightmost (n-1) bits
+```
+
+\begin{equation}
+  M(n)=\begin{cases}
+    1 & \text{if $n=1$}.\\
+    2 & \text{if $n=2$}.\\
+    2M(n-2)+M(n-1)+1 & \text{if $n > 2$}.
+  \end{cases}
+\end{equation}
+
+## Another Recurrence Relation
+
+If the algorithm is different, the recurrence is different.
+
+```
+B(int n){
+        if(n == 0){
+            print nothing
+        }
+        else if (n==1){
+            print 1
+        }
+        else {
+            B(n-2)
+            print n
+            B(n-2), but printed backwards 
+            B(n-1)
+        }
+    }
+```
+
+\begin{equation}
+  M(n)=\begin{cases}
+    0 & \text{if $n=0$}.\\
+    1 & \text{if $n=1$}.\\
+    2M(n-2)+M(n-1)+1 & \text{if $n > 2$}.
+  \end{cases}
+\end{equation}
+
+## Closed-form formula from OEIS
+
+At least two options:
+
+$$
+2^{n+1}/3 - 1/2 - (-1)^n/6
+$$
+or 
+
+$$
+M\left(n\right) = \left\lceil2\cdot\frac{2^n-1}{3}\right\rceil
+$$
+The former is easier; the latter requires cases in the induction argument.
 
 ## Inductive verification
 
-# Divide and Conquer
+Base case: $M(1)=1=\frac{2^{2}}{3}-\frac{1}{2}-\frac{(-1)^{1}}{6}$ and $M(2)=2=\frac{2^{3}}{3}-\frac{1}{2}-\frac{(-1)^{2}}{6}$.
+
+Suppose as inductive hypothesis that $M(k)=\frac{2^{k+1}}{3}-1/2-\frac{(-1)^{k}}{6}$ for all $k<n$.
+
+(When in doubt, always use *strong* induction.)
+
+## Inductive step
+
+\begin{align}
+M(n)&=2M(n-2)+M(n-1)+1\\
+&=2\left(\frac{2^{n-1}}{3}-\frac{1}{2}-\frac{(-1)^{n-2}}{6} \right) + \left(\frac{2^{n}}{3}-\frac{1}{2}-\frac{(-1)^{n-1}}{6}\right)+1\\
+&=\frac{2^{n}}{3}-1-\frac{2(-1)^{n-2}}{6}+\frac{2^{n}}{3}-\frac{1}{2}-\frac{(-1)^{n-1}}{6}+1\\
+&=\frac{2^{n}}{3}+\frac{2^{n}}{3}-1+1-\frac{1}{2}-\frac{2(-1)^{n-2}}{6}-\frac{(-1)^{n-1}}{6}\\
+&=\frac{2^{n+1}}{3}-\frac{1}{2}+\frac{2(-1)^{n-1}}{6}-\frac{(-1)^{n-1}}{6}\\
+&=\frac{2^{n+1}}{3}-\frac{1}{2}+\frac{(-1)^{n-1}}{6}\\
+&=\frac{2^{n+1}}{3}-\frac{1}{2}-\frac{(-1)^{n}}{6}
+\end{align}
+
+# Trust the Recursion Fairy
 
 ## Recall: Writing recursive functions
 
 > Your **only** task is to simplify the original problem, or to solve it directly when simplification is either unnecessary or impossible; the *Recursion Fairy* will solve all the simpler subproblems for you, using Methods That Are None Of Your Business...
 
-## Divide and Conquer
+## Jamboard Questions
+
+Consider the usual Towers of Hanoi puzzle (pp. 24ff) with $n$ disks and 3 pegs, numbered 0, 1, and 2. Now suppose you are forbidden to move any disk directly between peg 1 and peg 2; *every* move must involve peg 0.
+
+1. Describe a recursive algorithm to solve this puzzle.
+
+2. Explain why (prove that) your algorithm never moves a disk between peg 1 and peg 2. (Use a *strong* induction hypothesis.)
+
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Timothy", "Josiah", "Nathan")
+set.seed(1152021) 
+n <- length(roster)
+ngps <- 6
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+# Divide and Conquer
+
+## Divide and Conquer paradigm
 
 - When the problem domain *partitions* into smaller subproblems, the recursive paradigm is called **divide and conquer**.
     - Towers of Hanoi isn't really divide and conquer.
@@ -147,31 +313,3 @@ Total up each level in the recursion tree:
 There are $\log n$ levels in this tree, so $C(n) \in O(n \log n)$.
 
 (More to come.)
-
-# Another Hanoi Puzzle
-
-## Jamboard Questions
-
-Consider the usual Towers of Hanoi puzzle (pp. 24ff) with $n$ disks and 3 pegs, numbered 0, 1, and 2. Now suppose you are forbidden to move any disk directly between peg 1 and peg 2; *every* move must involve peg 0.
-
-1. Give a pseudocode block for a recursive algorithm to solve this puzzle.
-
-2. Explain why (prove that) your algorithm never moves a disk between peg 1 and peg 2. (Use a *strong* induction hypothesis.)
-
-
-## Table Groups
-
-```{r, echo=FALSE}
-library(knitr)
-roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Timothy", "Josiah", "Nathan")
-set.seed(1152021) 
-n <- length(roster)
-ngps <- 6
-maxingp <- ceiling(n/ngps)
-# just make random groups
-groups <- matrix(c(roster[sample(n)], 
-                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
-                 ncol=maxingp, byrow=FALSE)
-rownames(groups) <- paste0("Table #", 1:nrow(groups))
-kable(t(groups))
-```

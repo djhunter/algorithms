@@ -465,21 +465,144 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <h1>Assignment Comments, Sample Solutions</h1>
 
 </section>
+<section id="more-tips-on-describing-algorithms-from-pp.-11ff" class="slide level2">
+<h2>More tips on describing algorithms (from pp. 11ff)</h2>
+<ul>
+<li class="fragment"><strong>Algorithms are not programs.</strong> Please don’t write code (e.g., C, Python, Java, Haskell, R, …).
+<ul>
+<li class="fragment">Use a combination of pseudocode and structured English.
+<ul>
+<li class="fragment">Pseudocode uses the structure of formal programming languages to break algorithms into primitive steps.</li>
+<li class="fragment">The primitive steps themselves can be written using math, English, or a mixture of the two, whatever is clearest.</li>
+</ul></li>
+<li class="fragment">A good algorithm description is closer to what we should write in the comments of a real program than the code itself. Code is a poor medium for storytelling.</li>
+<li class="fragment">On the other hand, conditionals, loops, function calls, and recursion should be stated explicitly.</li>
+</ul></li>
+</ul>
+</section>
+<section id="who-is-the-audience" class="slide level2">
+<h2>Who is the audience?</h2>
+<ul>
+<li class="fragment">Imagine you are writing pseudocode for a competent but skeptical programmer who is <em>not as clever as you are</em>.
+<ul>
+<li class="fragment">This programmer should be able to quickly and correctly implement the algorithm in <em>their</em> favorite programming language.</li>
+</ul></li>
+<li class="fragment"><strong>Goal:</strong> include every detail necessary to fully specify the algorithm, prove its correctness, and analyze its running time.</li>
+</ul>
+</section>
 <section id="baguenaudier-solver" class="slide level2">
 <h2>Baguenaudier solver</h2>
+<p>Pseudocode and English: It is clear what it’s doing and <em>why it works</em>:</p>
+<pre><code>solve(n):
+
+If n=1, 
+    flip(1)
+If n=2
+    flip(2)
+    flip(1)
+else (when n&gt;2)
+    solve(n-2) on the rightmost n-2 bits
+    flip(n), the nth bit                            &lt;&lt; legal, b/c there are n-2 0&#39;s at the end &gt;&gt;
+    solve(n-2) in reverse on the rightmost n-2 bits &lt;&lt; makes Puzzle look like 0111...111 &gt;&gt;
+    solve(n-1) on rightmost (n-1) bits</code></pre>
+</section>
+<section id="baguenaudier-solver-but-a-little-too-code-y" class="slide level2">
+<h2>Baguenaudier solver, but a little too code-y</h2>
+<p>Psuedocode only. It’s correct, but it doesn’t communicate as well:</p>
+<pre><code>B(int n){
+        if(n == 0){
+            print nothing
+        }
+        else if (n==1){
+            print 1
+        }
+        else {
+            B(n-2)
+            print n
+            B(n-2), but printed backwards 
+            B(n-1)
+        }
+    }</code></pre>
 </section>
 <section id="recurrence-relation" class="slide level2">
 <h2>Recurrence Relation</h2>
+<p>The recurrence relation should match the algorithm:</p>
+<pre><code>solve(n):
+
+If n=1, 
+    flip(1)
+If n=2
+    flip(2)
+    flip(1)
+else (when n&gt;2)
+    solve(n-2) on the rightmost n-2 bits
+    flip(n), the nth bit                            &lt;&lt; legal, b/c there are n-2 0&#39;s at the end &gt;&gt;
+    solve(n-2) in reverse on the rightmost n-2 bits &lt;&lt; makes Puzzle look like 0111...111 &gt;&gt;
+    solve(n-1) on rightmost (n-1) bits</code></pre>
+<p><span class="math display">\[\begin{equation}
+  M(n)=\begin{cases}
+    1 &amp; \text{if $n=1$}.\\
+    2 &amp; \text{if $n=2$}.\\
+    2M(n-2)+M(n-1)+1 &amp; \text{if $n &gt; 2$}.
+  \end{cases}
+\end{equation}\]</span></p>
 </section>
-<section id="closed-form-formula" class="slide level2">
-<h2>Closed-form formula</h2>
+<section id="another-recurrence-relation" class="slide level2">
+<h2>Another Recurrence Relation</h2>
+<p>If the algorithm is different, the recurrence is different.</p>
+<pre><code>B(int n){
+        if(n == 0){
+            print nothing
+        }
+        else if (n==1){
+            print 1
+        }
+        else {
+            B(n-2)
+            print n
+            B(n-2), but printed backwards 
+            B(n-1)
+        }
+    }</code></pre>
+<p><span class="math display">\[\begin{equation}
+  M(n)=\begin{cases}
+    0 &amp; \text{if $n=0$}.\\
+    1 &amp; \text{if $n=1$}.\\
+    2M(n-2)+M(n-1)+1 &amp; \text{if $n &gt; 2$}.
+  \end{cases}
+\end{equation}\]</span></p>
+</section>
+<section id="closed-form-formula-from-oeis" class="slide level2">
+<h2>Closed-form formula from OEIS</h2>
+<p>At least two options:</p>
+<p><span class="math display">\[
+2^{n+1}/3 - 1/2 - (-1)^n/6
+\]</span> or</p>
+<p><span class="math display">\[
+M\left(n\right) = \left\lceil2\cdot\frac{2^n-1}{3}\right\rceil
+\]</span> The former is easier; the latter requires cases in the induction argument.</p>
 </section>
 <section id="inductive-verification" class="slide level2">
 <h2>Inductive verification</h2>
+<p>Base case: <span class="math inline">\(M(1)=1=\frac{2^{2}}{3}-\frac{1}{2}-\frac{(-1)^{1}}{6}\)</span> and <span class="math inline">\(M(2)=2=\frac{2^{3}}{3}-\frac{1}{2}-\frac{(-1)^{2}}{6}\)</span>.</p>
+<p>Suppose as inductive hypothesis that <span class="math inline">\(M(k)=\frac{2^{k+1}}{3}-1/2-\frac{(-1)^{k}}{6}\)</span> for all <span class="math inline">\(k&lt;n\)</span>.</p>
+<p>(When in doubt, always use <em>strong</em> induction.)</p>
+</section>
+<section id="inductive-step" class="slide level2">
+<h2>Inductive step</h2>
+<p><span class="math display">\[\begin{align}
+M(n)&amp;=2M(n-2)+M(n-1)+1\\
+&amp;=2\left(\frac{2^{n-1}}{3}-\frac{1}{2}-\frac{(-1)^{n-2}}{6} \right) + \left(\frac{2^{n}}{3}-\frac{1}{2}-\frac{(-1)^{n-1}}{6}\right)+1\\
+&amp;=\frac{2^{n}}{3}-1-\frac{2(-1)^{n-2}}{6}+\frac{2^{n}}{3}-\frac{1}{2}-\frac{(-1)^{n-1}}{6}+1\\
+&amp;=\frac{2^{n}}{3}+\frac{2^{n}}{3}-1+1-\frac{1}{2}-\frac{2(-1)^{n-2}}{6}-\frac{(-1)^{n-1}}{6}\\
+&amp;=\frac{2^{n+1}}{3}-\frac{1}{2}+\frac{2(-1)^{n-1}}{6}-\frac{(-1)^{n-1}}{6}\\
+&amp;=\frac{2^{n+1}}{3}-\frac{1}{2}+\frac{(-1)^{n-1}}{6}\\
+&amp;=\frac{2^{n+1}}{3}-\frac{1}{2}-\frac{(-1)^{n}}{6}
+\end{align}\]</span></p>
 </section></section>
 <section>
-<section id="divide-and-conquer" class="title-slide slide level1">
-<h1>Divide and Conquer</h1>
+<section id="trust-the-recursion-fairy" class="title-slide slide level1">
+<h1>Trust the Recursion Fairy</h1>
 
 </section>
 <section id="recall-writing-recursive-functions" class="slide level2">
@@ -488,8 +611,70 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <p>Your <strong>only</strong> task is to simplify the original problem, or to solve it directly when simplification is either unnecessary or impossible; the <em>Recursion Fairy</em> will solve all the simpler subproblems for you, using Methods That Are None Of Your Business…</p>
 </blockquote>
 </section>
-<section id="divide-and-conquer-1" class="slide level2">
-<h2>Divide and Conquer</h2>
+<section id="jamboard-questions" class="slide level2">
+<h2>Jamboard Questions</h2>
+<p>Consider the usual Towers of Hanoi puzzle (pp. 24ff) with <span class="math inline">\(n\)</span> disks and 3 pegs, numbered 0, 1, and 2. Now suppose you are forbidden to move any disk directly between peg 1 and peg 2; <em>every</em> move must involve peg 0.</p>
+<ol type="1">
+<li><p>Describe a recursive algorithm to solve this puzzle.</p></li>
+<li><p>Explain why (prove that) your algorithm never moves a disk between peg 1 and peg 2. (Use a <em>strong</em> induction hypothesis.)</p></li>
+</ol>
+</section>
+<section id="table-groups" class="slide level2">
+<h2>Table Groups</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Table #1</th>
+<th style="text-align: left;">Table #2</th>
+<th style="text-align: left;">Table #3</th>
+<th style="text-align: left;">Table #4</th>
+<th style="text-align: left;">Table #5</th>
+<th style="text-align: left;">Table #6</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Jack</td>
+<td style="text-align: left;">Bri</td>
+<td style="text-align: left;">Graham</td>
+<td style="text-align: left;">Blake</td>
+<td style="text-align: left;">James</td>
+<td style="text-align: left;">Ethan</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nathan</td>
+<td style="text-align: left;">Grace</td>
+<td style="text-align: left;">Logan</td>
+<td style="text-align: left;">Levi</td>
+<td style="text-align: left;">Drake</td>
+<td style="text-align: left;">John</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Josiah</td>
+<td style="text-align: left;">Kristen</td>
+<td style="text-align: left;">Claire</td>
+<td style="text-align: left;">Andrew</td>
+<td style="text-align: left;">Timothy</td>
+<td style="text-align: left;">Talia</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Kevin</td>
+<td style="text-align: left;">Isaac</td>
+<td style="text-align: left;">Jordan</td>
+<td style="text-align: left;">Trevor</td>
+<td style="text-align: left;"></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</section></section>
+<section>
+<section id="divide-and-conquer" class="title-slide slide level1">
+<h1>Divide and Conquer</h1>
+
+</section>
+<section id="divide-and-conquer-paradigm" class="slide level2">
+<h2>Divide and Conquer paradigm</h2>
 <ul>
 <li>When the problem domain <em>partitions</em> into smaller subproblems, the recursive paradigm is called <strong>divide and conquer</strong>.
 <ul>
@@ -581,68 +766,6 @@ C(n) = \left\{\begin{array}{ll}
     ... and so on</code></pre>
 <p>There are <span class="math inline">\(\log n\)</span> levels in this tree, so <span class="math inline">\(C(n) \in O(n \log n)\)</span>.</p>
 <p>(More to come.)</p>
-</section></section>
-<section>
-<section id="another-hanoi-puzzle" class="title-slide slide level1">
-<h1>Another Hanoi Puzzle</h1>
-
-</section>
-<section id="jamboard-questions" class="slide level2">
-<h2>Jamboard Questions</h2>
-<p>Consider the usual Towers of Hanoi puzzle (pp. 24ff) with <span class="math inline">\(n\)</span> disks and 3 pegs, numbered 0, 1, and 2. Now suppose you are forbidden to move any disk directly between peg 1 and peg 2; <em>every</em> move must involve peg 0.</p>
-<ol type="1">
-<li><p>Give a pseudocode block for a recursive algorithm to solve this puzzle.</p></li>
-<li><p>Explain why (prove that) your algorithm never moves a disk between peg 1 and peg 2. (Use a <em>strong</em> induction hypothesis.)</p></li>
-</ol>
-</section>
-<section id="table-groups" class="slide level2">
-<h2>Table Groups</h2>
-<table>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Table #1</th>
-<th style="text-align: left;">Table #2</th>
-<th style="text-align: left;">Table #3</th>
-<th style="text-align: left;">Table #4</th>
-<th style="text-align: left;">Table #5</th>
-<th style="text-align: left;">Table #6</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Jack</td>
-<td style="text-align: left;">Bri</td>
-<td style="text-align: left;">Graham</td>
-<td style="text-align: left;">Blake</td>
-<td style="text-align: left;">James</td>
-<td style="text-align: left;">Ethan</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Nathan</td>
-<td style="text-align: left;">Grace</td>
-<td style="text-align: left;">Logan</td>
-<td style="text-align: left;">Levi</td>
-<td style="text-align: left;">Drake</td>
-<td style="text-align: left;">John</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Josiah</td>
-<td style="text-align: left;">Kristen</td>
-<td style="text-align: left;">Claire</td>
-<td style="text-align: left;">Andrew</td>
-<td style="text-align: left;">Timothy</td>
-<td style="text-align: left;">Talia</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Kevin</td>
-<td style="text-align: left;">Isaac</td>
-<td style="text-align: left;">Jordan</td>
-<td style="text-align: left;">Trevor</td>
-<td style="text-align: left;"></td>
-<td style="text-align: left;"></td>
-</tr>
-</tbody>
-</table>
 </section></section>
     </div>
   </div>

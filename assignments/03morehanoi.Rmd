@@ -13,7 +13,7 @@ Read Exercise 4a on pages 47 of [E]. The following questions give a slightly rep
 
 Consider the usual Towers of Hanoi puzzle (pp. 24ff) with $n$ disks and 3 pegs, numbered 0, 1, and 2. Now suppose you are forbidden to move any disk directly between peg 1 and peg 2; *every* move must involve peg 0.
 
-> 1. Give a psuedocode block for a recursive algorithm to solve this puzzle.
+> 1. Describe a recursive algorithm to solve this puzzle.
 
 ```
 TODO: restricted hanoi algorithm
