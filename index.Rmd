@@ -37,7 +37,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 1. [Introduction: Space, Time, Perfection?](slides/01intro_algorithms.html) 
 2. [Recursion](slides/02recursion.html)
 3. [Divide and Conquer Intro](slides/03divideandconquer.html)
-4. [Divide and Conquer: Sorting](dcsorting.html)
+4. [Divide and Conquer: Sorting](slides/04dcsorting.html)
 
 # Written Assignments
 
