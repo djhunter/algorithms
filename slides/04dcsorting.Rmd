@@ -1,0 +1,247 @@
+---
+title: "Divide and Conquer: Sorting"
+date: "January 20, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+
+# Divide and Conquer
+
+## Divide and Conquer paradigm
+
+- When the problem domain *partitions* into smaller subproblems, the recursive paradigm is called **divide and conquer**.
+    - Towers of Hanoi isn't really divide and conquer.
+    - Binary search *is* divide and conquer. The search space partitions into two halves.
+
+## Merge Sort
+
+```
+Merge(A[1..n], m):                        MergeSort(A[1..n]):
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)..n)]
+        else if i > m                             Merge(A[1..n],m)
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+`Merge` running time? (Count comparisons of list elements.)
+
+```
+-poll "What is the running time of the Merge function?" "O(log n)" "O(n)" "O(n^2)" "O(2^n)"
+```
+
+
+## Merge Sort recurrence
+
+```
+Merge(A[1..n], m):   # O(n) comparisons   MergeSort(A[1..n]):  # C(n) comparisons
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])      # C(n/2) comparisons (approx)
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)..n)]  # C(n/2) comparisons (approx)
+        else if i > m                             Merge(A[1..n],m)        # O(n) comparisons
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+## Merge Sort time
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+As a tree, we can model $C(n)$ as:
+
+```
+          O(n)
+         /    \
+     C(n/2)   C(n/2)
+```
+
+Expanding recursively, we get the following *recursion tree:*
+
+```
+                             n
+                    /                 \
+                n/2                      n/2
+            /        \              /          \
+          n/4        n/4           n/4          n/4
+        /    \       /    \       /   \        /    \
+      n/8    n/8   n/8   n/8    n/8   n/8    n/8    n/8
+    ... and so on
+```
+
+## Merge Sort time
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+Total up each level in the recursion tree:
+
+```
+                                                            level total
+                             n                                   n
+                    /                 \
+                n/2                      n/2                     n
+            /        \              /          \ 
+          n/4        n/4           n/4          n/4              n
+        /    \       /    \       /   \        /    \
+      n/8    n/8   n/8   n/8    n/8   n/8    n/8    n/8          n
+    ... and so on
+```
+
+There are $\log n$ levels in this tree, so $C(n) \in O(n \log n)$.
+
+(More to come.)
+
+## Aside: This is the best you can do
+
+- Sorting a list involves figuring how how it is scrambled.
+- A list of $n$ elements can be scrambled $n!$ ways.
+- Using (two-way) comparisons gets us a binary decision tree.
+- In order to have $n!$ leaves, we need $\log_2(n!)$ levels.
+- $\log_2(n!) \in \Theta(n \log n)$
+
+So Merge Sort is *asymptotically optimal*.
+
+## Merge Sort Correctness
+
+```
+Merge(A[1..n], m):                        MergeSort(A[1..n]):
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)..n)]
+        else if i > m                             Merge(A[1..n],m)
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+- First you have to show that `Merge` is correct (see book).
+- Base case: $n=1$ `MergeSort` does nothing, and list is sorted.
+- Inductive hypothesis: Suppose that `MergeSort` correctly sorts a list of size $k$ when $k<n$.
+- By inductive hypothesis, `MergeSort(A[1..m])` and `MergeSort(A[(m+1)..n])` both work, so `A[1..m]` and `A[(m+1)..n]` will be correctly sorted when `Merge` is called. Since `Merge` works, `Merge(A[1..n],m)` will be correctly sorted.
+
+
+# QuickSort
+
+## Partitioning an array
+
+`Partition(A, p)` inputs an array `A` and an array index `p`. 
+
+- `A[p]` is the *pivot* element.
+
+`Partition(A, p)` rearranges the elements of `A` so that:
+
+- All elements less that the pivot come first,
+- followed by the pivot element,
+- followed by all the elements that are greater than the pivot.
+
+Also, `Partition(A, p)` returns the new location of the pivot.
+
+(See book for algorithm, correctness, and time ($O(n)$).)
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(1202021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+
+## Quick Sort Correctness
+
+```
+QuickSort(A[1 .. n]):
+if (n > 1)
+    Choose a pivot element A[p] 
+    r <- Partition(A, p)
+    QuickSort(A[1 .. r − 1])
+    QuickSort(A[r + 1 .. n])
+```
+
+1. Use strong induction to explain why (i.e., prove that), regardless of how `p` is chosen, `QuickSort(A[1..n])` correctly sorts the elements of `A`. (Assume that Partition correctly does its job.) 
+
+
+## Quick Sort running time
+
+Let's agree to choose the pivot element to be the first element (actually a common choice).
+
+```
+QuickSort(A[1 .. n]):
+if (n > 1)
+    r <- Partition(A, 1)
+    QuickSort(A[1 .. r − 1])
+    QuickSort(A[r + 1 .. n])
+```
+
+2. If we get extremely lucky and, at each stage, it just so happens that $r = \lfloor n/2 \rfloor$, give a recurrence for the running time of QuickSort.
+
+3. If we get extremely unlucky and, at each stage, it turns out that $r=n$ (i.e., the array was in reverse order), give a recurrence for the running time of QuickSort. 
+
+(In each case, solve the recurrence, asymptotically.)
