@@ -65,7 +65,7 @@ Hanoi(n, temp, destination):
     Hanoi(n-1, temp, destination)
 ```
 
-When $n=1$, the move involves peg 0. Suppose as inductive hypothesis that `Hanoi(k, temp, destination)` returns only moves that involve peg 0. Then `Hanoi(n, temp, destination)` makes three recursive calls, which by inductive hypothesis all involve peg 0 (note that `Undo` preserves the property of involving peg 0). The additional single move made by `Hanoi(n, temp, destination)` also involves peg 0. So by induction, all moves are legal.
+When $n=1$, the move involves peg 0. Suppose as inductive hypothesis that `Hanoi(k, temp, destination)` returns only moves that involve peg 0, for all $k<n$. Then `Hanoi(n, temp, destination)` makes three recursive calls, which by inductive hypothesis all involve peg 0 (note that `Undo` preserves the property of involving peg 0). The additional single move made by `Hanoi(n, temp, destination)` also involves peg 0. So by induction, all moves are legal.
 
 ## Recurrence Relation
 

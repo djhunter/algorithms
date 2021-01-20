@@ -503,7 +503,7 @@ Hanoi(n, temp, destination):
     move disk n from peg 0 to destination
     Undo Hanoi(n-1, destination, temp)
     Hanoi(n-1, temp, destination)</code></pre>
-<p>When <span class="math inline">\(n=1\)</span>, the move involves peg 0. Suppose as inductive hypothesis that <code>Hanoi(k, temp, destination)</code> returns only moves that involve peg 0. Then <code>Hanoi(n, temp, destination)</code> makes three recursive calls, which by inductive hypothesis all involve peg 0 (note that <code>Undo</code> preserves the property of involving peg 0). The additional single move made by <code>Hanoi(n, temp, destination)</code> also involves peg 0. So by induction, all moves are legal.</p>
+<p>When <span class="math inline">\(n=1\)</span>, the move involves peg 0. Suppose as inductive hypothesis that <code>Hanoi(k, temp, destination)</code> returns only moves that involve peg 0, for all <span class="math inline">\(k&lt;n\)</span>. Then <code>Hanoi(n, temp, destination)</code> makes three recursive calls, which by inductive hypothesis all involve peg 0 (note that <code>Undo</code> preserves the property of involving peg 0). The additional single move made by <code>Hanoi(n, temp, destination)</code> also involves peg 0. So by induction, all moves are legal.</p>
 </section>
 <section id="recurrence-relation" class="slide level2">
 <h2>Recurrence Relation</h2>
