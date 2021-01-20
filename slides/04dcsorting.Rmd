@@ -25,6 +25,100 @@ knitr::opts_chunk$set(comment = NA)
 
 # Assignment Comments, Sample Solutions
 
+## Beware of the Jamboard solutions
+
+- Don't uncritically copy someone else's (e.g., the Jamboard) solutions.
+
+## Modified Hanoi Algorithm
+
+```
+Undo [operations]:
+  Perform move operations in both reverse order and opposite direction
+  
+Hanoi(n, temp, destination):
+  if n is 1:
+    move disk 1 from peg 0 to destination
+  else:
+    Hanoi(n-1, destination, temp)
+    move disk n from peg 0 to destination
+    Undo Hanoi(n-1, destination, temp)
+    Hanoi(n-1, temp, destination)
+```
+
+- Notice that the parameter list in the function header matches the parameters that are used in the function calls.
+- Sometimes `destination` and `temp` need to be switched, so we can't hard code these as 0 and 1, for example.
+- If you are unsure that the base case is right, check that the $n=2$ case works.
+
+## Proof that all moves are legal
+
+```
+Undo [operations]:
+  Perform move operations in both reverse order and opposite direction
+  
+Hanoi(n, temp, destination):
+  if n is 1:
+    move disk 1 from peg 0 to destination
+  else:
+    Hanoi(n-1, destination, temp)
+    move disk n from peg 0 to destination
+    Undo Hanoi(n-1, destination, temp)
+    Hanoi(n-1, temp, destination)
+```
+
+When $n=1$, the move involves peg 0. Suppose as inductive hypothesis that `Hanoi(k, temp, destination)` returns only moves that involve peg 0. Then `Hanoi(n, temp, destination)` makes three recursive calls, which by inductive hypothesis all involve peg 0 (note that `Undo` preserves the property of involving peg 0). The additional single move made by `Hanoi(n, temp, destination)` also involves peg 0. So by induction, all moves are legal.
+
+## Recurrence Relation
+
+```
+Undo [operations]:
+  Perform move operations in both reverse order and opposite direction
+  
+Hanoi(n, temp, destination):   <<Source is always 0>>
+  if n is 1:
+    move disk 1 from peg 0 to destination
+  else:
+    Hanoi(n-1, destination, temp)
+    move disk n from peg 0 to destination
+    Undo Hanoi(n-1, destination, temp)
+    Hanoi(n-1, temp, destination)
+```
+
+$$
+V(n) = \left\{\begin{array}{ll} 
+               1 & \mbox{if } n=1 \\
+               3V(n-1) +1 & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+## Closed-form formula
+
+$$
+V(n) = \left\{\begin{array}{ll} 
+               1 & \mbox{if } n=1 \\
+               3V(n-1) +1 & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+```
+Search: seq:1,4,13,40,121,364
+    A003462   a(n) = (3^n - 1)/2.
+```
+
+## Inductive verification
+
+Base Case: $V(1)=1=\frac{3^\left(1\right)-1}{2}$. Suppose as inductive hypothesis that $V(k)=\frac{3^k-1}{2}$ for all $k<n$. Using the recurrence relation,
+
+\begin{align}
+V(n)&=3V(n-1)+1 \\
+&=3\left(\frac{3^\left(n-1\right)-1}{2}\right)+1 \\
+&=\frac{3^n-3}{2}+1 \\
+&=\frac{3^n-3}{2}+\frac{2}{2} \\
+&=\frac{3^n-1}{2} \\
+\end{align}
+
+So by induction, $V(n) = \frac{3^n-1}{2}$
 
 # Divide and Conquer
 

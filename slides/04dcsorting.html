@@ -460,11 +460,96 @@ document.getElementsByTagName('head')[0].appendChild(style);
     <h3 class="date">January 20, 2021</h3>
 </section>
 
+<section>
 <section id="assignment-comments-sample-solutions" class="title-slide slide level1">
 <h1>Assignment Comments, Sample Solutions</h1>
 
 </section>
-
+<section id="beware-of-the-jamboard-solutions" class="slide level2">
+<h2>Beware of the Jamboard solutions</h2>
+<ul>
+<li>Don’t uncritically copy someone else’s (e.g., the Jamboard) solutions.</li>
+</ul>
+</section>
+<section id="modified-hanoi-algorithm" class="slide level2">
+<h2>Modified Hanoi Algorithm</h2>
+<pre><code>Undo [operations]:
+  Perform move operations in both reverse order and opposite direction
+  
+Hanoi(n, temp, destination):
+  if n is 1:
+    move disk 1 from peg 0 to destination
+  else:
+    Hanoi(n-1, destination, temp)
+    move disk n from peg 0 to destination
+    Undo Hanoi(n-1, destination, temp)
+    Hanoi(n-1, temp, destination)</code></pre>
+<ul>
+<li>Notice that the parameter list in the function header matches the parameters that are used in the function calls.</li>
+<li>Sometimes <code>destination</code> and <code>temp</code> need to be switched, so we can’t hard code these as 0 and 1, for example.</li>
+<li>If you are unsure that the base case is right, check that the <span class="math inline">\(n=2\)</span> case works.</li>
+</ul>
+</section>
+<section id="proof-that-all-moves-are-legal" class="slide level2">
+<h2>Proof that all moves are legal</h2>
+<pre><code>Undo [operations]:
+  Perform move operations in both reverse order and opposite direction
+  
+Hanoi(n, temp, destination):
+  if n is 1:
+    move disk 1 from peg 0 to destination
+  else:
+    Hanoi(n-1, destination, temp)
+    move disk n from peg 0 to destination
+    Undo Hanoi(n-1, destination, temp)
+    Hanoi(n-1, temp, destination)</code></pre>
+<p>When <span class="math inline">\(n=1\)</span>, the move involves peg 0. Suppose as inductive hypothesis that <code>Hanoi(k, temp, destination)</code> returns only moves that involve peg 0. Then <code>Hanoi(n, temp, destination)</code> makes three recursive calls, which by inductive hypothesis all involve peg 0 (note that <code>Undo</code> preserves the property of involving peg 0). The additional single move made by <code>Hanoi(n, temp, destination)</code> also involves peg 0. So by induction, all moves are legal.</p>
+</section>
+<section id="recurrence-relation" class="slide level2">
+<h2>Recurrence Relation</h2>
+<pre><code>Undo [operations]:
+  Perform move operations in both reverse order and opposite direction
+  
+Hanoi(n, temp, destination):   &lt;&lt;Source is always 0&gt;&gt;
+  if n is 1:
+    move disk 1 from peg 0 to destination
+  else:
+    Hanoi(n-1, destination, temp)
+    move disk n from peg 0 to destination
+    Undo Hanoi(n-1, destination, temp)
+    Hanoi(n-1, temp, destination)</code></pre>
+<p><span class="math display">\[
+V(n) = \left\{\begin{array}{ll} 
+               1 &amp; \mbox{if } n=1 \\
+               3V(n-1) +1 &amp; \mbox{if } n&gt;1
+               \end{array}
+              \right.
+\]</span></p>
+</section>
+<section id="closed-form-formula" class="slide level2">
+<h2>Closed-form formula</h2>
+<p><span class="math display">\[
+V(n) = \left\{\begin{array}{ll} 
+               1 &amp; \mbox{if } n=1 \\
+               3V(n-1) +1 &amp; \mbox{if } n&gt;1
+               \end{array}
+              \right.
+\]</span></p>
+<pre><code>Search: seq:1,4,13,40,121,364
+    A003462   a(n) = (3^n - 1)/2.</code></pre>
+</section>
+<section id="inductive-verification" class="slide level2">
+<h2>Inductive verification</h2>
+<p>Base Case: <span class="math inline">\(V(1)=1=\frac{3^\left(1\right)-1}{2}\)</span>. Suppose as inductive hypothesis that <span class="math inline">\(V(k)=\frac{3^k-1}{2}\)</span> for all <span class="math inline">\(k&lt;n\)</span>. Using the recurrence relation,</p>
+<p><span class="math display">\[\begin{align}
+V(n)&amp;=3V(n-1)+1 \\
+&amp;=3\left(\frac{3^\left(n-1\right)-1}{2}\right)+1 \\
+&amp;=\frac{3^n-3}{2}+1 \\
+&amp;=\frac{3^n-3}{2}+\frac{2}{2} \\
+&amp;=\frac{3^n-1}{2} \\
+\end{align}\]</span></p>
+<p>So by induction, <span class="math inline">\(V(n) = \frac{3^n-1}{2}\)</span></p>
+</section></section>
 <section>
 <section id="divide-and-conquer" class="title-slide slide level1">
 <h1>Divide and Conquer</h1>
