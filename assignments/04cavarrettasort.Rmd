@@ -30,7 +30,7 @@ CavarrettaSort(A[0 .. n - 1]):
 
 
 
-> 3. Suppose that $n = \left(\frac{3}{2}\right)^p+1$. Let $D(p) = C\left(\left(\frac{3}{2}\right)^p+1\right)$. Give a recurrence relation for $D(p)$ (in terms of $p$) and find a closed-form solution (in terms of $p$).
+> 3. Suppose that $n = \left(\frac{3}{2}\right)^p+1$. Let $D(p) = C\left(\left(\frac{3}{2}\right)^p+1\right)$. Give a recurrence relation for $D(p)$ (in terms of $p$) and find a closed-form solution (in terms of $p$). *Hint:* This part is actually easier if you include the ceiling in your recurrence relation.
 
 
 
