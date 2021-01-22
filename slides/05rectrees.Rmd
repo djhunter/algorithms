@@ -57,7 +57,7 @@ After step 2, the last 1/3 of the array will contain the highest 1/3 of numbers,
 
 ## Alternative inductive step (more details)
 
-First, since $m$ is the *ceiling* of $2n/3$, $m-n$ is never larger than $2m-n$. 
+First, since $m$ is the *ceiling* of $2n/3$, $n-m$ is never larger than $2m-n$. 
 
 After the first `CavarrettaSort(A[0 .. (m - 1)])` call, all of the $n-m$ elements of `A[(2m-n)..(m-1)]` (the second "1/3") are greater than all of the $2m-n$ elements of `A[0..(2m-n-1)]` (the first "1/3"), by inductive hypothesis. Therefore, *none of the largest $n-m$ elements of the entire array can be in `A[0..(n-m-1)]`,* and so the largest $n-m$ elements must be in `A[(n-m)..(n-1)]` (the last "2/3"). 
 
