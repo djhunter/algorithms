@@ -1,0 +1,21 @@
+---
+title: "Practice with Recursion Trees"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](05rectreepractice.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+Do Problem 6 on page 49 of [E]. Draw your recursion trees on scratch paper, and don't bother trying to typeset them in this document. For each recurrence, you only need to include:
+
+- The given formula for the recurrence,
+- The first few terms of the sequence of row sums,
+- The case of the "Master Theorem" that you are using, and
+- The asymptotic solution to the recurrence.
+
+
+
+
