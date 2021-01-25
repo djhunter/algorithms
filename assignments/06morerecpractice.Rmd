@@ -1,0 +1,20 @@
+---
+title: "More Recursion Practice"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](05rectreepractice.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+> 1. Do Problems 7a and 7b on page 49 of [E]. Draw your recursion trees on scratch paper, and don't bother trying to typeset them in this document. Since these recurrences are a little messy, just include the given formula for the recurrence, the case of the "Master Theorem" that you are using (along with a reason for your choice), and the asymptotic solution to the recurrence.
+
+
+
+> 2. Do Problem 33a on page 62 of [E], and make sure that your algorithm finds $k$ in $O(\log n)$ time. (Use the divide and conquer paradigm.) In addition to describing your algorithm, give a recurrence for the number of list comparisons, and check that the solution to the recurrence is $O(\log n)$.
+
+
+
+

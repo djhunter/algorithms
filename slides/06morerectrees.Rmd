@@ -1,0 +1,197 @@
+---
+title: "Recursion Trees, continued"
+date: "January 25, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## General comments
+
+- Please read my comments on Canvas.
+- Use LaTeX for mathematics, and spell check.
+- Academic integrity:
+    - You may work with others.
+    - If you work with others, you should cite your collaboration *on your assignment* by listing the names of those you worked with.
+    - If you work with others, the work you hand in should represent your *own* understanding. Don't hand in solutions you don't understand.
+    - Even if you work with others, the work you hand in should *not* be *identical* to the work another student hands in. You should be writing up your solutions on your own, not copying someone else's solutions.
+        - Next time I'm going to have to submit a plagiarism report to the Provost.
+        
+## Repeat this to yourself until it makes sense
+
+$$
+\mbox{}
+$$
+
+$$
+\Large
+\log_b(x) \mbox{ is the number you raise } b \mbox{ to to get } x.
+$$
+
+$$
+\mbox{}
+$$
+
+Don't like the grammar? Put it in your own words.
+
+## Basic algebra
+
+- You need to know and apply basic rules of algebra.
+    - For example, logarithms and exponents.
+    - In the future, if you leave something like $\log_2 4$ unsimplified, you will lose points (assignment or exam).
+- *Make a list of rules* for exponents and logarithms and memorize it.
+    - Don't just watch videos about it.
+    
+## Master theorem for solving recurrences
+
+Recursive case of divide and conquer recurrence:
+
+$$
+T(n) = rT(n/c) + O(f(n))
+$$
+
+1. Root dominates: $T(n) = O(f(n))$
+    - happens when row sums *decrease* geometrically.
+2. Internal nodes dominate: $T(n) = O(f(n)\log n)$
+    - happens when row sums are *constant*.
+3. Leaves dominate: $T(n) = O(n^{\log_c r})$
+    - happens when row sums *increase* geometrically.
+    
+## Sample solutions: A, B, C
+
+- $A(n) = 2A(\frac{n}{4}) + \sqrt{n}$
+    - Row sums: $\sqrt{n}, \sqrt{n}, \sqrt{n}, \sqrt{n}, \ldots$
+    - Case 2, internal nodes dominate: $A(n) = O(\sqrt{n} \log n)$
+    
+- $B(n) = 2B(\frac{n}{4}) +  n$
+    - Row sums: $n, n/2, n/4, n/8, \ldots$
+    - Case 1, root dominates: $B(n) = O(n)$
+
+- $C(n) = 2C(\frac{n}{4}) + n^2$
+    - Row sums: $n^2, n^2/8, n^2/64, n^2/512, \ldots$
+    - Case 1: root dominates $C(n) = O(n^2)$
+
+## Sample solutions: D, E, F
+
+- $D(n) = 3D(\frac{n}{3}) + \sqrt{n}$
+    - Row sums: $n, n\sqrt{3}, n(\sqrt{3})^2, n(\sqrt{3})^3, \ldots$
+    - Case 3, leaves dominate: $D(n) =  O(n)$
+    
+- $E(n) = 3E(\frac{n}{3}) +  n$
+    - Row sums: $n, n, n, n, \ldots$
+    - Case 2, internal nodes dominate: $E(n) = O(n \log n)$
+    
+- $F(n) = 3F(\frac{n}{3}) + n^2$
+    - Row sums: $n^2, n^2/3, n^2/9, n^2/27, \ldots$
+    - Case 1, root dominates: $F(n) = O(n^2)$
+
+## Sample solutions: G, H, I
+
+- $G(n) = 4G(\frac{n}{2}) + \sqrt{n}$
+    - Row sums: $\sqrt{n}, \sqrt{8}\sqrt{n}, (\sqrt{8})^2\sqrt{n},(\sqrt{8})^3\sqrt{n}, \ldots$
+    - Case 3, leaves dominate: $G(n) =  O(n^2)$
+    
+- $H(n) = 4H(\frac{n}{2}) +  n$
+    - Row sums: $n, 2n, 4n, 8n, \ldots$
+    - Case 3, leaves dominate: $H(n) = O(n^2)$
+    
+- $I(n) = 4I(\frac{n}{2}) + n^2$
+    - Row sums: $n^2, n^2, n^2, n^2, \ldots$
+    - Case 2, internal nodes dominate: $I(n) = O(n^2 \log n)$
+
+## Patterns?
+
+Join your table group and discuss the following. Write any observations you have on the Jamboard.
+
+- What patterns do you notice?
+    - For example, can you tell when you are going to be in case $n$, for $n = 1,2,3$?
+    - How to $r$, $c$, and $f(n)$ "pull" the asymptotic estimate in different directions?
+    
+$$
+T(n) = rT(n/c) + O(f(n))
+$$
+    - Notice any other patterns or rules-of-thumb?
+
+# Messier Recursion Trees
+
+## Recall: Quick Sort
+
+```
+QuickSort(A[1 .. n]):
+if (n > 1)
+    r <- Partition(A, 1)
+    QuickSort(A[1 .. r − 1])
+    QuickSort(A[r + 1 .. n])
+```
+
+- Lucky: pivot is the median at each stage.
+    - $T(n) = 2T(n/2) + O(n) \in O(n \log n)$
+- Unlucky: pivot is always at beginning or end at each stage.
+    - $T(n) = T(n-1) + O(n) \in O(n^2)$
+
+## Just a little lucky
+
+With mild assumptions/modifications, we can hope that the pivot will fall in the middle third at each stage:
+
+- Worst case: $T(n) \leq T(n/3) + T(2n/3) + O(n)$
+
+This doesn't exactly match the Master Theorem, but we can still use it.
+
+- See Figure 1.11.
+    
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(1252021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+
+## Cavarretta recurrence, revisited.
+
+1. Consider adding a constant term $K = O(1)$  to the Cavarretta recurrence:
+
+$$
+C(n) = \left\{\begin{array}{lr}  1, 
+& \text{for } n=2,\\  
+3C\left(\left\lceil\frac{2}{3}n\right\rceil\right) + K, 
+& \text{for } n>2.\\  \end{array}\right.
+$$
+
+Use a recursion tree (with root $K$) to solve this recurrence. What effect did adding the constant term have?
+
+2. What if we added a linear term to the recurrence, instead of a constant term?
+
+## Messy recursion tree
+
+3. Solve the recurrence $K(n) = K(n/2) + 2K(n/3) + 3K(n/4) + n^2$ using a recursion tree.
+
