@@ -7,9 +7,9 @@ output:
     theme: spacelab
 ---
 
-Edit the [RMarkdown source file](05rectreepractice.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+Edit the [RMarkdown source file](06morerecpractice.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
 
-> 1. Do Problems 7a and 7b on page 49 of [E]. Draw your recursion trees on scratch paper, and don't bother trying to typeset them in this document. Since these recurrences are a little messy, just include the given formula for the recurrence, the case of the "Master Theorem" that you are using (along with a reason for your choice), and the asymptotic solution to the recurrence.
+> 1. Do Problems 7j and 7k on page 49 of [E]. Draw your recursion trees on scratch paper, and don't bother trying to typeset them in this document. Since these recurrences are a little messy, just include the given formula for the recurrence, the case of the "Master Theorem" that you are using (along with a reason for your choice), and the asymptotic solution to the recurrence.
 
 
 
