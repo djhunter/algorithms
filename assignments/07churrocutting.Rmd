@@ -42,7 +42,7 @@ CutChurro(n):
     return maxTotPrice
 ```
 
-> 2. Determine the number of `CutChurro` calls made by `CutChurro[n]` as a function of $n$, for $n \geq 0$. You don't need to give a formal proof (unless you want to), but if you don't, you still need to justify your answer in a way that is convincing.
+> 2. Determine the number of `CutChurro` calls made by `CutChurro[n]` as a function of $n$, for $n \geq 0$. You don't need to give a formal proof (though a formal proof would certainly be sufficient), but if you don't, you still need to justify your answer in a way that is convincing.
 
 
 
@@ -77,7 +77,7 @@ In R, you can check the running time of an algorithm using the `system.time` com
 system.time(CutChurro(20))
 ```
 
-> 3. Compute the elapsed system time for `CutChurro(n)` for values of $n$ from 10 to 20. What do you notice about this sequence of numbers?
+> 3. Compute the elapsed system time for `CutChurro(n)` for values of $n$ from 10 to 20. What do you notice about this sequence of numbers? Does it seem consistent with your answer to #2?
 
 
 

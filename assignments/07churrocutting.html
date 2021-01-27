@@ -221,7 +221,7 @@ CutChurro(n):
     return maxTotPrice</code></pre>
 <blockquote>
 <ol start="2" style="list-style-type: decimal">
-<li>Determine the number of <code>CutChurro</code> calls made by <code>CutChurro[n]</code> as a function of <span class="math inline">\(n\)</span>, for <span class="math inline">\(n \geq 0\)</span>. You don’t need to give a formal proof (unless you want to), but if you don’t, you still need to justify your answer in a way that is convincing.</li>
+<li>Determine the number of <code>CutChurro</code> calls made by <code>CutChurro[n]</code> as a function of <span class="math inline">\(n\)</span>, for <span class="math inline">\(n \geq 0\)</span>. You don’t need to give a formal proof (though a formal proof would certainly be sufficient), but if you don’t, you still need to justify your answer in a way that is convincing.</li>
 </ol>
 </blockquote>
 </div>
@@ -246,10 +246,10 @@ CutChurro &lt;- function(n) {
 <p>In R, you can check the running time of an algorithm using the <code>system.time</code> command:</p>
 <pre class="r"><code>system.time(CutChurro(20))</code></pre>
 <pre><code>##    user  system elapsed 
-##   0.680   0.000   0.681</code></pre>
+##   0.672   0.003   0.676</code></pre>
 <blockquote>
 <ol start="3" style="list-style-type: decimal">
-<li>Compute the elapsed system time for <code>CutChurro(n)</code> for values of <span class="math inline">\(n\)</span> from 10 to 20. What do you notice about this sequence of numbers?</li>
+<li>Compute the elapsed system time for <code>CutChurro(n)</code> for values of <span class="math inline">\(n\)</span> from 10 to 20. What do you notice about this sequence of numbers? Does it seem consistent with your answer to #2?</li>
 </ol>
 </blockquote>
 </div>

@@ -467,12 +467,74 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </section>
 <section id="general-comments" class="slide level2">
 <h2>General comments</h2>
+<pre><code>Format code in code blocks.</code></pre>
 </section>
 <section id="messy-recurrences" class="slide level2">
 <h2>Messy Recurrences</h2>
+<ul>
+<li><span class="math inline">\(J(n) = J(n/2) + J(n/3) + J(n/6)+ n\)</span>
+<ul>
+<li>Second row: <span class="math inline">\(\frac{n}{2}+\frac{n}{3}+\frac{n}{6}=n\)</span>.</li>
+<li>All row sums equal <span class="math inline">\(n\)</span>: internal nodes dominate: <span class="math inline">\(J(n) \in O(n \log n)\)</span>
+<ul>
+<li>The unevenness of the tree only changes the base of the log, which only changes the answer up to a constant factor (i.e., not at all.)</li>
+</ul></li>
+</ul></li>
+<li><span class="math inline">\(K(n) = K(n/2) + 2K(n/3) + 3K(n/4)+ n^2\)</span>
+<ul>
+<li>Second row: <span class="math inline">\(\left(\frac{n}{2}\right)^2+\left(\frac{n}{3}\right)^2+\left(\frac{n}{3}\right)^2+\left(\frac{n}{4}\right)^2+\left(\frac{n}{4}\right)^2+\left(\frac{n}{4}\right)^2=\frac{95}{144}n^2\)</span></li>
+<li>Subsequent rows get multiplied by <span class="math inline">\(\frac{95}{144}\)</span>: root dominates: <span class="math inline">\(K(n) = O(n^2)\)</span>
+<ul>
+<li>The unevenness of the tree means there are even fewer internal nodes and leaves for the root to dominate. If we added nodes to make a full tree, the root would still dominate.</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="writing-recursive-functions" class="slide level2">
+<h2>Writing Recursive Functions</h2>
+<ul>
+<li>Keep in mind any <em>preconditions</em>, and make sure:
+<ul>
+<li>Your algorithm uses them, if necessary, and</li>
+<li>Your recursive calls obey them.</li>
+</ul></li>
+<li>Write your function assuming the Recursion Fairy (inductive hypothesis) works, for any subproblem.</li>
+</ul>
 </section>
 <section id="find-the-rotation" class="slide level2">
 <h2>Find the Rotation</h2>
+<p><strong>Preconditions:</strong> “Suppose you are given a sorted array of <span class="math inline">\(n\)</span> <em>distinct</em> numbers that <em>has been rotated</em> <span class="math inline">\(k\)</span> steps, for some unknown integer <span class="math inline">\(k\)</span> <em>between <span class="math inline">\(1\)</span> and <span class="math inline">\(n − 1\)</span>.</em>”</p>
+<ul>
+<li>Use the preconditions when describing your algorithm.
+<ul>
+<li>e.g., there’s only one base case</li>
+</ul></li>
+<li>Make sure your recursive calls obey the preconditions.</li>
+</ul>
+<pre><code>rotationCheck(A[1..n])
+if (n == 2) 
+  return(1)  &lt;&lt; only one possible rotation when n = 2 &gt;&gt;
+else
+  m = ceiling(n/2)
+  if(A[m]&gt;A[n])   &lt;&lt; it&#39;s in second half &gt;&gt;
+    k = (m-1)+rotationCheck(A[m..n])
+  else  &lt;&lt; it&#39;s in first half &gt;&gt;
+    k = rotationCheck(A[1..m])
+return(k)</code></pre>
+</section>
+<section id="another-rotation-finder" class="slide level2">
+<h2>Another rotation finder</h2>
+<pre><code>RotationFinder(A[1...n]):
+  if n=2 return 1
+  else:
+       middle &lt;- floor(n/2)
+       if A[middle]&gt;A[middle+1]:  &lt;&lt; we found it (lucky) &gt;&gt;
+           return middle
+       if A[middle]&gt;A[1]:   &lt;&lt; it&#39;s in second half &gt;&gt;
+            return middle + rotationFinder(A[(middle+1)...n])
+       else:   &lt;&lt; it&#39;s in first half &gt;&gt;
+            return rotationFinder(A[1...middle])</code></pre>
+<p>Recurrence: <span class="math inline">\(C(n) = C(n/2) + O(1)\)</span>. Solution: <span class="math inline">\(C(n) \in O(\log n)\)</span>.</p>
 </section></section>
 <section>
 <section id="backtracking" class="title-slide slide level1">
@@ -625,8 +687,14 @@ price     1    5    8    9   10   17   17   20   24    30</code></pre>
 length    1    2    3    4    5    6    7    8    9    10
 price     1    5    8    9   10   17   17   20   24    30</code></pre>
 <ol type="1">
-<li><p>A five-inch churro sells for 10 cents. Is there a way to cut it into pieces so that the total price of all the pieces will be more? What is the best total price you can find?</p></li>
-<li><p>Suppose (as inductive hypothesis) that <code>CutChurro(k)</code> returns the maximum price among all the ways to cut up a <span class="math inline">\(k\)</span>-inch churro, for <span class="math inline">\(k\leq n\)</span>. Write a for-loop to determine the maximum price among all the ways to cut up an <span class="math inline">\(n\)</span>-inch churro.</p></li>
+<li><p>A five-inch churro sells for 10 cents. Is there a way to cut it into pieces so that the total price of all the pieces will be more? What is the best (largest) total price you can find? What is the worst total price?</p></li>
+<li><p>Suppose (as inductive hypothesis) that <code>CutChurro(k)</code> returns the maximum price among all the ways to cut up a <span class="math inline">\(k\)</span>-inch churro, for <span class="math inline">\(k\leq n\)</span>. Let’s say you cut a 3-inch piece off of an <span class="math inline">\(n\)</span>-inch churro, leaving yourself with pieces of size <span class="math inline">\(3\)</span> inches and <span class="math inline">\(n-3\)</span> inches. You plan to sell the <span class="math inline">\(3\)</span>-inch piece, but you are open to making more cuts in the <span class="math inline">\(n-3\)</span>-inch piece. Give an expression for the maximum price you can get for the pieces, among all the ways you can continue to cut the <span class="math inline">\(n-3\)</span>-inch piece up.</p></li>
+</ol>
+</section>
+<section id="optimal-churro-cutting-continued" class="slide level2">
+<h2>Optimal Churro Cutting, continued</h2>
+<ol start="3" type="1">
+<li>Suppose (as inductive hypothesis) that <code>CutChurro(k)</code> returns the maximum price among all the ways to cut up a <span class="math inline">\(k\)</span>-inch churro, for <span class="math inline">\(k\leq n\)</span>. Write a for-loop to determine the maximum price among all the ways to cut up an <span class="math inline">\(n\)</span>-inch churro.</li>
 </ol>
 </section></section>
     </div>

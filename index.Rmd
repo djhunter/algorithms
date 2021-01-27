@@ -40,6 +40,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 4. [Divide and Conquer: Sorting](slides/04dcsorting.html)
 5. [Recursion Trees](slides/05rectrees.html)
 6. [Recursion Trees, continued](slides/06morerectrees.html)
+7. [Backtracking](slides/07backtracking.html)
 
 # Written Assignments
 
@@ -48,7 +49,8 @@ This site provides slides, assignments, and other resources that I use in my Spa
 3. [Another Hanoi Puzzle](assignments/03morehanoi.html)
 4. [The Cavarretta Sort](assignments/04cavarrettasort.html)
 5. [Practice with Recursion Trees](assignments/05rectreepractice.html)
-5. [More Practice with Recursion](assignments/06morerecpractice.html)
+6. [More Practice with Recursion](assignments/06morerecpractice.html)
+7. [Churro Cutting](assignments/07churrocutting.html)
 
 # Other Resources
 

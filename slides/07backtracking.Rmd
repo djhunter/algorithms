@@ -27,10 +27,65 @@ knitr::opts_chunk$set(comment = NA)
 
 ## General comments
 
+```
+Format code in code blocks.
+```
+
 ## Messy Recurrences
+
+- $J(n) = J(n/2) + J(n/3) + J(n/6)+ n$
+    - Second row: $\frac{n}{2}+\frac{n}{3}+\frac{n}{6}=n$. 
+    - All row sums equal $n$: internal nodes dominate: $J(n) \in O(n \log n)$
+        - The unevenness of the tree only changes the base of the log, which only changes the answer up to a constant factor (i.e., not at all.)
+- $K(n) = K(n/2) + 2K(n/3) + 3K(n/4)+ n^2$
+    - Second row: $\left(\frac{n}{2}\right)^2+\left(\frac{n}{3}\right)^2+\left(\frac{n}{3}\right)^2+\left(\frac{n}{4}\right)^2+\left(\frac{n}{4}\right)^2+\left(\frac{n}{4}\right)^2=\frac{95}{144}n^2$
+    - Subsequent rows get multiplied by $\frac{95}{144}$: root dominates: $K(n) = O(n^2)$
+        - The unevenness of the tree means there are even fewer internal nodes and leaves for the root to dominate. If we added nodes to make a full tree, the root would still dominate.
+
+## Writing Recursive Functions
+
+- Keep in mind any *preconditions*, and make sure:
+    - Your algorithm uses them, if necessary, and
+    - Your recursive calls obey them.
+- Write your function assuming the Recursion Fairy (inductive hypothesis) works, for any subproblem.
 
 ## Find the Rotation
 
+**Preconditions:** "Suppose you are given a sorted array of $n$ *distinct* numbers that *has been rotated* $k$ steps, for some unknown integer $k$ *between $1$ and $n − 1$.*"
+
+- Use the preconditions when describing your algorithm.
+    - e.g., there's only one base case
+- Make sure your recursive calls obey the preconditions.
+
+```
+rotationCheck(A[1..n])
+if (n == 2) 
+  return(1)  << only one possible rotation when n = 2 >>
+else
+  m = ceiling(n/2)
+  if(A[m]>A[n])   << it's in second half >>
+    k = (m-1)+rotationCheck(A[m..n])
+  else  << it's in first half >>
+    k = rotationCheck(A[1..m])
+return(k)
+```
+
+## Another rotation finder
+
+```
+RotationFinder(A[1...n]):
+  if n=2 return 1
+  else:
+       middle <- floor(n/2)
+       if A[middle]>A[middle+1]:  << we found it (lucky) >>
+           return middle
+       if A[middle]>A[1]:   << it's in second half >>
+            return middle + rotationFinder(A[(middle+1)...n])
+       else:   << it's in first half >>
+            return rotationFinder(A[1...middle])
+```
+
+Recurrence: $C(n) = C(n/2) + O(1)$. Solution: $C(n) \in O(\log n)$.
 
 # Backtracking
 
@@ -151,8 +206,12 @@ length <- 1:10
 print(rbind(length,price))
 ```
 
-1. A five-inch churro sells for 10 cents. Is there a way to cut it into pieces so that the total price of all the pieces will be more? What is the best total price you can find?
+1. A five-inch churro sells for 10 cents. Is there a way to cut it into pieces so that the total price of all the pieces will be more? What is the best (largest) total price you can find? What is the worst total price?
 
-2. Suppose (as inductive hypothesis) that `CutChurro(k)` returns the maximum price among all the ways to cut up a $k$-inch churro, for $k\leq n$. Write a for-loop to determine the maximum price among all the ways to cut up an $n$-inch churro.
+2. Suppose (as inductive hypothesis) that `CutChurro(k)` returns the maximum price among all the ways to cut up a $k$-inch churro, for $k\leq n$. Let's say you cut a 3-inch piece off of an $n$-inch churro, leaving yourself with pieces of size $3$ inches and $n-3$ inches. You plan to sell the $3$-inch piece, but you are open to making more cuts in the $n-3$-inch piece. Give an expression for the maximum price you can get for the pieces, among all the ways you can continue to cut the $n-3$-inch piece up.
+
+## Optimal Churro Cutting, continued
+
+3. Suppose (as inductive hypothesis) that `CutChurro(k)` returns the maximum price among all the ways to cut up a $k$-inch churro, for $k\leq n$. Write a for-loop to determine the maximum price among all the ways to cut up an $n$-inch churro.
 
 
