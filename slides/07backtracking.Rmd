@@ -1,0 +1,158 @@
+---
+title: "Backtracking"
+date: "January 27, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## General comments
+
+## Messy Recurrences
+
+## Find the Rotation
+
+
+# Backtracking
+
+## General Idea
+
+- Problem has several options, and *recursive substructure.*
+- Try one of the options, and solve the subproblem recursively.
+    - If that doesn't work, try another option.
+    
+Backtracking algorithms tend to be slow.
+
+## Example: $n$ Queens
+
+Can you place $n$ queens on an $n\times n$ chessboard so that none are threatening another?
+
+> Schwer ist es übrigens nicht, durch ein methodisches
+Tatonniren sich diese Gewissheit zu verschaffen, wenn man 1 oder ein paar Stunden
+daran wenden will.
+
+Gauss says it's no big deal.
+
+## {data-background="http://www.learnchessrules.com/images/quenmove.png" data-background-size="contain"}
+
+## Backtracking algorithm: idea
+
+Start with $r=1$ and $j = 1$. 
+
+- Place a queen on the $r$th row in the $j$th square (avoiding conflicts with rows $1, \ldots, r-1$).
+    - If you find a legal move, recursively solve the remaining rows.
+    - If you can't find a legal move, try the $(j+1)$st square.
+
+Try $n=4$.
+
+## Backtracking algorithm: description
+
+`Q[1..n]` is going to contain the locations of the queens. If `Q[i] == j`, that means there is a queen on the $j$th square of row $i$.
+
+*Preconditions:* `r` stands for the row we are trying to place a queen on. So we've managed to place a queen on rows $1, \ldots, r-1$ legally when this algorithm is called.
+
+```
+PlaceQueens(Q[1 .. n], r):
+    if r = n + 1
+        print Q[1 .. n]  << Problem solved! >>
+    else
+        for j <- 1 to n
+            legal <- TRUE
+            for i <- 1 to r − 1
+                if (Q[i] = j) or (Q[i] = j + r − i) or (Q[i] = j − r + i)
+                    legal <- False    << a previous queen is attacking this square >>
+            if legal
+                Q[r] <- j
+                PlaceQueens(Q[1 .. n], r + 1)
+```
+
+## Backtracking
+
+```
+PlaceQueens(Q[1 .. n], r):
+    if r = n + 1
+        print Q[1 .. n]  << Problem solved! >>
+    else
+        for j <- 1 to n
+            legal <- TRUE
+            for i <- 1 to r − 1
+                if (Q[i] = j) or (Q[i] = j + r − i) or (Q[i] = j − r + i)
+                    legal <- False    << a previous queen is attacking this square >>
+            if legal
+                Q[r] <- j
+                PlaceQueens(Q[1 .. n], r + 1)
+```
+
+- The recursive call is "hopeful." 
+    - It may fail. If it does, you try the next option. *backtracking*
+    - Equivalent to a *depth-first search*.
+    
+See Figure 2.3.
+
+
+# Churros
+
+## {data-background="http://www.laxureria.com.mx/imago/productos.jpg" data-background-size="contain"}
+    
+## Churro Cutting
+
+- The price of a churro depends on its length, according to the following table.
+
+```{r, echo=FALSE}
+price <- c(1,5,8,9,10,17,17,20,24,30)
+length <- 1:10
+print(rbind(length,price))
+```
+
+- Out of the fryer, churros are $n$ inches long, but they can be cut into smaller pieces before they are sold. 
+- *What is the optimal way to cut an $n$-inch churro to maximize the total price of all the pieces?*
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(1272021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Optimal Churro Cutting
+
+```{r, echo=FALSE}
+price <- c(1,5,8,9,10,17,17,20,24,30)
+length <- 1:10
+print(rbind(length,price))
+```
+
+1. A five-inch churro sells for 10 cents. Is there a way to cut it into pieces so that the total price of all the pieces will be more? What is the best total price you can find?
+
+2. Suppose (as inductive hypothesis) that `CutChurro(k)` returns the maximum price among all the ways to cut up a $k$-inch churro, for $k\leq n$. Write a for-loop to determine the maximum price among all the ways to cut up an $n$-inch churro.
+
+
