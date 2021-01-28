@@ -42,7 +42,7 @@ CutChurro(n):
     return maxTotPrice
 ```
 
-> 2. Determine the number of `CutChurro` calls made by `CutChurro[n]` as a function of $n$, for $n \geq 0$. You don't need to give a formal proof (though a formal proof would certainly be sufficient), but if you don't, you still need to justify your answer in a way that is convincing.
+> 2. Determine the number of `CutChurro` calls made by `CutChurro(n)` as a function of $n$, for $n \geq 0$. You don't need to give a formal proof (though a formal proof would certainly be sufficient), but if you don't, you still need to justify your answer in a way that is convincing.
 
 
 
