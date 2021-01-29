@@ -41,6 +41,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 5. [Recursion Trees](slides/05rectrees.html)
 6. [Recursion Trees, continued](slides/06morerectrees.html)
 7. [Backtracking](slides/07backtracking.html)
+8. [More Backtracking Algorithms](slides/08backtracking2.html)
 
 # Written Assignments
 
@@ -51,6 +52,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 5. [Practice with Recursion Trees](assignments/05rectreepractice.html)
 6. [More Practice with Recursion](assignments/06morerecpractice.html)
 7. [Churro Cutting](assignments/07churrocutting.html)
+8. [More Backtracking Exercises](assignments/08morebacktracking.html)
 
 # Other Resources
 

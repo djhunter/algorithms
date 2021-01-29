@@ -25,11 +25,125 @@ knitr::opts_chunk$set(comment = NA)
 
 # Assignment Comments, Sample Solutions
 
-## General comments
+## All the cuts tried by CutChurro
 
-## ChurroCut Time
+```
+Cuts:   Price:
+1111    4
+112     7
+121     7
+13      9
+211     7
+22      10
+31      9
+4       9
+```
 
-## ChurroCut Timing
+- When $n = 4$, there are three places to make (or not make) a cut.
+- So you have 3 independent decisions to make in sequence, each with two options (cut or don't cut):
+    - $2^3 = 8$ ways to cut the churro into pieces.
+- `CutChurro` is calculating by *recursive brute force*. (not clever)
+
+## CutChurro Time, counting nonrecursive call
+
+```{javascript eval=FALSE}
+// Let price[1..n] be a constant array of prices.
+// So price[i] is the cost of a churro of length i.
+
+CutChurro(n):
+    if n = 0
+        return 0
+    maxTotPrice <- -1
+    for i <- 1 to n
+        totPriceTry <- price[i] + CutChurro(n-i)
+        if totPriceTry > maxTotPrice
+            maxTotPrice <- totPriceTry 
+    return maxTotPrice
+```
+
+
+Count the original call as one call, so `CutChurro(0)` makes 1 `CutChurro` call:
+
+\begin{align}
+C(0) &=  1\\
+C(n) &= C(n-1) + C(n-2) + \cdots + C(1) + C(0) + 1
+\end{align}
+
+## Guess a closed-form solution
+
+\begin{align}
+C(0) &=  1\\
+C(n) &= C(n-1) + C(n-2) + \cdots + C(1) + C(0) + 1
+\end{align}
+
+Compute the first few terms and you get: $1,2,4,8,\ldots$, so it looks like the closed-form formula is going to be $C(n) = 2^n$. Can we prove this?
+
+## Trick: Subtract and cancel
+\begin{align}
+C(n) - C(n-1) &= [C(n-1) + C(n-2) + \cdots + C(1)+ C(0)+ 1] \\
+ &\phantom{=[C(n-1)} - [C(n-2) + \cdots + C(1) + C(0) + 1] \\
+& = C(n-1)
+\end{align}
+
+So we get $C(n) = 2C(n-1)$, and it is easy to prove by induction that $C(n) = 2^n$.
+
+## Inductive argument
+
+- Base case: `CutChurro(0)` makes one call.
+- Suppose as *inductive hypothesis* that `CutChurro(k)` makes $2^k$ calls, for $k<n$.
+- `CutChurro(n)` calls `CutChurro(n-1)`, `CutChurro(n-2)`, ..., `CutChurro(1)`, `CutChurro(0)`, so by inductive hypothesis, it makes $2^{n-1} + 2^{n-2} + \cdots + 2 + 1 + 1$ calls (counting the original call itself). By the same subtract-and-cancel trick, this equals $2^n$.
+
+## Aside: Inductive correctness proof
+
+- Base case: `CutChurro(0)` is zero, which is the maximum price you can get for nothing at all.
+- Suppose as *inductive hypothesis* that `CutChurro(k)` **returns the maximum price** you can get for a $k$-inch churro by cutting it up, for $k<n$.
+- `CutChurro(n)` computes the maximum price obtained by cutting a piece of size $0,1,\ldots n-1$ and then, by inductive hypothesis, maximizing the total price of the other piece. Therefore `CutChurro(n)` **returns the maximum price**.
+
+In an inductive proof, your inductive hypothesis should look like the final conclusion of your proof.
+
+## CutChurro Time, recursive calls only
+
+\begin{align}
+C(0) &=  0\\
+C(n) &= n + \sum\limits_{i=1}^n C(n-i)\\
+&= n + C(n-1) + \sum\limits_{i=1}^{n-1} C(n-1-i)\\
+&= n + C(n-1) + C(n-1) - (n-1) \\
+&= 1 + 2C(n-1)
+\end{align}
+
+Closed-form solution: $C(n) = 2^n - 1$
+
+## CutChurro Timing
+
+```{r, echo=FALSE}
+price <- c(1,5,8,9,10,17,17,20,24,30,34,34,38,40,45,46,47,50,52,55)
+CutChurro <- function(n) {
+  if (n == 0)
+    return(0)
+  maxTotPrice <- -1
+  for(i in 1:n) {
+    totPriceTry <- price[i] + CutChurro(n-i)
+    if(totPriceTry > maxTotPrice)
+            maxTotPrice <- totPriceTry 
+  }
+  return(maxTotPrice)
+}
+dummycall <- CutChurro(4) # so function gets loaded b/4 timing test
+```
+
+
+```{r}
+num_inches <- 10:20
+elapsed_time = sapply(num_inches,function(n){system.time(CutChurro(n))['elapsed']} )
+rbind(num_inches, elapsed_time)
+```
+
+## Plot of times
+
+```{r, fig.height=4.5, fig.width=7, fig.align="center"}
+plot(num_inches, elapsed_time)
+```
+
 
 # More Backtracking Examples
 
@@ -87,7 +201,7 @@ If a string starts with a word, and the rest of the string is splittable into wo
 
 ## Text Segmentation Algorithm
 
-```
+```{javascript, eval=FALSE}
 Splittable(A[1..n]):
     if n = 0
         return TRUE
@@ -109,9 +223,9 @@ Time? (Same recurrence as CutChurro: $O(2^n)$).
     
 ## Text Segmentation Algorithm: Index only version
 
-```
-A[1..n] is a string to test to see if it is splittable.
-IsWord(i,j) returns true iff A[i..j] is a word.
+```{javascript, eval=FALSE}
+// A[1..n] is a string to test to see if it is splittable. (n is constant)
+// IsWord(i,j) returns true iff A[i..j] is a word.
 
 Splittable(i):    << Is A[i..n] splittable? >>
     if i > n
@@ -123,7 +237,7 @@ Splittable(i):    << Is A[i..n] splittable? >>
     return FALSE
     
     
-Call this function as: Splittable(n)
+// Call this function as: Splittable(n)
 ```
 
 # Subset Sum
@@ -150,8 +264,8 @@ Recursive Substructure:
 
 Form the subproblems by removing *some* element of $X$.
 
-```
-SubsetSum(X, T):   <<  Does any subset of X sum to T?  >>
+```{javascript, eval=FALSE}
+SubsetSum(X, T):   //  Does any subset of X sum to T?  
     if T = 0
         return TRUE
     else if T < 0 or X = ∅
@@ -184,16 +298,16 @@ kable(t(groups))
 
 1. Complete the array index version of `SubsetSum`. Form the subproblems by removing the *last* element of $X$.
 
-```
-X[1..n] is a global array of positive integers
+```{javascript, eval=FALSE}
+// X[1..n] is an array of positive integers (n is constant)
 
-SubsetSum(i, T) :  <<  Does any subset of X[1..i] sum to T?  >>
+SubsetSum(i, T) :  //  Does any subset of X[1..i] sum to T?  
 {
     TODO
 }
 
 
-Call this function as: SubsetSum(n, T)
+// Call this function as: SubsetSum(n, T)
 ```
 
 2. Come up with a recurrence for the number of `SubsetSum` calls made by `SubsetSum(n)`. Do you recognize it? What's the closed-form solution?
