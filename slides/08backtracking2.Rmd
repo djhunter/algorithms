@@ -1,0 +1,204 @@
+---
+title: "More Backtracking Algorithms"
+date: "January 29, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## General comments
+
+## ChurroCut Time
+
+## ChurroCut Timing
+
+# More Backtracking Examples
+
+## General Idea
+
+- Problem has several options, and *recursive substructure.*
+- Try one of the options, and solve the subproblem recursively.
+    - If that doesn't work, try another option.
+    
+Backtracking algorithms tend to be slow.
+
+## Decision Problems
+
+- A *decision problem* is a problem whose answer is either TRUE or FALSE.
+- Lots of basic questions about algorithms involve decision problems.
+- Often an algorithm that solves a decision problem can be modified slightly to do something that seems harder.
+
+Example: 
+
+- Decision problem: Does $p(x) = Ax^2 + Bx +C$ have any roots?
+- Slightly harder problem: Find all the roots of $p(x) = Ax^2 + Bx +C$.
+
+Meta-Example:
+
+- Decision problem: Does $\mathcal{X}$ have a solution?
+- Slightly harder problem: Give all the solutions of $\mathcal{X}$.
+
+# Text Segmentation
+
+## Example: Text Segmentation
+
+- We have a boolean function `IsWord(A[1..i])` that tells us if a string (i.e., array) is a word in our language.
+- We have a string of words without spaces.
+- Can the string be *segmented* into words? (Is it "splittable"?)
+
+```
+BOTHEARTHANDSATURNSPIN
+
+BOT HEART HANDS AT URNS PIN
+
+BOTH EARTH AND SATURN SPIN 
+```
+
+## Recursive substructure
+
+If a string starts with a word, and the rest of the string is splittable into words, then whole string is splittable.
+
+- See if the first letter is a word.
+    - Recursively check the rest.
+- See if the first two letters make a word.
+    - Recursively check the rest.
+- See if the first three letters make a word.
+    - Recursively check the rest.
+- ... and so on.
+
+## Text Segmentation Algorithm
+
+```
+Splittable(A[1..n]):
+    if n = 0
+        return TRUE
+    for i <- 1 to n
+        if IsWord(A[1..i])
+            if Splittable(A[(i+1)..n])
+                return TRUE
+    return FALSE
+```
+
+Time? (Same recurrence as CutChurro: $O(2^n)$).
+
+## Global Variables
+
+- Is usually *not OK* to use global variables when programming.
+- It is actually **OK** to use global variables when describing algorithms.
+    - Often global variables make our descriptions cleaner.
+    - We assume a "competent programmer who is not quite as clever as we are" could read our algorithm description and implement it without global variables.
+    
+## Text Segmentation Algorithm: Index only version
+
+```
+A[1..n] is a string to test to see if it is splittable.
+IsWord(i,j) returns true iff A[i..j] is a word.
+
+Splittable(i):    << Is A[i..n] splittable? >>
+    if i > n
+        return TRUE
+    for j <- i to n
+        if IsWord(i, j)
+            if Splittable(j+1)
+                return TRUE
+    return FALSE
+    
+    
+Call this function as: Splittable(n)
+```
+
+# Subset Sum
+
+## Example: Subset Sum
+
+- We have a *set* $X$ of positive integers (so no duplicates).
+- Given a *target* value $T$, is there some *subset* of $X$ that adds up to $T$?
+
+Recursive Substructure:
+
+- For any $x\in X$, the answer is TRUE for target $T$ if
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T$, or
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T-x$.
+- In other words, the cases are:
+    - *without:* There is a subset not containing $x$ that works.
+    - *with:* There is a subset containing $x$ that works.
+- Base Cases:
+    - If $T = 0$, the answer is TRUE. ($\emptyset$ works!)
+    - If $T < 0$, the answer is FALSE. (everything's positive)
+    - If $X = \emptyset$, the answer if FALSE (unless $T=0$, of course.)
+
+## Subset Sum Algorithm: Set version
+
+Form the subproblems by removing *some* element of $X$.
+
+```
+SubsetSum(X, T):   <<  Does any subset of X sum to T?  >>
+    if T = 0
+        return TRUE
+    else if T < 0 or X = ∅
+        return FALSE
+    else
+        x <- any element of X
+        with <- SubsetSum(X \ {x}, T − x)
+        wout <- SubsetSum(X \ {x}, T)
+        return (with OR wout)
+```
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(1292021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Subset Sum: Array index version
+
+1. Complete the array index version of `SubsetSum`. Form the subproblems by removing the *last* element of $X$.
+
+```
+X[1..n] is a global array of positive integers
+
+SubsetSum(i, T) :  <<  Does any subset of X[1..i] sum to T?  >>
+{
+    TODO
+}
+
+
+Call this function as: SubsetSum(n, T)
+```
+
+2. Come up with a recurrence for the number of `SubsetSum` calls made by `SubsetSum(n)`. Do you recognize it? What's the closed-form solution?
+
+## Slightly Harder Problem
+
+3. Can you modify the algorithm from #1 so that it returns the *number* of subsets of $X$ that add up to $T$, instead of just TRUE or FALSE?
+

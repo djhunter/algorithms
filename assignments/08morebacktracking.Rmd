@@ -1,0 +1,20 @@
+---
+title: "More Backtracking Exercises"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](08morebacktracking.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+> 1. Do Exercise 1a on page 93 of [E]. In addition to describing the algorithm, give an informal, convincing, inductive argument explaining why your algorithm works.
+
+
+
+> 2. Do Exercise 2a on pp. 93-94 of [E]. In addition to describing the algorithm, give an informal, convincing, inductive argument explaining why your algorithm works.
+
+
+
+
