@@ -237,7 +237,7 @@ Splittable(i):    << Is A[i..n] splittable? >>
     return FALSE
     
     
-// Call this function as: Splittable(n)
+// Call this function as: Splittable(1)
 ```
 
 # Subset Sum
