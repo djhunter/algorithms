@@ -1,0 +1,246 @@
+---
+title: "Dynamic Programming: Introduction"
+date: "February 1, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## Counting Subsets
+
+```{javascript, eval=FALSE}
+SubsetSum(i,T):    //  Does any subset of X[1..i] sum to T?  
+  if T = 0
+    return 1
+  else if T < 0 or i = 0
+    return 0
+  else
+    with <- SubsetSum(i-1, T − X[i])
+    without <- SubsetSum(i-1, T) 
+    return (with + without)
+```
+
+- Base case: If $T=0$, there is one subset, $\emptyset$, summing to $T$.
+- Inductive hypothesis: `SubsetSum(k,T)` returns the number of subsets of `X[1..k]` summing to $T$, for $k<i$.
+- Inductive step: There are two *disjoint* ways the target can be reached: using `X[i]` and not using `X[i]`, so the total number of ways is the sum of these two.
+
+## Recall: Text Segmentation 
+
+Break a string into words: `BOTHEARTHANDSATURNSPIN`
+
+```{javascript, eval=FALSE}
+Splittable(A[1..n]):
+    if n = 0
+        return TRUE
+    for i <- 1 to n
+        if IsWord(A[1..i])
+            if Splittable(A[(i+1)..n])
+                return TRUE
+    return FALSE
+```
+
+## Text Segmentation (array index version)
+
+```{javascript, eval=FALSE}
+// A[1..n] is a string to test to see if it is splittable. (n is constant)
+// IsWord(i,j) returns true iff A[i..j] is a word.
+
+Splittable(i):    // Is A[i..n] splittable? 
+    if i > n
+        return TRUE
+    for j <- i to n
+        if IsWord(i, j)
+            if Splittable(j+1)
+                return TRUE
+    return FALSE
+    
+    
+// Call this function as: Splittable(1)
+```
+
+## Counting word segmentations
+
+```{javascript, eval=FALSE}
+// A[1..n] is a string (n is constant)
+// IsWord(i,j) returns true iff A[i..j] is a word.
+
+PartitionCount(i):   // how many ways can A[i..n] split into words?
+    if i > n
+        return 1 
+    total <- 0
+    for j <- i to n
+        if IsWord(i, j)
+            total <- total + PartitionCount(j+1)
+    return total
+```
+
+- Base Case: There are no letters to consider, so we have one vacuous split.
+- Inductive hypothesis: `PartitionCount(k)` returns the number of splits of `A[k..n]` for $k > i$.
+- Inductive Step: Check all the possible prefixes of `A[i..n]` for a word. For each that is found, increment `total` by the number of splits of the remainder, which is correctly determined, by inductive hypothesis.
+
+## Recursion Tree?
+
+Consider the recursion tree for `TOPARTISTOIL`.
+
+# Dynamic Programming
+
+## Why is backtracking so slow?
+
+- Problem has several options, and *recursive substructure.*
+- Many of the subproblems are the same: *overlapping subproblems*.
+    - A brute-force recursive algorithm will repeatedly solve the same problem.
+    
+**Solution:** Save the subproblem calculations (usually in an array), and refer to the array instead of making a recursive call.
+    
+## Example: Fibonacci Numbers
+
+$$
+F(n) = \left\{\begin{array}{ll}
+1 & \mbox{if } n = 0 \mbox{ or } n = 1 \\
+F(n-1) + F(n-1) & \mbox{if } n>1
+\end{array} \right.
+$$
+Brute force recursion (exponential time):
+
+```
+RFib(n):
+    if n = 0
+        return 0
+    else if n = 1
+        return 1
+    else
+    return RFib(n − 1) + RFib(n − 2)
+```
+
+Top-down evaluation wastes a lot of effort:
+
+```
+RFib(7) =                   RFib(6)                               + RFib(5)
+           =       RFib(5)          + RFib(4)            + RFib(4)          + RFib(3)
+           = RFib(4) + RFib(3) + RFib(3) + RFib(2) + RFib(3) + RFib(2) + RFib(2) + RFib(1)
+           = etc...
+```
+
+## Better: Memoized Recursion
+
+**Memoization:**  Avoid repeated recursive calls by storing every result in an array.
+Instead of making a recursive call, just use the array value (if defined).
+
+```
+MemFibo(n):
+    if n = 0
+        return 0
+    else if n = 1
+        return 1
+    else
+        if F[n] is undefined
+            F[n] <- MemFibo(n − 1) + MemFibo(n − 2)
+        return F[n]
+```
+
+- The recursion "tree" is trimmed: constant "width"
+- The algorithm is actually iterative.
+    - $F[n]$ gets populated from the bottom up: $F[0], F[1], F[2], \ldots$
+
+## Even Better: Iterative Solution
+
+Notice: 
+
+- $F[n]$ gets populated from the bottom up: $F[0], F[1], F[2], \ldots$
+- So loop from bottom up, and populate $F$ as you go.
+    - Populate $F$ recursively, but in a loop.
+    
+```
+IterFibo(n):
+    F[0] <- 0
+    F[1] <- 1
+    for i <- 2 to n
+        F[i] <- F[i − 1] + F[i − 2]
+    return F[n]
+```
+
+- Time: $\Theta(n)$
+- Space: $\Theta(n)$ 
+    - But we could make it $\Theta(1)$ by just keeping last two $F$'s as we go.
+    
+# Writing Dynamic Programming Algorithms
+
+## Dynamic Programming Steps
+
+1. *Specify* the problem as a recursive function, and *solve it* recursively (with an algorithm or formula).
+
+2. *Build the solutions* from the bottom up:
+    - What are the *subproblems*?
+    - What *data structure* do I store the solutions in? (Usually an array.)
+    - Which subproblem does each subproblem depend on?
+        - Determine an *evaluation order.*
+    - Space and time?
+    - Write the algorithm. Usually it will just be a couple nested loops, with the recursive calls replaced by array look-ups.
+
+## Counting word segmentations
+
+```{javascript, eval=FALSE}
+// A[1..n] is a string (n is constant)
+// IsWord(i,j) returns true iff A[i..j] is a word.
+
+PartitionCount(i):   // how many ways can A[i..n] split into words?
+    if i > n
+        return 1 
+    total <- 0
+    for j <- i to n
+        if IsWord(i, j)
+            total <- total + PartitionCount(j+1)
+    return total
+    
+    
+// Call this function as PartitionCount(1)
+```
+
+Time: $O(2^n)$
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(212021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Using dynamic programming
+
+1. *Identify the subproblems.* In order for `PartitionCount(i)` to return a value, which subproblems need to return values? (i.e., what does the Recursion Fairy need to take care of?)
+
+2. *Find an evaluation order.* Let `PC` be an array of numbers for filling in the solutions, so our job is to put the return value of `PartitionCount(i)` in `PC[i]`, for all `i`. What is the first value of `PC` that you can fill in? Based on that first value, what's the second value you can fill in? Third?
+
+3. Write an iterative *algorithm* to fill in the elements of `PC`.
+
+4. What are the *space and time* of your algorithm?
+

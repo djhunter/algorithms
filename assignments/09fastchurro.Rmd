@@ -1,0 +1,53 @@
+---
+title: "Fast Churro Cutting"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](09fastchurro.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+## Recursive Churro Cutting
+
+Recall the following recursive algorithm for finding the maximum total price among all the ways to cut an $n$-inch churro into pieces.
+
+```
+Let price[1..N] be a constant array of prices.
+So price[i] is the cost of a churro of length i.
+
+CutChurro(n):
+    if n = 0
+        return 0
+    maxTotPrice <- -1
+    for i <- 1 to n
+        totPriceTry <- price[i] + CutChurro(n-i)
+        if totPriceTry > maxTotPrice
+            maxTotPrice <- totPriceTry 
+    return maxTotPrice
+```
+
+In [assignment #7](07churrocutting.html), we saw that the time complexity of this algorithm is $O(2^n)$, and we verified this exponential time growth by timing an implementation of the algorithm in R.
+
+## Dynamic Programming Solution
+
+> 1. **Identify the subproblems.** In order for `CutChurro(n)` to return a value, which subproblems need to return values?
+
+
+
+> 2. **Find an evaluation order.** Let `CC` be a numeric array for filling in the solutions, so our job is to put the return value of `CutChurro(j)` in `CC[j]`, for all `j`. What is the first value of `CC` that you can fill in? Based on that first value, what's the second value you can fill in? Third?
+
+
+
+> 3. Write an iterative **algorithm** to fill in the elements of `CC`. Write your algorithm as a function that consumes an integer $n$ and returns the maximum price you can get by cutting an $n$-inch churro into pieces.
+
+```
+FastCutChurro(n):
+    TODO
+```
+
+> 4. What are the **space and time** of your algorithm? (They should be sub-exponential.)
+
+
+
