@@ -13,6 +13,10 @@
   color: Violet;
 }
   
+.reveal code {
+  color: LightGreen;
+}
+  
 .reveal p {
   margin: 20px 0;
   line-height: 1.3; 

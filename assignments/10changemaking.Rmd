@@ -1,0 +1,19 @@
+---
+title: "Making Change"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](10changemaking.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+**Read the paragraph** below the heading "Exercises" on page 123 of [E]. Also read footnote number 18.
+
+**Do Exercise 1abc** on page 123 of [E]. 
+
+- For part (a), just show that the greedy algorithm for the target amount $455 uses more Dream-Dollar bills than the minimum possible (no need to write a small program).
+- For part (b), give a description of your recursive algorithm as a recursive function (no need to analyze its running time).
+- For part (c), follow the steps outlined in Section 3.4. Describe an iterative algorithm, and give its space and time. It should be at most polynomial time ($O(n^p)$ for some $p$).
+
