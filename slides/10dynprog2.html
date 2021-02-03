@@ -881,7 +881,7 @@ SUN  DAY    S  UNDAY    SITTING    AL TRUISTIC</code></pre>
 <h2>Algorithm</h2>
 <p>Finally, we can write the algorithm. (Note we add a row and a column of 0’s as a base case.)</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>EditDistance(A[<span class="dv">1</span> .. m], B[<span class="dv">1</span> .. n]):</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    Initialize ED[<span class="dv">0</span>, <span class="op">*</span>] <span class="kw">and</span> ED[<span class="op">*</span>, <span class="dv">0</span>] to <span class="dv">0</span>s </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    Initialize ED[<span class="dv">0</span>, <span class="op">*</span>] <span class="kw">and</span> ED[<span class="op">*</span>, <span class="dv">0</span>] to <span class="op">*</span>, <span class="cf">for</span> <span class="op">*=</span><span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,... </span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="op">&lt;-</span> <span class="dv">1</span> to m</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="op">&lt;-</span> <span class="dv">1</span> to n</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>            insert <span class="op">&lt;-</span> ED[i, j − <span class="dv">1</span>] <span class="op">+</span> <span class="dv">1</span></span>

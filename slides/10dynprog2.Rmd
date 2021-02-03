@@ -336,7 +336,7 @@ Finally, we can write the algorithm. (Note we add a row and a column of 0's as a
 
 ```{python, eval=FALSE}
 EditDistance(A[1 .. m], B[1 .. n]):
-    Initialize ED[0, *] and ED[*, 0] to 0s 
+    Initialize ED[0, *] and ED[*, 0] to *, for *=0,1,2,... 
     for i <- 1 to m
         for j <- 1 to n
             insert <- ED[i, j − 1] + 1
