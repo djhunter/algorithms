@@ -15,5 +15,8 @@ Edit the [RMarkdown source file](10changemaking.Rmd) for this assignment in RStu
 
 - For part (a), just show that the greedy algorithm for the target amount $455 uses more Dream-Dollar bills than the minimum possible (no need to write a small program).
 - For part (b), give a description of your recursive algorithm as a recursive function (no need to analyze its running time).
-- For part (c), follow the steps outlined in Section 3.4. Describe an iterative algorithm, and give its space and time. It should be at most polynomial time ($O(n^p)$ for some $p$).
+- For part (c), follow the steps outlined in Section 3.4. Describe$^*$ an iterative algorithm, and give its space and time. It should be at most polynomial time ($O(n^p)$ for some $p$).
 
+----
+
+$^*$ As usual, when we say "describe", we mean that you need to write the entire algorithm using the level of detail and specificity necessary to implement and analyze it. See [this Canvas announcement](https://westmont.instructure.com/courses/5960/discussion_topics/28735), and [this slide](https://djhunter.github.io/algorithms/slides/03divideandconquer.html#/more-tips-on-describing-algorithms-from-pp.-11ff) (and the next few slides after it), and also Section 0.5 of the book, which, interestingly enough, has the title *Describing Algorithms*.
