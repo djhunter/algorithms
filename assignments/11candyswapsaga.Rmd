@@ -1,0 +1,23 @@
+---
+title: "Candy Swap Saga"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](11candyswapsaga.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+**Do Exercise 14** on pages 131-132 of [E] using the procedure outlined in Section 3.4 of [E]. According to this section, your solution should include:
+
+- A description of the problem that you want to solve recursively,
+in coherent and precise English -- not *how* to solve that problem, but
+*what* problem you're trying to solve,
+- A description of a recursive formula or algorithm for the whole
+problem in terms of the answers to smaller instances of *exactly* the same
+problem,
+- A description of the subproblems, a memoization data structure, and an evaluation order for this data structure,
+- The space and time of your dynamic programming algorithm, and
+- A description of your efficient, iterative algorithm using pseudocode.
+
