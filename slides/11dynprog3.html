@@ -766,8 +766,8 @@ Error: C stack usage  7979108 is too close to the limit
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span> <span class="cf">if</span> T <span class="op">&lt;</span> <span class="dv">0</span> or i <span class="op">&gt;</span> n</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> FALSE</span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="op">&lt;-</span> <span class="fu">SubsetSum</span>(X <span class="op">,</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> T − X[i])</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        wout <span class="op">&lt;-</span> <span class="fu">SubsetSum</span>(X <span class="op">,</span> i <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> T)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> <span class="op">&lt;-</span> <span class="fu">SubsetSum</span>(i <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> T − X[i])</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        wout <span class="op">&lt;-</span> <span class="fu">SubsetSum</span>(i <span class="op">+</span> <span class="dv">1</span><span class="op">,</span> T)</span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (<span class="cf">with</span> OR wout)</span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co">// Call this function as: SubsetSum(1, T)</span></span></code></pre></div>
@@ -775,7 +775,7 @@ Error: C stack usage  7979108 is too close to the limit
 <section id="subset-sum-dynamic-programming-solution" class="slide level2">
 <h2>Subset Sum: Dynamic programming solution</h2>
 <ul>
-<li>Subproblems: <code>SubsetSum(i,T)</code> depends on <code>SubsetSum(X, i+1, T&#39;)</code>, for <span class="math inline">\(T&#39;\leq T\)</span>.</li>
+<li>Subproblems: <code>SubsetSum(i,T)</code> depends on <code>SubsetSum(i+1, T&#39;)</code>, for <span class="math inline">\(T&#39;\leq T\)</span>.</li>
 <li>Data Structure: Two-dimensional <em>boolean</em> array: <code>SS[0..n, 0..T]</code></li>
 </ul>
 </section>

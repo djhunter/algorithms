@@ -260,8 +260,8 @@ SubsetSum(i, T) :  //  Does any subset of X[i..n] sum to T?
     else if T < 0 or i > n
         return FALSE
     else
-        with <- SubsetSum(X , i + 1, T − X[i])
-        wout <- SubsetSum(X , i + 1, T)
+        with <- SubsetSum(i + 1, T − X[i])
+        wout <- SubsetSum(i + 1, T)
         return (with OR wout)
 
 // Call this function as: SubsetSum(1, T)
@@ -269,7 +269,7 @@ SubsetSum(i, T) :  //  Does any subset of X[i..n] sum to T?
 
 ## Subset Sum: Dynamic programming solution
 
-- Subproblems: `SubsetSum(i,T)` depends on `SubsetSum(X, i+1, T')`, for $T'\leq T$.
+- Subproblems: `SubsetSum(i,T)` depends on `SubsetSum(i+1, T')`, for $T'\leq T$.
 - Data Structure: Two-dimensional *boolean* array: `SS[0..n, 0..T]`
 
 ## Table Groups
