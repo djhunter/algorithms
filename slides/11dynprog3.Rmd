@@ -1,0 +1,366 @@
+---
+title: "Dynamic Programming: Subset Sum"
+date: "February 5, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## Working Together
+
+- It's fine to work together, as long as the work you turn in represents work that you understand and participated in.
+- Consider not always working with the same group.
+- *Invite* other to join you; Feel free to use the `#CS-120` text channel to announce when you'll be working.
+
+For example,
+
+> Hey everyone! I'm planning to be in VC tonight around 7 to work on the assignment. Anyone want to join me?
+
+Feel free to use the voice channels in the Winter Hall Learning Lounge server.
+
+## Describing Algorithms
+
+- Go back and read Section 0.5 again. It might make more sense now that we have a little more context.
+- Remember: the goal is to *communicate*.
+
+## Change Making Examples
+
+```
+dollarValues = [1, 4, 7, 13, 28, 52, 91, 365]
+
+MinDreamDollars(k):
+  # base case
+  if k = 0:
+    return 0
+  
+  # the min is set to the max to begin with
+  minBills <- k
+  
+  # go over every dollar value
+  for i <- 1 to len(dollarValues):
+    # if the current dollar value can go into k
+    if k >= dollarValues[i]:
+      # if the one that we check next is more than the last, we don't want to keep it
+      minBills = Math.min(minBills, 1 + MinDreamDollars(k - dollarValues[i]))
+  
+  return minBills
+  
+  
+MinDreamDollarsDynamicExtravaganza(k):
+    MD <- array of size k
+    MD[0] <- 0
+
+    # memo time
+    for i <- 1 to k:
+      minBills <- k
+      for j <- 1 to len(dollarValues):
+        if k >= dollarValues[j]:
+          # if the one that we check next is more than the last, we don't want to keep it
+          minBills = Math.min(minBills, 1 + MD[i - dollarValues[i]])
+        
+      MD[i] = minBills
+    
+    return MD[k]
+```
+
+## Change Making Examples
+
+```
+ChangeCalc(k):
+  if k=0
+    return 0
+  leastBills <- k
+  for j <- each bill value <= k
+    maybeLeast <- 1 + ChangeCalc(k-j)
+    if maybeLeast < leastBills
+      leastBills <- maybeLeast
+  return leastBills
+  
+  
+FastChangeCalc(k):
+  LB[0] <- 0
+  for i <- 1 through k
+  leastBills <- k
+    for j <- each bill value <= i
+      maybeLeast <- 1 + LB[i-j]
+      if maybeLeast < leastBills
+        leastBills <- maybeLeast
+    LB[i] <- leastBills
+  return LB[k]
+```
+
+## Change Making Examples
+
+```
+bill_values = [1, 4, 7, 13, 28, 52, 91, 365]
+
+MinDreamDollars(i):
+    if i is 0:
+        return 0 // no bills make 0
+    minBills = i
+    for each value in bill_values:
+        if i >= value: // possible bill value must not be greater than desired value
+            minBills = minimum of {minBills, MinDreamDollars(i-value)}
+    return minBills + 1
+
+
+
+FastMinDreamDollars(n):
+    initialize MDD[0..n] to [0, 1, 2, ..., n]
+    for i in 1..n:
+        for each value in bill_values:
+            if i >= value:
+                MDD[i] = min(MDD[i],MDD[i-value]+1)
+    return MDD[n]
+```
+
+## Implementation in R (just for fun)
+
+```{r}
+bills <- c(1,4,7,13,28,52,91,365)
+NumBills <- function(n) {
+  if(n == 0)
+    return(0)
+  if(n<0)
+    return(Inf)
+  nb <- Inf
+  for(b in bills[bills <= n]) {
+    tryNum <- 1 + NumBills(n-b)
+    if(tryNum < nb)
+      nb <- tryNum
+  }
+  return(nb)
+}
+```
+
+Notice that you can use `Inf` for a number that is bigger than all other numbers.
+
+## Memoized version in R
+
+
+```{r}
+bills <- c(1,4,7,13,28,52,91,365)
+FastBills <- function(n){
+  nbills <- rep(Inf, n   +1) # off by one indexing
+  nbills[0  +1] <- 0
+  for (i in 1:n) {
+    for (b in bills[bills <= i]) {
+      tryNum <- 1 + nbills[i - b   +1]
+      if (tryNum < nbills[i   +1])
+        nbills[i   +1] <- tryNum
+    }
+  }
+  return(nbills[n  +1])
+}
+```
+
+We can "pretend" that the `nbills` array is indexed from 1 to n by adding a "`   +1`" to every subscript (with some spaces to remind us why).
+
+## Timing Experiments
+
+```
+> system.time(NumBills(45))
+   user  system elapsed 
+ 23.174   0.048  23.240 
+> system.time(FastBills(45))
+   user  system elapsed 
+  0.000   0.000   0.001 
+> system.time(FastBills(455))
+   user  system elapsed 
+  0.001   0.000   0.001 
+> FastBills(455)
+[1] 5
+> NumBills(455)
+
+```
+
+... still waiting for that last one to finish.
+
+```
+PID  USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND 
+2767 dhunter   20   0 1881376 217652  31936 R 100.0   1.4   3:22.98 rsession 
+```
+
+The size of the recursion tree is just silly:
+
+```
+> NumBills(4554234)
+Error: C stack usage  7979108 is too close to the limit
+> NumBills(4554)
+Error: C stack usage  7979108 is too close to the limit
+> FastBills(4554234)
+[1] 12483
+```
+
+# Dynamic Programming
+
+## Dynamic Programming Problems
+
+- Good for problems with *recursive substructure* and *overlapping subproblems*.
+
+## Dynamic Programming Steps
+
+1. *Specify* the problem as a recursive function, and *solve it* recursively (with an algorithm or formula).
+
+2. *Build the solutions* from the bottom up:
+    - What are the *subproblems*?
+    - What *data structure* do I store the solutions in? (Usually an array.)
+    - Which subproblem does each subproblem depend on?
+        - Determine an *evaluation order.*
+    - Space and time?
+    - Write the algorithm. Usually it will just be a couple nested loops, with the recursive calls replaced by array look-ups.
+
+# Subset Sum
+
+## Recall: Subset Sum
+
+- We have a *set* $X$ of positive integers (so no duplicates).
+- Given a *target* value $T$, is there some *subset* of $X$ that adds up to $T$?
+
+## Subset Sum: Recursive Specification
+
+- For any $x\in X$, the answer is TRUE for target $T$ if
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T$, or
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T-x$.
+- In other words, the cases are:
+    - *without:* There is a subset not containing $x$ that works.
+    - *with:* There is a subset containing $x$ that works.
+- Base Cases:
+    - If $T = 0$, the answer is TRUE. ($\emptyset$ works!)
+    - If $T < 0$, the answer is FALSE. (everything's positive)
+    - If $X = \emptyset$, the answer if FALSE (unless $T=0$, of course.)
+
+## Algorithm description, using indexes (revised)
+
+```{javascript, eval=FALSE}
+// X[1..n] is an array of positive integers (n is constant)
+
+SubsetSum(i, T) :  //  Does any subset of X[i..n] sum to T?  
+    if T = 0
+        return TRUE
+    else if T < 0 or i > n
+        return FALSE
+    else
+        with <- SubsetSum(X , i + 1, T − X[i])
+        wout <- SubsetSum(X , i + 1, T)
+        return (with OR wout)
+
+// Call this function as: SubsetSum(1, T)
+```
+
+## Subset Sum: Dynamic programming solution
+
+- Subproblems: `SubsetSum(i,T)` depends on `SubsetSum(X, i+1, T')`, for $T'\leq T$.
+- Data Structure: Two-dimensional *boolean* array: `SS[0..n, 0..T]`
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(252021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Evaluation Order?
+
+1. Draw arrows in this diagram that the evaluation order must obey.
+
+$$ \scriptsize
+\begin{array}{ccccccccc}
+       & \vdots & & \vdots && \vdots && \vdots &\\ 
+\cdots & \mathtt{SS[i-1, j-1]} & \phantom{\rightarrow} & \mathtt{SS[i-1, j]} & \phantom{\rightarrow} & \mathtt{SS[i-1, j+1]} & \phantom{\rightarrow} &\mathtt{SS[i-1, j+2]} & \cdots \\[20pt]
+\cdots & \mathtt{SS[i, j-1]}& & \mathtt{SS[i, j]} & \phantom{\rightarrow} & \mathtt{SS[i, j+1]} & \phantom{\rightarrow} &\mathtt{SS[i, j+2]} & \cdots\\[20pt]
+\cdots & \mathtt{SS[i+1, j-1]} & & \mathtt{SS[i+1, j]} & & \mathtt{SS[i+1, j+1]} & &\mathtt{SS[i+1, j+2]} & \cdots \\[20pt]
+\cdots & \mathtt{SS[i+2, j-1]}  & & \mathtt{SS[i+2, j]} & & \mathtt{SS[i+2, j+1]} & & \mathtt{SS[i+2, j+2]} & \cdots \\
+       & \vdots & & \vdots && \vdots && \vdots &\\ 
+\end{array}
+$$
+
+
+
+## Describe the algorithm
+
+3. Propose an evaluation order, and write some for-loops. 
+
+4. Space and time?
+
+5. If time permits, complete the memoized algorithm.
+
+#  Subset Sum postmortem
+
+## Subset Sum: Memoized version (spoiler)
+
+```{javascript, eval=FALSE}
+// X[1..n] is an array of positive integers (n is constant)
+// SS[1..(n+1), 0..T] is a boolean array
+
+FastSubsetSum(T):
+    Initialize SS[*, 0] to TRUE
+    Initialize SS[n + 1, *] to FALSE for * > 0
+    Initialize SS[* , *] to FALSE for * < 0    // hmmm...
+    for i <- n downto 1
+        for t <- 1 to T
+            with <- SS[i + 1, t - X[i]]
+            wout <- SS[i + 1, t]
+            SS[i, t] <- (with OR wout)
+    return S[1, T]
+```
+
+
+## Spiffier Version (avoid negative indexes)
+
+```{javascript, eval=FALSE}
+// X[1..n] is an array of positive integers (n is constant)
+
+FastSubsetSum(T):
+    Initialize SS[*, 0] to TRUE
+    Initialize SS[n + 1, *] to FALSE for * > 0
+    for i <- n downto 1
+        for t <- 1 to X[i] − 1
+            SS[i, t] <- SS[i + 1, t]   // avoid t - X[i] < 0 case
+        for t <- X [i] to T
+            SS[i, t] <- SS[i + 1, t] OR SS[i + 1, t − X[i]]
+    return S[1, T]
+```
+
+- Space and Time are both $O(nT)$.
+
+
+## Not so fast!
+
+- $O(nT)$ seems like an improvement over $O(2^n)$.
+    - It is better for small $T$.
+- However, $O(nT)$ is bad when $T$ is large.
+    - If $m$ is the number of *bits* in $T$, then $T \in O(2^m)$, so the space and time become $O(n\cdot 2^m)$.
+    - So in terms of the *size* of the input, this algorithm is still exponential.
+    
+Fact: The SubsetSum problem is NP-complete.
+    

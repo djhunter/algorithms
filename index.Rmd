@@ -44,6 +44,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 8. [More Backtracking Algorithms](slides/08backtracking2.html)
 9. [Dynamic Programming: Introduction](slides/09dynprog1.html)
 10. [Dynamic Programming: Tables](slides/10dynprog2.html)
+11. [Dynamic Programming: Subset Sum](slides/11dynprog3.html)
 
 # Written Assignments
 
@@ -57,6 +58,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 8. [More Backtracking Exercises](assignments/08morebacktracking.html)
 9. [Fast Churro Cutting](assignments/09fastchurro.html)
 10. [Making Change](assignments/10changemaking.html)
+11. [Candy Swap Saga](assignments/11candyswapsaga.html)
 
 # Other Resources
 
