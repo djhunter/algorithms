@@ -1,0 +1,2816 @@
+---
+title: "Slide Notes: 01-11"
+author: "David J. Hunter"
+output:
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    df_print: paged
+    theme: spacelab
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+This page contains the content of all the slides for the material that we covered in Chapters 1-3 of [Algorithms](http://jeffe.cs.illinois.edu/teaching/algorithms/book/Algorithms-JeffE.pdf), by Jeff Erickson. If you notice any errors, please [create a new issue](https://github.com/djhunter/algorithms/issues).
+
+# Introduction: Space, Time, Perfection?
+
+## Algorithms
+
+### What is an Algorithm?
+
+From [our textbook](http://jeffe.cs.illinois.edu/teaching/algorithms/book/Algorithms-JeffE.pdf):
+
+> An algorithm is an *explicit*, precise, *unambiguous*, mechanically-executable sequence of elementary instructions, usually intended to *accomplish* a specific purpose.
+
+From \textit{Algorithms}, by Cormen, et. al. [CLRS]:
+
+> An algorithm is any *well-defined* computational procedure that takes some value, or set of values, as input and *produces* some value, or set of values, as output.
+
+### Example: Peasant Multiplication
+
+```
+PeasantMultiply(X, Y):
+    prod <- 0
+    x <- X
+    y <- Y
+    while x > 0
+        if x is odd
+             prod <- prod + y
+        x <- floor(x/2)         # mediation
+        y <- y + y              # duplation
+    return prod
+```
+
+- Does it work? (correctness)
+- How fast is it? (time)
+- How much storage does it require? (space)
+
+## Correctness
+
+```
+PeasantMultiply(X, Y):
+    prod <- 0
+    x <- X
+    y <- Y
+    while x > 0
+        if x is odd
+             prod <- prod + y
+        x <- floor(x/2)         # mediation
+        y <- y + y              # duplation
+    return prod
+```
+
+- "Easy" to show that **`XY == prod + xy`** is an *invariant* for the while loop.
+- At loop termination, **`x == 0`**, so **`prod == XY`**.
+- The algorithm *correctly* computes the product of `X` and `Y`.
+
+## Running Time
+
+```
+PeasantMultiply(X, Y):
+    prod <- 0
+    x <- X
+    y <- Y
+    while x > 0
+        if x is odd
+             prod <- prod + y
+        x <- floor(x/2)         # mediation
+        y <- y + y              # duplation
+    return prod
+```
+
+How many mediation and duplation operations does this algorithm require?
+
+- Answer the [poll question](https://forms.gle/Phu8bX9DtAZ7wQJVA).
+
+### Asymptotic notation (review)
+
+- **$f(n)$ is $O(g(n))$** if $f(n)$ is **less than or equal** to a constant multiple of $g(n)$ for large $n$.
+- **$f(n)$ is $\Omega(g(n))$** if $f(n)$ is **greater than or equal** to a constant multiple of $g(n)$ for large $n$.
+- **$f(n)$ is $\Theta(g(n))$** if $f(n)$ is **both** $O(g(n))$ and $\Omega(g(n))$. In this case, we say that $f$ and $g$ are *asymptotically* the same.
+
+We use big-$O$ to represent asymptotic upper bounds, and big-$\Omega$ for asymptotic lower bounds.
+
+### Big-Theta shortcuts
+
+- Symmetry Rule:  If $f \in\Theta(g)$, then $g\in \Theta(f)$. 
+- Reflexivity Rule:  $f \in \Theta(f)$. 
+- Transitivity Rule:  If $f\in \Theta(g)$ and $g\in \Theta(h)$, then $f\in \Theta(h)$. 
+- Sum Rule:  If $f\in O(g)$, then $f+g \in \Theta(g)$. 
+- Constant Multiple Rule:  If $c>0$ is a constant, then $cf \in \Theta(f)$. 
+- Product Rule:  If $f_1\in \Theta(g_1)$ and $f_2\in\Theta(g_2)$, then $f_1 \cdot f_2 \in \Theta(g_1 \cdot g_2)$.
+
+### Little-oh and little-omega
+
+- **$f(n)$ is $o(g(n))$** if $f(n)$ is $O(g(n))$ but not $\Theta(g(n))$.
+    - Little-$o$ gives an upper bound that is not "tight".
+    - Alternatively: $\displaystyle{\lim_{n\rightarrow \infty} \frac{f(n)}{g(n)} = 0}$
+    
+- **$f(n)$ is $\omega(g(n))$** if $f(n)$ is $\Omega(g(n))$ but not $\Theta(g(n))$.
+    - Little-$\omega$ gives a lower bound that is not "tight".
+    - Alternatively: $\displaystyle{\lim_{n\rightarrow \infty} \frac{f(n)}{g(n)} = \infty}$
+    
+### Join your table group
+
+Join the *voice channel* for your group. (Video on if possible.)
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Timothy", "Josiah", "Nathan")
+set.seed(1112021) 
+n <- length(roster)
+ngps <- 6
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+Complete the group exercise on the [Jamboard](https://jamboard.google.com/d/1VvpZH1jAEqjosSKcXtEM1Fn8XbQ9e7SUwqkm_D3T5qw/edit?usp=sharing). 
+
+### Asymptotic notation practice
+
+For each pair of expressions $(A,B)$, indicate whether $A$ is $O,o,\Omega,\omega,$ and/or $\Theta$ of $B$. Check all boxes that apply. Put a ? where you are not sure. Here $c>1$, $\epsilon>0$, and $k\geq 1$ represent constants.
+
+| $A$            | $B$            | $O$ | $o$ | $\Omega$ | $\omega$ | $\Theta$  | 
+|----------|----------|----------|----------|----------|----------|----------|
+| $100n^2 + 1000n$ | $n^3$  |     |     |          |          |           |
+| $\log_2 n$ | $\log_c n$  |     |     |          |          |           |
+| $n^k$          | $c^n$          |     |     |          |          |           |
+| $\sqrt{n}$     | $n^{\sin n}$   |     |     |          |          |           |
+| $2^n$          | $2^{n/2}$      |     |     |          |          |           |
+| $n^{\log_2 c}$ | $c^{\log_2 n}$ |     |     |          |          |           |
+| $\log_2(n!)$   | $\log_2(n^n)$  |     |     |          |          |           |
+| $(\log_2 n)^k$ | $n^\epsilon$   |     |     |          |          |           |
+
+## Class Structure
+
+### Daily Assignments on Canvas
+
+- Due night before each class, 11:59pm.
+- Questions posted in an RMarkdown file.
+- Edit the RMarkdown file using RStudio, and write up solutions.
+    - Use code blocks for pseudocode.
+    - Use LaTeX for mathematics.
+    - Markdown syntax works.
+    - RMarkdown can also execute R code blocks.
+- Knit to HTML, and upload `.html` file to Canvas.    
+    
+### Class Routine
+
+- Goal is to spend the majority of the time working in groups on problems.
+- Just-in-time mini-lectures.
+- Some slides, but they won't be comprehensive.
+- Can start by discussing assignment that was due the night before.
+
+### Exams and Grading
+
+| Task | % of total |
+|----------|----------|
+| Daily Assignments: | 44% |
+| Exams: | 3 @ 14% each |
+| Final Exam: | 14% |
+
+### Attendance
+
+- I expect every student to attend every class during the scheduled class period.  
+- If you miss a significant number of classes, you will almost definitely do poorly in this class. 
+- I consider it excessive to miss more than three classes during the course of the semester. 
+- If you miss more than six classes without a valid excuse, I reserve the right to terminate you from the course with a grade of F.
+
+### Academic integrity
+
+- Dishonesty of any kind may result in loss of credit for the work involved and the filing of a report with the Provost’s Office.  
+- Major or repeated infractions may result in dismissal from the course with a grade of F. 
+- Be familiar with the [College’s plagiarism policy](https://www.westmont.edu/office-provost/academic-program/academic-integrity-policy).
+- **Do not email, post online, or otherwise disseminate** any of the work that you do in this class.
+- You may work with others on the assignments, but make sure that you type up your own answers yourself. 
+- You are on your honor that the work you hand in represents your own understanding.
+
+### Course Materials on GitHub
+
+https://djhunter.github.io/algorithms/
+
+- Assignments and slides posted here.
+- Links to syllabus and textbook.
+- Also source code for everything, if you want to look at the repository.
+
+# Recursion
+
+## Assignment Comments, Sample Solutions
+
+### Describe algorithms properly
+
+- You can't analyze algorithms if you don't describe them properly.
+- Make sure you read the [Canvas announcement](https://westmont.instructure.com/courses/5960/discussion_topics/28735) about this.
+
+### $\Theta(n^3)$ songs
+
+Basic idea:
+
+```
+for i<-1 to n
+  sing verse i
+  for j<-1 to n
+    sing verse j
+    for k<-1 to n
+      sing verse k
+```
+
+### $\Theta(n^3)$ songs
+
+```
+for i ← 1 to n
+  Sing “And I was like”
+  for j ← i down to 1
+    Sing “Baby, Baby, Baby, oooh,”
+    for k ←  j down to 1
+      Sing "Baby, Baby, Baby, oooh,"
+  if i > 1
+    Sing “Thought you'd always be mine”
+  else Sing “Mine”
+  
+  
+for i <- 1 to n:
+  for j <- 1 to n:
+    for k <- n down to 1:
+      Sing "On the j'th bookshelf in the i'th bookstore 
+            on route to Kentucky, there were k Bibles 
+            left to distribute. The clerk sent a lad off 
+            to preach with one Bible."
+      if not the last verse:
+        Sing "So..."  
+```
+
+### Another idea:
+
+> Sing the twelve days of Christmas but for every type of gift, sing BottlesOfBeer(i) with i equal to how many gifts there are (e.g., instead of singing "5 golden rings", sing BottlesOfBeer(5)). Twelve days of Christmas is $\Theta(n^2)$, and bottles of beer is $\Theta(n)$ so it ends up being $\Theta(n^3)$.
+
+Not pseudocode, but clearly defines an algorithm.
+
+### Counting Syllables
+
+Estimate. Don't try to count things exactly.
+
+- 2a. $O(\log n)$: The number of syllables in $n$ is asymptotically equivalent to the number of digits in $n$, which is $O(\log n)$.
+
+- 2b. $O(n \log n)$: For $i = 1 \ldots n$, singing $i$ requires $O(\log n)$ syllables, and $i$ gets sung $O(n)$ times.
+
+- 2c. $O(n^2 \log n)$: (similar to 2b)
+
+### Two-element subset sum
+
+This **does not** specify an algorithm:
+
+> ... merge sort the numbers in the array, and then iterate through the array and check if the sum of the number and the number after it, and lastly print the result.
+
+- If your algorithm has a loop, write it as a loop, and explicitly describe what happens in an arbitrary iteration.
+- If your algorithm is recursive, write it recursively, and explicitly describe the case boundaries and what happens in each case.
+
+### Two-element subset sum
+
+Acceptable answer, if not great:
+
+```
+SumFromArr(intArray, x)
+  for each element a in intArray
+    for each of the other elements b
+      add a to b
+      if sum is x, return true 
+return false
+```
+
+Running time is $\Theta(n^2)$
+
+### Two-element subset sum
+
+$\Theta(n \log n)$ examples:
+
+
+```
+findSumInArr(arr, x):
+  arr = mergeSort(arr)
+  leftPointer <- 0
+  rightPointer <- (length of arr) - 1
+  while (leftPointer < rightPointer) {
+      if ((arr[leftPointer] + arr[rightPointer]) == x)
+          return 1
+      else if ((arr[leftPointer] + arr[rightPointer]) < x)
+          leftPointer <- leftPointer + 1
+      else
+          rightPointer <- rightPointer - 1
+  }
+  
+ 
+findsum(array arr, int x) :
+  mergeSort arr
+  for a in arr:
+    binary search arr for (x - a)
+    if (x - a) is found
+      return true;
+  return false
+```
+
+## The Recursion Fairy
+
+### Writing Recursive Functions
+
+> Your **only** task is to simplify the original problem, or to solve it directly when simplification is either unnecessary or impossible; the *Recursion Fairy* will solve all the simpler subproblems for you, using Methods That Are None Of Your Business...
+
+The Recursion Fairy is the inductive hypothesis.
+
+### Recursive Peasant Multiplication
+
+```
+PeasantMultiply(X, Y):
+    if X = 0
+        return 0
+    else
+        x <- floor(X/2)
+        y <- Y + Y
+        prod <- PeasantMultiply(x, y)  # Recursion Fairy does correctly
+        if X is odd
+            prod <- prod + Y
+        return prod
+```
+
+**Strong** inductive hypothesis: 
+
+`PeasantMultiply(x,y)` works for any `x` less than `X`.
+
+## Time and Recurrence Relations
+
+### {data-background="https://www.includehelp.com/data-structure-tutorial/images/tower-of-hanoi-1.png" data-background-size="contain"}
+
+### Towers of Hanoi
+
+```
+Hanoi(n, src, dst, tmp):
+    if n > 0
+        Hanoi(n − 1, src, tmp, dst) 
+        move disk n from src to dst
+        Hanoi(n − 1, tmp, dst, src) 
+```
+
+### Towers of Hanoi Time
+
+```
+Hanoi(n, src, dst, tmp):                # T(n) moves
+    if n > 0
+        Hanoi(n − 1, src, tmp, dst)     # T(n-1) moves
+        move disk n from src to dst     # 1 move
+        Hanoi(n − 1, tmp, dst, src)     # T(n-1) moves
+```
+
+$$
+T(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=0 \\
+               2T(n-1) +1 & \mbox{if } n>0
+               \end{array}
+              \right.
+$$
+
+### "Straightforward" induction proof
+
+Suppose that $T(n)$ is given by the recurrence relation:
+
+$$
+T(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=0 \\
+               2T(n-1) +1 & \mbox{if } n>0
+               \end{array}
+              \right.
+$$
+
+Prove that $T(n) = 2^n - 1$ for all $n\geq 0$.
+
+- Base case: $T(0) = 0 = 2^0 -1$. Check.
+- **Strong** induction hypothesis: Suppose as inductive hypothesis that $T(k) = 2^k - 1$ for all $k < n$.
+- Inductive step: 
+
+\begin{align}
+T(n) &= 2T(n-1) + 1 && \mbox{by the recurrence relation} \\
+     &= 2(2^{n-1} - 1) + 1 && \mbox{by inductive hypothesis} \\
+     &= 2^n - 1
+\end{align}
+
+## Another Recursive Puzzle
+
+### {data-background="https://i.pinimg.com/originals/9e/9d/77/9e9d773c7f91cc277708cd1b8d53357d.jpg" data-background-size="contain"}
+
+### Abstract Description
+
+- Puzzle is a sequence of $n$ bits.
+- Starts at $111\ldots 1$. Need to make it $000\ldots 0$.
+- You can always flip the rightmost bit. (i.e., bit #1)
+- If $z$ is the number of 0's on the right, you can flip the $(z+2)$th bit.
+
+Solution for $n=5$:
+
+```
+11111 -> 11110 -> 11010 -> 11011 -> 11001 -> 11000 -> 01000 -> 01001
+    -> 01011 -> 01010 -> 01110 -> 01111 -> 01101 -> 01100 -> 00100 
+    -> 00101 -> 00111 -> 00110 -> 00010 -> 00011 -> 00001 -> 00000
+```
+
+### Jamboard Questions
+
+1. Consider the case $n = 3$. Draw a graph whose nodes are the 8 possible states of the puzzle, and draw a directed edge between two states if there is a legal move between the states. Is there a directed path from 111 to 000? Is there more than one path?
+
+2. Describe a recursive algorithm for solving this puzzle. Your input is the number of rings $n$; your algorithm should print a reduced sequence of moves that solves the puzzle. For example, given the integer 5 as input, your algorithm should print the sequence 1, 3, 1, 2, 1, 5, 1, 2, 1, 3, 1, 2, 1, 4, 1, 2, 1, 3, 1, 2, 1. 
+
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Timothy", "Josiah", "Nathan")
+set.seed(1132021) 
+n <- length(roster)
+ngps <- 6
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+# Divide and Conquer
+
+## Assignment Comments, Sample Solutions
+
+### More tips on describing algorithms (from pp. 11ff)
+
+>- **Algorithms are not programs.** Please don't write code (e.g., C, Python, Java, Haskell, R, ...). 
+>    - Use a combination of pseudocode and structured English. 
+>        - Pseudocode uses the structure of formal programming languages to break algorithms into primitive steps.
+>        - The primitive steps themselves can be written using math, English, or a mixture of the two, whatever is clearest.
+>    - A good algorithm description is closer to what we should write in the comments of a real program than the code itself. Code is a poor medium for storytelling.
+>    - On the other hand, conditionals, loops, function calls, and recursion should be stated explicitly.
+
+### Who is the audience?
+
+>- Imagine you are writing pseudocode for a competent but skeptical programmer who is *not as clever as you are*.
+>    - This programmer should be able to quickly and correctly implement the algorithm in *their* favorite programming language.
+>- **Goal:** include every detail necessary to fully specify the algorithm, prove its correctness, and analyze its running time.
+
+
+### Baguenaudier solver
+
+Pseudocode and English: It is clear what it's doing and *why it works*:
+
+```
+solve(n):
+
+If n=1, 
+    flip(1)
+If n=2
+    flip(2)
+    flip(1)
+else (when n>2)
+    solve(n-2) on the rightmost n-2 bits
+    flip(n), the nth bit                            << legal, b/c there are n-2 0's at the end >>
+    solve(n-2) in reverse on the rightmost n-2 bits << makes Puzzle look like 0111...111 >>
+    solve(n-1) on rightmost (n-1) bits
+```
+
+### Baguenaudier solver, but a little too code-y
+
+Psuedocode only. It's correct, but it doesn't communicate as well:
+
+```
+B(int n){
+        if(n == 0){
+            print nothing
+        }
+        else if (n==1){
+            print 1
+        }
+        else {
+            B(n-2)
+            print n
+            B(n-2), but printed backwards 
+            B(n-1)
+        }
+    }
+```
+
+### Recurrence Relation
+
+The recurrence relation should match the algorithm:
+
+```
+solve(n):
+
+If n=1, 
+    flip(1)
+If n=2
+    flip(2)
+    flip(1)
+else (when n>2)
+    solve(n-2) on the rightmost n-2 bits
+    flip(n), the nth bit                            << legal, b/c there are n-2 0's at the end >>
+    solve(n-2) in reverse on the rightmost n-2 bits << makes Puzzle look like 0111...111 >>
+    solve(n-1) on rightmost (n-1) bits
+```
+
+\begin{equation}
+  M(n)=\begin{cases}
+    1 & \text{if $n=1$}.\\
+    2 & \text{if $n=2$}.\\
+    2M(n-2)+M(n-1)+1 & \text{if $n > 2$}.
+  \end{cases}
+\end{equation}
+
+### Another Recurrence Relation
+
+If the algorithm is different, the recurrence is different.
+
+```
+B(int n){
+        if(n == 0){
+            print nothing
+        }
+        else if (n==1){
+            print 1
+        }
+        else {
+            B(n-2)
+            print n
+            B(n-2), but printed backwards 
+            B(n-1)
+        }
+    }
+```
+
+\begin{equation}
+  M(n)=\begin{cases}
+    0 & \text{if $n=0$}.\\
+    1 & \text{if $n=1$}.\\
+    2M(n-2)+M(n-1)+1 & \text{if $n > 2$}.
+  \end{cases}
+\end{equation}
+
+### Closed-form formula from OEIS
+
+At least two options:
+
+$$
+2^{n+1}/3 - 1/2 - (-1)^n/6
+$$
+or 
+
+$$
+M\left(n\right) = \left\lceil2\cdot\frac{2^n-1}{3}\right\rceil
+$$
+The former is easier; the latter requires cases in the induction argument.
+
+### Inductive verification
+
+Base case: $M(1)=1=\frac{2^{2}}{3}-\frac{1}{2}-\frac{(-1)^{1}}{6}$ and $M(2)=2=\frac{2^{3}}{3}-\frac{1}{2}-\frac{(-1)^{2}}{6}$.
+
+Suppose as inductive hypothesis that $M(k)=\frac{2^{k+1}}{3}-1/2-\frac{(-1)^{k}}{6}$ for all $k<n$.
+
+(When in doubt, always use *strong* induction.)
+
+### Inductive step
+
+\begin{align}
+M(n)&=2M(n-2)+M(n-1)+1\\
+&=2\left(\frac{2^{n-1}}{3}-\frac{1}{2}-\frac{(-1)^{n-2}}{6} \right) + \left(\frac{2^{n}}{3}-\frac{1}{2}-\frac{(-1)^{n-1}}{6}\right)+1\\
+&=\frac{2^{n}}{3}-1-\frac{2(-1)^{n-2}}{6}+\frac{2^{n}}{3}-\frac{1}{2}-\frac{(-1)^{n-1}}{6}+1\\
+&=\frac{2^{n}}{3}+\frac{2^{n}}{3}-1+1-\frac{1}{2}-\frac{2(-1)^{n-2}}{6}-\frac{(-1)^{n-1}}{6}\\
+&=\frac{2^{n+1}}{3}-\frac{1}{2}+\frac{2(-1)^{n-1}}{6}-\frac{(-1)^{n-1}}{6}\\
+&=\frac{2^{n+1}}{3}-\frac{1}{2}+\frac{(-1)^{n-1}}{6}\\
+&=\frac{2^{n+1}}{3}-\frac{1}{2}-\frac{(-1)^{n}}{6}
+\end{align}
+
+## Trust the Recursion Fairy
+
+### Recall: Writing recursive functions
+
+> Your **only** task is to simplify the original problem, or to solve it directly when simplification is either unnecessary or impossible; the *Recursion Fairy* will solve all the simpler subproblems for you, using Methods That Are None Of Your Business...
+
+### Jamboard Questions
+
+Consider the usual Towers of Hanoi puzzle (pp. 24ff) with $n$ disks and 3 pegs, numbered 0, 1, and 2. Now suppose you are forbidden to move any disk directly between peg 1 and peg 2; *every* move must involve peg 0.
+
+1. Describe a recursive algorithm to solve this puzzle.
+
+2. Explain why (prove that) your algorithm never moves a disk between peg 1 and peg 2. (Use a *strong* induction hypothesis.)
+
+
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Timothy", "Josiah", "Nathan")
+set.seed(1152021) 
+n <- length(roster)
+ngps <- 6
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Divide and Conquer
+
+### Divide and Conquer paradigm
+
+- When the problem domain *partitions* into smaller subproblems, the recursive paradigm is called **divide and conquer**.
+    - Towers of Hanoi isn't really divide and conquer.
+    - Binary search *is* divide and conquer. The search space partitions into two halves.
+
+### Merge Sort
+
+```
+Merge(A[1..n], m):                        MergeSort(A[1..n]):
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)]..m)
+        else if i > m                             Merge(A[1..n],m)
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+### Merge Sort recurrence
+
+```
+Merge(A[1..n], m):   # O(n) comparisons   MergeSort(A[1..n]):  # C(n) comparisons
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])      # C(n/2) comparisons (approx)
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)]..m)  # C(n/2) comparisons (approx)
+        else if i > m                             Merge(A[1..n],m)        # O(n) comparisons
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+### Merge Sort time
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+As a tree, we can model $C(n)$ as:
+
+```
+          O(n)
+         /    \
+     C(n/2)   C(n/2)
+```
+
+Expanding recursively, we get the following *recursion tree:*
+
+```
+                             n
+                    /                 \
+                n/2                      n/2
+            /        \              /          \
+          n/4        n/4           n/4          n/4
+        /    \       /    \       /   \        /    \
+      n/8    n/8   n/8   n/8    n/8   n/8    n/8    n/8
+    ... and so on
+```
+
+### Merge Sort time
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+Total up each level in the recursion tree:
+
+```
+                                                            level total
+                             n                                   n
+                    /                 \
+                n/2                      n/2                     n
+            /        \              /          \ 
+          n/4        n/4           n/4          n/4              n
+        /    \       /    \       /   \        /    \
+      n/8    n/8   n/8   n/8    n/8   n/8    n/8    n/8          n
+    ... and so on
+```
+
+There are $\log n$ levels in this tree, so $C(n) \in O(n \log n)$.
+
+(More to come.)
+
+# Divide and Conquer: Sorting 
+
+## Assignment Comments, Sample Solutions
+
+### Beware of the Jamboard solutions
+
+- Don't uncritically copy someone else's (e.g., the Jamboard) solutions.
+
+### Modified Hanoi Algorithm
+
+```
+Undo [operations]:
+  Perform move operations in both reverse order and opposite direction
+  
+Hanoi(n, temp, destination):
+  if n is 1:
+    move disk 1 from peg 0 to destination
+  else:
+    Hanoi(n-1, destination, temp)
+    move disk n from peg 0 to destination
+    Undo Hanoi(n-1, destination, temp)
+    Hanoi(n-1, temp, destination)
+```
+
+- Notice that the parameter list in the function header matches the parameters that are used in the function calls.
+- Sometimes `destination` and `temp` need to be switched, so we can't hard code these as 0 and 1, for example.
+- If you are unsure that the base case is right, check that the $n=2$ case works.
+
+### Proof that all moves are legal
+
+```
+Undo [operations]:
+  Perform move operations in both reverse order and opposite direction
+  
+Hanoi(n, temp, destination):
+  if n is 1:
+    move disk 1 from peg 0 to destination
+  else:
+    Hanoi(n-1, destination, temp)
+    move disk n from peg 0 to destination
+    Undo Hanoi(n-1, destination, temp)
+    Hanoi(n-1, temp, destination)
+```
+
+When $n=1$, the move involves peg 0. Suppose as inductive hypothesis that `Hanoi(k, temp, destination)` returns only moves that involve peg 0, for all $k<n$. Then `Hanoi(n, temp, destination)` makes three recursive calls, which by inductive hypothesis all involve peg 0 (note that `Undo` preserves the property of involving peg 0). The additional single move made by `Hanoi(n, temp, destination)` also involves peg 0. So by induction, all moves are legal.
+
+### Recurrence Relation
+
+```
+Undo [operations]:
+  Perform move operations in both reverse order and opposite direction
+  
+Hanoi(n, temp, destination):   <<Source is always 0>>
+  if n is 1:
+    move disk 1 from peg 0 to destination
+  else:
+    Hanoi(n-1, destination, temp)
+    move disk n from peg 0 to destination
+    Undo Hanoi(n-1, destination, temp)
+    Hanoi(n-1, temp, destination)
+```
+
+$$
+V(n) = \left\{\begin{array}{ll} 
+               1 & \mbox{if } n=1 \\
+               3V(n-1) +1 & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+### Closed-form formula
+
+$$
+V(n) = \left\{\begin{array}{ll} 
+               1 & \mbox{if } n=1 \\
+               3V(n-1) +1 & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+```
+Search: seq:1,4,13,40,121,364
+    A003462   a(n) = (3^n - 1)/2.
+```
+
+### Inductive verification
+
+Base Case: $V(1)=1=\frac{3^\left(1\right)-1}{2}$. Suppose as inductive hypothesis that $V(k)=\frac{3^k-1}{2}$ for all $k<n$. Using the recurrence relation,
+
+\begin{align}
+V(n)&=3V(n-1)+1 \\
+&=3\left(\frac{3^\left(n-1\right)-1}{2}\right)+1 \\
+&=\frac{3^n-3}{2}+1 \\
+&=\frac{3^n-3}{2}+\frac{2}{2} \\
+&=\frac{3^n-1}{2} \\
+\end{align}
+
+So by induction, $V(n) = \frac{3^n-1}{2}$
+
+## Divide and Conquer
+
+### Divide and Conquer paradigm
+
+- When the problem domain *partitions* into smaller subproblems, the recursive paradigm is called **divide and conquer**.
+    - Towers of Hanoi isn't really divide and conquer.
+    - Binary search *is* divide and conquer. The search space partitions into two halves.
+
+### Merge Sort
+
+```
+Merge(A[1..n], m):                        MergeSort(A[1..n]):
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)..n)]
+        else if i > m                             Merge(A[1..n],m)
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+`Merge` running time? (Count comparisons of list elements.)
+
+```
+-poll "What is the running time of the Merge function?" "O(log n)" "O(n)" "O(n^2)" "O(2^n)"
+```
+
+
+### Merge Sort recurrence
+
+```
+Merge(A[1..n], m):   # O(n) comparisons   MergeSort(A[1..n]):  # C(n) comparisons
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])      # C(n/2) comparisons (approx)
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)..n)]  # C(n/2) comparisons (approx)
+        else if i > m                             Merge(A[1..n],m)        # O(n) comparisons
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+### Merge Sort time
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+As a tree, we can model $C(n)$ as:
+
+```
+          O(n)
+         /    \
+     C(n/2)   C(n/2)
+```
+
+Expanding recursively, we get the following *recursion tree:*
+
+```
+                             n
+                    /                 \
+                n/2                      n/2
+            /        \              /          \
+          n/4        n/4           n/4          n/4
+        /    \       /    \       /   \        /    \
+      n/8    n/8   n/8   n/8    n/8   n/8    n/8    n/8
+    ... and so on
+```
+
+### Merge Sort time
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+Total up each level in the recursion tree:
+
+```
+                                                            level total
+                             n                                   n
+                    /                 \
+                n/2                      n/2                     n
+            /        \              /          \ 
+          n/4        n/4           n/4          n/4              n
+        /    \       /    \       /   \        /    \
+      n/8    n/8   n/8   n/8    n/8   n/8    n/8    n/8          n
+    ... and so on
+```
+
+There are $\log n$ levels in this tree, so $C(n) \in O(n \log n)$.
+
+(More to come.)
+
+### Aside: This is the best you can do
+
+- Sorting a list involves figuring how how it is scrambled.
+- A list of $n$ elements can be scrambled $n!$ ways.
+- Using (two-way) comparisons gets us a binary decision tree.
+- In order to have $n!$ leaves, we need $\log_2(n!)$ levels.
+- $\log_2(n!) \in \Theta(n \log n)$
+
+So Merge Sort is *asymptotically optimal*.
+
+### Merge Sort Correctness
+
+```
+Merge(A[1..n], m):                        MergeSort(A[1..n]):
+    i <- 1; j <- m + 1                        if n > 1
+    for k <- 1 to n                               m <- floor(n/2)
+        if j > n                                  MergeSort(A[1..m])
+            B[k] <- A[i]; i <- i + 1              MergeSort(A[(m+1)..n)]
+        else if i > m                             Merge(A[1..n],m)
+            B[k] <- A[ j]; j <- j + 1
+        else if A[i] < A[j]
+            B[k] <- A[i]; i <- i + 1
+        else
+            B[k] <- A[j]; j <- j + 1
+    for k <- 1 to n
+        A[k] <- B[k]
+```
+
+- First you have to show that `Merge` is correct (see book).
+- Base case: $n=1$ `MergeSort` does nothing, and list is sorted.
+- Inductive hypothesis: Suppose that `MergeSort` correctly sorts a list of size $k$ when $k<n$.
+- By inductive hypothesis, `MergeSort(A[1..m])` and `MergeSort(A[(m+1)..n])` both work, so `A[1..m]` and `A[(m+1)..n]` will be correctly sorted when `Merge` is called. Since `Merge` works, `Merge(A[1..n],m)` will be correctly sorted.
+
+
+## QuickSort
+
+### Partitioning an array
+
+`Partition(A, p)` inputs an array `A` and an array index `p`. 
+
+- `A[p]` is the *pivot* element.
+
+`Partition(A, p)` rearranges the elements of `A` so that:
+
+- All elements less that the pivot come first,
+- followed by the pivot element,
+- followed by all the elements that are greater than the pivot.
+
+Also, `Partition(A, p)` returns the new location of the pivot.
+
+(See book for algorithm, correctness, and time ($O(n)$).)
+
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(1202021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+## just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+
+### Quick Sort Correctness
+
+```
+QuickSort(A[1 .. n]):
+if (n > 1)
+    Choose a pivot element A[p] 
+    r <- Partition(A, p)
+    QuickSort(A[1 .. r − 1])
+    QuickSort(A[r + 1 .. n])
+```
+
+1. Use strong induction to explain why (i.e., prove that), regardless of how `p` is chosen, `QuickSort(A[1..n])` correctly sorts the elements of `A`. (Assume that Partition correctly does its job.) 
+
+
+### Quick Sort running time
+
+Let's agree to choose the pivot element to be the first element (actually a common choice).
+
+```
+QuickSort(A[1 .. n]):
+if (n > 1)
+    r <- Partition(A, 1)
+    QuickSort(A[1 .. r − 1])
+    QuickSort(A[r + 1 .. n])
+```
+
+2. If we get extremely lucky and, at each stage, it just so happens that $r = \lfloor n/2 \rfloor$, give a recurrence for the running time of QuickSort.
+
+3. If we get extremely unlucky and, at each stage, it turns out that $r=n$ (i.e., the array was in reverse order), give a recurrence for the running time of QuickSort. 
+
+(In each case, solve the recurrence, asymptotically.)
+
+# Recursion Trees
+
+## Assignment Comments, Sample Solutions
+
+### Balance between informal and formal
+
+- Include enough details to be correct.
+- Try not to include details that obfuscate.
+- Strive for an argument that *convinces* someone that the algorithm really works.
+    - A description of what the algorithm does is not a proof that the algorithm is correct.
+
+### Cavarretta Sort Correctness
+
+```
+CavarrettaSort(A[0 .. n - 1]):
+    if n = 2 and A[0] > A[1]
+        swap A[0] and A[1]
+    else if n > 2
+         m = ceiling(2n/3)
+         CavarrettaSort(A[0 .. (m - 1)])
+         CavarrettaSort(A[(n - m) .. (n - 1)])
+         CavarrettaSort(A[0 .. (m - 1)])
+```
+
+### Clear proof, with a couple details glossed over
+
+Base case: If n = 2, the two elements of the list are swapped if out of order, resulting a correctly sorted list.
+
+Suppose as inductive hypothesis that `CavarrettaSort(A[0 .. k-1])` correctly sorts its input array for all $k<n$.
+
+Then `CavarrettaSort(A[0...n-1])` takes the following steps: 1. Correctly sorts the first 2/3 of the array, according to the inductive hypothesis 2. Correctly sorts the last 2/3 of the array, according to the inductive hypothesis 3. Correctly sorts the first 2/3 of the array again, according to the inductive hypothesis.
+
+After step 2, the last 1/3 of the array will contain the highest 1/3 of numbers, because any of these numbers that may have been in the first 1/3 were moved into the middle 1/3 in step 1, and the last 1/3 in step 2. After step 3, the first 2/3 of the array will be sorted correctly as well, because all numbers in the first 2/3 at this point are less than all numbers in the last 1/3, resulting in a complete solution.
+
+### Alternative inductive step (more details)
+
+First, since $m$ is the *ceiling* of $2n/3$, $n-m$ is never larger than $2m-n$. 
+
+After the first `CavarrettaSort(A[0 .. (m - 1)])` call, all of the $n-m$ elements of `A[(2m-n)..(m-1)]` (the second "1/3") are greater than all of the $2m-n$ elements of `A[0..(2m-n-1)]` (the first "1/3"), by inductive hypothesis. Therefore, *none of the largest $n-m$ elements of the entire array can be in `A[0..(n-m-1)]`,* and so the largest $n-m$ elements must be in `A[(n-m)..(n-1)]` (the last "2/3"). 
+
+After the call `CavarrettaSort(A[(n - m) .. (n - 1)])`, these largest $n-m$ elements must be in order in `A[m..(n-1)]` (the last "1/3"), by inductive hypothesis. The final recursive call puts the smallest $m$ elements of the array in order in `A[0..(m-1)]`, by inductive hypothesis. Therefore, the entire array is correctly sorted.
+
+### Recurrence
+
+```
+CavarrettaSort(A[0 .. n - 1]):
+    if n = 2 and A[0] > A[1]
+        swap A[0] and A[1]
+    else if n > 2
+         m = ceiling(2n/3)
+         CavarrettaSort(A[0 .. (m - 1)])
+         CavarrettaSort(A[(n - m) .. (n - 1)])
+         CavarrettaSort(A[0 .. (m - 1)])
+```
+
+$$
+C(n) = \left\{\begin{array}{lr}  1, 
+& \text{for } n=2,\\  
+3C\left(\left\lceil\frac{2}{3}n\right\rceil\right), 
+& \text{for } n>2.\\  \end{array}\right.
+$$
+
+### Solving the recurrence
+
+Ignoring the ceiling,
+
+\begin{align}
+C(n) &= 3C\left(\frac{2}{3}n\right) = 3^2C\left(\left(\frac{2}{3}\right)^2n\right) 
+= 3^3C\left(\left(\frac{2}{3}\right)^3n\right) \\ 
+& = \cdots = 3^LC\left(\left(\frac{2}{3}\right)^Ln\right) = 3^L C(2) = 3^L \cdot 1 = 3^L
+\end{align}
+
+Where $\left(\frac{2}{3}\right)^Ln = 2$. Solving for $n$ gives $L = \log_{1.5}(n/2)$. 
+
+Therefore, $C(n) = 3^{\log_{1.5}(n/2)} = (n/2)^{\log_{1.5} 3} \in O(n^{\log_{1.5} 3}) = O(n^{2.7095\ldots})$
+
+## Recursion Trees
+
+### Recall: Merge (Quick?) Sort Recurrence
+
+$$
+C(n) = \left\{\begin{array}{ll} 
+               0 & \mbox{if } n=1 \\
+               2C(n/2) + O(n) & \mbox{if } n>1
+               \end{array}
+              \right.
+$$
+
+Total up each level in the recursion tree:
+
+```
+                                                            level total
+                             n                                   n
+                    /                 \
+                n/2                      n/2                     n
+            /        \              /          \ 
+          n/4        n/4           n/4          n/4              n
+        /    \       /    \       /   \        /    \
+      n/8    n/8   n/8   n/8    n/8   n/8    n/8    n/8          n
+    ... and so on
+```
+
+There are $\log n$ levels in this tree, so $C(n) \in O(n \log n)$.
+
+### General divide and conquer relations
+
+- Each step costs $O(f(n))$, plus
+- the cost of $r$ subproblems, each of size $n/c$.
+- We want an asymptotic (big-O) solution
+
+$$
+T(n) = \left\{\begin{array}{ll} 
+               \mbox{doesn't matter} & \mbox{if } n \leq n_0 \\
+               rT(n/c) + O(f(n)) & \mbox{if } n > n_0
+               \end{array}
+              \right.
+$$
+Recursion tree:
+
+- $r$-way branches ($r$-ary tree)
+- Level of leaves: $L = \log_c n$
+- Number of leaves: $r^L = r^{\log_c n} = n^{\log_c r}$
+
+See Figure 1.9.
+
+### Three cases you can solve
+
+Recursive case of divide and conquer recurrence:
+
+$$
+T(n) = rT(n/c) + O(f(n))
+$$
+
+1. Root dominates: $T(n) = O(f(n))$
+    - happens when row sums *decrease* geometrically.
+2. Internal nodes dominate: $T(n) = O(f(n)\log n)$
+    - happens when row sums are *constant*.
+3. Leaves dominate: $T(n) = O(n^{\log_c r})$
+    - happens when row sums *increase* geometrically.
+    
+[CLRS] calls this the **Master Theorem** for solving d&c recurrences.
+
+### Examples
+
+>- $C(n) = 2C(n/2) + O(n)$, (Merge Sort)
+>    - row sums all equal $n$. Case 2: $C(n) = O(n \log n)$
+>- $D(n) = 4D(n/2) + O(n^3)$
+>    - row sums decrease geometrically. Case 1: $D(n) = O(n^3)$
+    
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(1222021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+## just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+
+### Recursion Tree Practice
+
+1. Draw a recursion tree for the recurrence $F(n) = 3F(n/4) + O(\sqrt{n})$.
+
+2. Write down the first four terms in the sequence of row sums.
+
+3. Apply the Master Theorem to solve the recurrence.
+
+### Cavarretta recurrence, revisited.
+
+4. Consider adding a constant term $K = O(1)$  to the Cavarretta recurrence:
+
+$$
+C(n) = \left\{\begin{array}{lr}  1, 
+& \text{for } n=2,\\  
+3C\left(\left\lceil\frac{2}{3}n\right\rceil\right) + K, 
+& \text{for } n>2.\\  \end{array}\right.
+$$
+
+Use a recursion tree (with root $K$) to solve this recurrence. What effect did adding the constant term have?
+
+# Recursion Trees, continued
+
+## Assignment Comments, Sample Solutions
+
+### General comments
+
+- Please read my comments on Canvas.
+- Use LaTeX for mathematics, and spell check.
+- Academic integrity:
+    - You may work with others.
+    - If you work with others, you should cite your collaboration *on your assignment* by listing the names of those you worked with.
+    - If you work with others, the work you hand in should represent your *own* understanding. Don't hand in solutions you don't understand.
+    - Even if you work with others, the work you hand in should *not* be *identical* to the work another student hands in. You should be writing up your solutions on your own, not copying someone else's solutions.
+        - Next time I'm going to have to submit a plagiarism report to the Provost.
+        
+### Repeat this to yourself until it makes sense
+
+$$
+\mbox{}
+$$
+
+$$
+\Large
+\log_b(x) \mbox{ is the number you raise } b \mbox{ to to get } x.
+$$
+
+$$
+\mbox{}
+$$
+
+Don't like the grammar? Put it in your own words.
+
+### Basic algebra
+
+- You need to know and apply basic rules of algebra.
+    - For example, logarithms and exponents.
+    - In the future, if you leave something like $\log_2 4$ unsimplified, you will lose points (assignment or exam).
+- *Make a list of rules* for exponents and logarithms and memorize it.
+    - Don't just watch videos about it.
+    
+### Master theorem for solving recurrences
+
+Recursive case of divide and conquer recurrence:
+
+$$
+T(n) = rT(n/c) + O(f(n))
+$$
+
+1. Root dominates: $T(n) = O(f(n))$
+    - happens when row sums *decrease* geometrically.
+2. Internal nodes dominate: $T(n) = O(f(n)\log n)$
+    - happens when row sums are *constant*.
+3. Leaves dominate: $T(n) = O(n^{\log_c r})$
+    - happens when row sums *increase* geometrically.
+    
+### Sample solutions: A, B, C
+
+- $A(n) = 2A(\frac{n}{4}) + \sqrt{n}$
+    - Row sums: $\sqrt{n}, \sqrt{n}, \sqrt{n}, \sqrt{n}, \ldots$
+    - Case 2, internal nodes dominate: $A(n) = O(\sqrt{n} \log n)$
+    
+- $B(n) = 2B(\frac{n}{4}) +  n$
+    - Row sums: $n, n/2, n/4, n/8, \ldots$
+    - Case 1, root dominates: $B(n) = O(n)$
+
+- $C(n) = 2C(\frac{n}{4}) + n^2$
+    - Row sums: $n^2, n^2/8, n^2/64, n^2/512, \ldots$
+    - Case 1: root dominates $C(n) = O(n^2)$
+
+### Sample solutions: D, E, F
+
+- $D(n) = 3D(\frac{n}{3}) + \sqrt{n}$
+    - Row sums: $n, n\sqrt{3}, n(\sqrt{3})^2, n(\sqrt{3})^3, \ldots$
+    - Case 3, leaves dominate: $D(n) =  O(n)$
+    
+- $E(n) = 3E(\frac{n}{3}) +  n$
+    - Row sums: $n, n, n, n, \ldots$
+    - Case 2, internal nodes dominate: $E(n) = O(n \log n)$
+    
+- $F(n) = 3F(\frac{n}{3}) + n^2$
+    - Row sums: $n^2, n^2/3, n^2/9, n^2/27, \ldots$
+    - Case 1, root dominates: $F(n) = O(n^2)$
+
+### Sample solutions: G, H, I
+
+- $G(n) = 4G(\frac{n}{2}) + \sqrt{n}$
+    - Row sums: $\sqrt{n}, \sqrt{8}\sqrt{n}, (\sqrt{8})^2\sqrt{n},(\sqrt{8})^3\sqrt{n}, \ldots$
+    - Case 3, leaves dominate: $G(n) =  O(n^2)$
+    
+- $H(n) = 4H(\frac{n}{2}) +  n$
+    - Row sums: $n, 2n, 4n, 8n, \ldots$
+    - Case 3, leaves dominate: $H(n) = O(n^2)$
+    
+- $I(n) = 4I(\frac{n}{2}) + n^2$
+    - Row sums: $n^2, n^2, n^2, n^2, \ldots$
+    - Case 2, internal nodes dominate: $I(n) = O(n^2 \log n)$
+
+### Patterns?
+
+Join your table group and discuss the following. Write any observations you have on the Jamboard.
+
+- What patterns do you notice?
+    - For example, can you tell when you are going to be in case $n$, for $n = 1,2,3$?
+    - How to $r$, $c$, and $f(n)$ "pull" the asymptotic estimate in different directions?
+    
+$$
+T(n) = rT(n/c) + O(f(n))
+$$
+    - Notice any other patterns or rules-of-thumb?
+
+## Messier Recursion Trees
+
+### Recall: Quick Sort
+
+```
+QuickSort(A[1 .. n]):
+if (n > 1)
+    r <- Partition(A, 1)
+    QuickSort(A[1 .. r − 1])
+    QuickSort(A[r + 1 .. n])
+```
+
+- Lucky: pivot is the median at each stage.
+    - $T(n) = 2T(n/2) + O(n) \in O(n \log n)$
+- Unlucky: pivot is always at beginning or end at each stage.
+    - $T(n) = T(n-1) + O(n) \in O(n^2)$
+
+### Just a little lucky
+
+With mild assumptions/modifications, we can hope that the pivot will fall in the middle third at each stage:
+
+- Worst case: $T(n) \leq T(n/3) + T(2n/3) + O(n)$
+
+This doesn't exactly match the Master Theorem, but we can still use it.
+
+- See Figure 1.11.
+    
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(1252021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+## just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+
+### Cavarretta recurrence, revisited.
+
+1. Consider adding a constant term $K = O(1)$  to the Cavarretta recurrence:
+
+$$
+C(n) = \left\{\begin{array}{lr}  1, 
+& \text{for } n=2,\\  
+3C\left(\left\lceil\frac{2}{3}n\right\rceil\right) + K, 
+& \text{for } n>2.\\  \end{array}\right.
+$$
+
+Use a recursion tree (with root $K$) to solve this recurrence. What effect did adding the constant term have?
+
+2. What if we added a linear term to the recurrence, instead of a constant term?
+
+### Messy recursion tree
+
+3. Solve the recurrence $K(n) = K(n/2) + 2K(n/3) + 3K(n/4) + n^2$ using a recursion tree.
+
+# Backtracking
+
+## Assignment Comments, Sample Solutions
+
+### General comments
+
+```
+Format code in code blocks.
+```
+
+### Messy Recurrences
+
+- $J(n) = J(n/2) + J(n/3) + J(n/6)+ n$
+    - Second row: $\frac{n}{2}+\frac{n}{3}+\frac{n}{6}=n$. 
+    - All row sums equal $n$: internal nodes dominate: $J(n) \in O(n \log n)$
+        - The unevenness of the tree only changes the base of the log, which only changes the answer up to a constant factor (i.e., not at all.)
+- $K(n) = K(n/2) + 2K(n/3) + 3K(n/4)+ n^2$
+    - Second row: $\left(\frac{n}{2}\right)^2+\left(\frac{n}{3}\right)^2+\left(\frac{n}{3}\right)^2+\left(\frac{n}{4}\right)^2+\left(\frac{n}{4}\right)^2+\left(\frac{n}{4}\right)^2=\frac{95}{144}n^2$
+    - Subsequent rows get multiplied by $\frac{95}{144}$: root dominates: $K(n) = O(n^2)$
+        - The unevenness of the tree means there are even fewer internal nodes and leaves for the root to dominate. If we added nodes to make a full tree, the root would still dominate.
+
+### Writing Recursive Functions
+
+- Keep in mind any *preconditions*, and make sure:
+    - Your algorithm uses them, if necessary, and
+    - Your recursive calls obey them.
+- Write your function assuming the Recursion Fairy (inductive hypothesis) works, for any subproblem.
+
+### Find the Rotation
+
+**Preconditions:** "Suppose you are given a sorted array of $n$ *distinct* numbers that *has been rotated* $k$ steps, for some unknown integer $k$ *between $1$ and $n − 1$.*"
+
+- Use the preconditions when describing your algorithm.
+    - e.g., there's only one base case
+- Make sure your recursive calls obey the preconditions.
+
+```
+rotationCheck(A[1..n])
+if (n == 2) 
+  return(1)  << only one possible rotation when n = 2 >>
+else
+  m = ceiling(n/2)
+  if(A[m]>A[n])   << it's in second half >>
+    k = (m-1)+rotationCheck(A[m..n])
+  else  << it's in first half >>
+    k = rotationCheck(A[1..m])
+return(k)
+```
+
+### Another rotation finder
+
+```
+RotationFinder(A[1...n]):
+  if n=2 return 1
+  else:
+       middle <- floor(n/2)
+       if A[middle]>A[middle+1]:  << we found it (lucky) >>
+           return middle
+       if A[middle]>A[1]:   << it's in second half >>
+            return middle + rotationFinder(A[(middle+1)...n])
+       else:   << it's in first half >>
+            return rotationFinder(A[1...middle])
+```
+
+Recurrence: $C(n) = C(n/2) + O(1)$. Solution: $C(n) \in O(\log n)$.
+
+## Backtracking
+
+### General Idea
+
+- Problem has several options, and *recursive substructure.*
+- Try one of the options, and solve the subproblem recursively.
+    - If that doesn't work, try another option.
+    
+Backtracking algorithms tend to be slow.
+
+### Example: $n$ Queens
+
+Can you place $n$ queens on an $n\times n$ chessboard so that none are threatening another?
+
+> Schwer ist es übrigens nicht, durch ein methodisches
+Tatonniren sich diese Gewissheit zu verschaffen, wenn man 1 oder ein paar Stunden
+daran wenden will.
+
+Gauss says it's no big deal.
+
+### {data-background="http://www.learnchessrules.com/images/quenmove.png" data-background-size="contain"}
+
+### Backtracking algorithm: idea
+
+Start with $r=1$ and $j = 1$. 
+
+- Place a queen on the $r$th row in the $j$th square (avoiding conflicts with rows $1, \ldots, r-1$).
+    - If you find a legal move, recursively solve the remaining rows.
+    - If you can't find a legal move, try the $(j+1)$st square.
+
+Try $n=4$.
+
+### Backtracking algorithm: description
+
+`Q[1..n]` is going to contain the locations of the queens. If `Q[i] == j`, that means there is a queen on the $j$th square of row $i$.
+
+*Preconditions:* `r` stands for the row we are trying to place a queen on. So we've managed to place a queen on rows $1, \ldots, r-1$ legally when this algorithm is called.
+
+```
+PlaceQueens(Q[1 .. n], r):
+    if r = n + 1
+        print Q[1 .. n]  << Problem solved! >>
+    else
+        for j <- 1 to n
+            legal <- TRUE
+            for i <- 1 to r − 1
+                if (Q[i] = j) or (Q[i] = j + r − i) or (Q[i] = j − r + i)
+                    legal <- False    << a previous queen is attacking this square >>
+            if legal
+                Q[r] <- j
+                PlaceQueens(Q[1 .. n], r + 1)
+```
+
+### Backtracking
+
+```
+PlaceQueens(Q[1 .. n], r):
+    if r = n + 1
+        print Q[1 .. n]  << Problem solved! >>
+    else
+        for j <- 1 to n
+            legal <- TRUE
+            for i <- 1 to r − 1
+                if (Q[i] = j) or (Q[i] = j + r − i) or (Q[i] = j − r + i)
+                    legal <- False    << a previous queen is attacking this square >>
+            if legal
+                Q[r] <- j
+                PlaceQueens(Q[1 .. n], r + 1)
+```
+
+- The recursive call is "hopeful." 
+    - It may fail. If it does, you try the next option. *backtracking*
+    - Equivalent to a *depth-first search*.
+    
+See Figure 2.3.
+
+
+## Churros
+
+### {data-background="http://www.laxureria.com.mx/imago/productos.jpg" data-background-size="contain"}
+    
+### Churro Cutting
+
+- The price of a churro depends on its length, according to the following table.
+
+```{r, echo=FALSE}
+price <- c(1,5,8,9,10,17,17,20,24,30)
+length <- 1:10
+print(rbind(length,price))
+```
+
+- Out of the fryer, churros are $n$ inches long, but they can be cut into smaller pieces before they are sold. 
+- *What is the optimal way to cut an $n$-inch churro to maximize the total price of all the pieces?*
+
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(1272021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+## just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+### Optimal Churro Cutting
+
+```{r, echo=FALSE}
+price <- c(1,5,8,9,10,17,17,20,24,30)
+length <- 1:10
+print(rbind(length,price))
+```
+
+1. A five-inch churro sells for 10 cents. Is there a way to cut it into pieces so that the total price of all the pieces will be more? What is the best (largest) total price you can find? What is the worst total price?
+
+2. Suppose (as inductive hypothesis) that `CutChurro(k)` returns the maximum price among all the ways to cut up a $k$-inch churro, for $k\leq n$. Let's say you cut a 3-inch piece off of an $n$-inch churro, leaving yourself with pieces of size $3$ inches and $n-3$ inches. You plan to sell the $3$-inch piece, but you are open to making more cuts in the $n-3$-inch piece. Give an expression for the maximum price you can get for the pieces, among all the ways you can continue to cut the $n-3$-inch piece up.
+
+### Optimal Churro Cutting, continued
+
+3. Suppose (as inductive hypothesis) that `CutChurro(k)` returns the maximum price among all the ways to cut up a $k$-inch churro, for $k\leq n$. Write a for-loop to determine the maximum price among all the ways to cut up an $n$-inch churro.
+
+
+# More Backtracking Algorithms
+
+## Assignment Comments, Sample Solutions
+
+### All the cuts tried by CutChurro
+
+```
+Cuts:   Price:
+1111    4
+112     7
+121     7
+13      9
+211     7
+22      10
+31      9
+4       9
+```
+
+- When $n = 4$, there are three places to make (or not make) a cut.
+- So you have 3 independent decisions to make in sequence, each with two options (cut or don't cut):
+    - $2^3 = 8$ ways to cut the churro into pieces.
+- `CutChurro` is calculating by *recursive brute force*. (not clever)
+
+### CutChurro Time, counting nonrecursive call
+
+```{javascript eval=FALSE}
+// Let price[1..n] be a constant array of prices.
+// So price[i] is the cost of a churro of length i.
+
+CutChurro(n):
+    if n = 0
+        return 0
+    maxTotPrice <- -1
+    for i <- 1 to n
+        totPriceTry <- price[i] + CutChurro(n-i)
+        if totPriceTry > maxTotPrice
+            maxTotPrice <- totPriceTry 
+    return maxTotPrice
+```
+
+
+Count the original call as one call, so `CutChurro(0)` makes 1 `CutChurro` call:
+
+\begin{align}
+C(0) &=  1\\
+C(n) &= C(n-1) + C(n-2) + \cdots + C(1) + C(0) + 1
+\end{align}
+
+### Guess a closed-form solution
+
+\begin{align}
+C(0) &=  1\\
+C(n) &= C(n-1) + C(n-2) + \cdots + C(1) + C(0) + 1
+\end{align}
+
+Compute the first few terms and you get: $1,2,4,8,\ldots$, so it looks like the closed-form formula is going to be $C(n) = 2^n$. Can we prove this?
+
+### Trick: Subtract and cancel
+\begin{align}
+C(n) - C(n-1) &= [C(n-1) + C(n-2) + \cdots + C(1)+ C(0)+ 1] \\
+ &\phantom{=[C(n-1)} - [C(n-2) + \cdots + C(1) + C(0) + 1] \\
+& = C(n-1)
+\end{align}
+
+So we get $C(n) = 2C(n-1)$, and it is easy to prove by induction that $C(n) = 2^n$.
+
+### Inductive argument
+
+- Base case: `CutChurro(0)` makes one call.
+- Suppose as *inductive hypothesis* that `CutChurro(k)` makes $2^k$ calls, for $k<n$.
+- `CutChurro(n)` calls `CutChurro(n-1)`, `CutChurro(n-2)`, ..., `CutChurro(1)`, `CutChurro(0)`, so by inductive hypothesis, it makes $2^{n-1} + 2^{n-2} + \cdots + 2 + 1 + 1$ calls (counting the original call itself). By the same subtract-and-cancel trick, this equals $2^n$.
+
+### Aside: Inductive correctness proof
+
+- Base case: `CutChurro(0)` is zero, which is the maximum price you can get for nothing at all.
+- Suppose as *inductive hypothesis* that `CutChurro(k)` **returns the maximum price** you can get for a $k$-inch churro by cutting it up, for $k<n$.
+- `CutChurro(n)` computes the maximum price obtained by cutting a piece of size $0,1,\ldots n-1$ and then, by inductive hypothesis, maximizing the total price of the other piece. Therefore `CutChurro(n)` **returns the maximum price**.
+
+In an inductive proof, your inductive hypothesis should look like the final conclusion of your proof.
+
+### CutChurro Time, recursive calls only
+
+\begin{align}
+C(0) &=  0\\
+C(n) &= n + \sum\limits_{i=1}^n C(n-i)\\
+&= n + C(n-1) + \sum\limits_{i=1}^{n-1} C(n-1-i)\\
+&= n + C(n-1) + C(n-1) - (n-1) \\
+&= 1 + 2C(n-1)
+\end{align}
+
+Closed-form solution: $C(n) = 2^n - 1$
+
+### CutChurro Timing
+
+```{r, echo=FALSE}
+price <- c(1,5,8,9,10,17,17,20,24,30,34,34,38,40,45,46,47,50,52,55)
+CutChurro <- function(n) {
+  if (n == 0)
+    return(0)
+  maxTotPrice <- -1
+  for(i in 1:n) {
+    totPriceTry <- price[i] + CutChurro(n-i)
+    if(totPriceTry > maxTotPrice)
+            maxTotPrice <- totPriceTry 
+  }
+  return(maxTotPrice)
+}
+dummycall <- CutChurro(4) # so function gets loaded b/4 timing test
+```
+
+
+```{r}
+num_inches <- 10:20
+elapsed_time = sapply(num_inches,function(n){system.time(CutChurro(n))['elapsed']} )
+rbind(num_inches, elapsed_time)
+```
+
+### Plot of times
+
+```{r, fig.height=4.5, fig.width=7, fig.align="center"}
+plot(num_inches, elapsed_time)
+```
+
+
+## More Backtracking Examples
+
+### General Idea
+
+- Problem has several options, and *recursive substructure.*
+- Try one of the options, and solve the subproblem recursively.
+    - If that doesn't work, try another option.
+    
+Backtracking algorithms tend to be slow.
+
+### Decision Problems
+
+- A *decision problem* is a problem whose answer is either TRUE or FALSE.
+- Lots of basic questions about algorithms involve decision problems.
+- Often an algorithm that solves a decision problem can be modified slightly to do something that seems harder.
+
+Example: 
+
+- Decision problem: Does $p(x) = Ax^2 + Bx +C$ have any roots?
+- Slightly harder problem: Find all the roots of $p(x) = Ax^2 + Bx +C$.
+
+Meta-Example:
+
+- Decision problem: Does $\mathcal{X}$ have a solution?
+- Slightly harder problem: Give all the solutions of $\mathcal{X}$.
+
+## Text Segmentation
+
+### Example: Text Segmentation
+
+- We have a boolean function `IsWord(A[1..i])` that tells us if a string (i.e., array) is a word in our language.
+- We have a string of words without spaces.
+- Can the string be *segmented* into words? (Is it "splittable"?)
+
+```
+BOTHEARTHANDSATURNSPIN
+
+BOT HEART HANDS AT URNS PIN
+
+BOTH EARTH AND SATURN SPIN 
+```
+
+### Recursive substructure
+
+If a string starts with a word, and the rest of the string is splittable into words, then whole string is splittable.
+
+- See if the first letter is a word.
+    - Recursively check the rest.
+- See if the first two letters make a word.
+    - Recursively check the rest.
+- See if the first three letters make a word.
+    - Recursively check the rest.
+- ... and so on.
+
+### Text Segmentation Algorithm
+
+```{javascript, eval=FALSE}
+Splittable(A[1..n]):
+    if n = 0
+        return TRUE
+    for i <- 1 to n
+        if IsWord(A[1..i])
+            if Splittable(A[(i+1)..n])
+                return TRUE
+    return FALSE
+```
+
+Time? (Same recurrence as CutChurro: $O(2^n)$).
+
+### Global Variables
+
+- Is usually *not OK* to use global variables when programming.
+- It is actually **OK** to use global variables when describing algorithms.
+    - Often global variables make our descriptions cleaner.
+    - We assume a "competent programmer who is not quite as clever as we are" could read our algorithm description and implement it without global variables.
+    
+### Text Segmentation Algorithm: Index only version
+
+```{javascript, eval=FALSE}
+// A[1..n] is a string to test to see if it is splittable. (n is constant)
+// IsWord(i,j) returns true iff A[i..j] is a word.
+
+Splittable(i):    << Is A[i..n] splittable? >>
+    if i > n
+        return TRUE
+    for j <- i to n
+        if IsWord(i, j)
+            if Splittable(j+1)
+                return TRUE
+    return FALSE
+    
+    
+// Call this function as: Splittable(1)
+```
+
+## Subset Sum
+
+### Example: Subset Sum
+
+- We have a *set* $X$ of positive integers (so no duplicates).
+- Given a *target* value $T$, is there some *subset* of $X$ that adds up to $T$?
+
+Recursive Substructure:
+
+- For any $x\in X$, the answer is TRUE for target $T$ if
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T$, or
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T-x$.
+- In other words, the cases are:
+    - *without:* There is a subset not containing $x$ that works.
+    - *with:* There is a subset containing $x$ that works.
+- Base Cases:
+    - If $T = 0$, the answer is TRUE. ($\emptyset$ works!)
+    - If $T < 0$, the answer is FALSE. (everything's positive)
+    - If $X = \emptyset$, the answer if FALSE (unless $T=0$, of course.)
+
+### Subset Sum Algorithm: Set version
+
+Form the subproblems by removing *some* element of $X$.
+
+```{javascript, eval=FALSE}
+SubsetSum(X, T):   //  Does any subset of X sum to T?  
+    if T = 0
+        return TRUE
+    else if T < 0 or X = ∅
+        return FALSE
+    else
+        x <- any element of X
+        with <- SubsetSum(X \ {x}, T − x)
+        wout <- SubsetSum(X \ {x}, T)
+        return (with OR wout)
+```
+
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(1292021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+## just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+### Subset Sum: Array index version
+
+1. Complete the array index version of `SubsetSum`. Form the subproblems by removing the *last* element of $X$.
+
+```{javascript, eval=FALSE}
+// X[1..n] is an array of positive integers (n is constant)
+
+SubsetSum(i, T) :  //  Does any subset of X[1..i] sum to T?  
+{
+    TODO
+}
+
+
+// Call this function as: SubsetSum(n, T)
+```
+
+2. Come up with a recurrence for the number of `SubsetSum` calls made by `SubsetSum(n)`. Do you recognize it? What's the closed-form solution?
+
+### Slightly Harder Problem
+
+3. Can you modify the algorithm from #1 so that it returns the *number* of subsets of $X$ that add up to $T$, instead of just TRUE or FALSE?
+
+# Dynamic Programming: Introduction
+
+## Assignment Comments, Sample Solutions
+
+### Counting Subsets
+
+```{javascript, eval=FALSE}
+SubsetSum(i,T):    //  Does any subset of X[1..i] sum to T?  
+  if T = 0
+    return 1
+  else if T < 0 or i = 0
+    return 0
+  else
+    with <- SubsetSum(i-1, T − X[i])
+    without <- SubsetSum(i-1, T) 
+    return (with + without)
+```
+
+- Base case: If $T=0$, there is one subset, $\emptyset$, summing to $T$.
+- Inductive hypothesis: `SubsetSum(k,T)` returns the number of subsets of `X[1..k]` summing to $T$, for $k<i$.
+- Inductive step: There are two *disjoint* ways the target can be reached: using `X[i]` and not using `X[i]`, so the total number of ways is the sum of these two.
+
+### Recall: Text Segmentation 
+
+Break a string into words: `BOTHEARTHANDSATURNSPIN`
+
+```{javascript, eval=FALSE}
+Splittable(A[1..n]):
+    if n = 0
+        return TRUE
+    for i <- 1 to n
+        if IsWord(A[1..i])
+            if Splittable(A[(i+1)..n])
+                return TRUE
+    return FALSE
+```
+
+### Text Segmentation (array index version)
+
+```{javascript, eval=FALSE}
+// A[1..n] is a string to test to see if it is splittable. (n is constant)
+// IsWord(i,j) returns true iff A[i..j] is a word.
+
+Splittable(i):    // Is A[i..n] splittable? 
+    if i > n
+        return TRUE
+    for j <- i to n
+        if IsWord(i, j)
+            if Splittable(j+1)
+                return TRUE
+    return FALSE
+    
+    
+// Call this function as: Splittable(1)
+```
+
+### Counting word segmentations
+
+```{javascript, eval=FALSE}
+// A[1..n] is a string (n is constant)
+// IsWord(i,j) returns true iff A[i..j] is a word.
+
+PartitionCount(i):   // how many ways can A[i..n] split into words?
+    if i > n
+        return 1 
+    total <- 0
+    for j <- i to n
+        if IsWord(i, j)
+            total <- total + PartitionCount(j+1)
+    return total
+```
+
+- Base Case: There are no letters to consider, so we have one vacuous split.
+- Inductive hypothesis: `PartitionCount(k)` returns the number of splits of `A[k..n]` for $k > i$.
+- Inductive Step: Check all the possible prefixes of `A[i..n]` for a word. For each that is found, increment `total` by the number of splits of the remainder, which is correctly determined, by inductive hypothesis.
+
+### Recursion Tree?
+
+Consider the recursion tree for `TOPARTISTOIL`.
+
+## Dynamic Programming
+
+### Why is backtracking so slow?
+
+- Problem has several options, and *recursive substructure.*
+- Many of the subproblems are the same: *overlapping subproblems*.
+    - A brute-force recursive algorithm will repeatedly solve the same problem.
+    
+**Solution:** Save the subproblem calculations (usually in an array), and refer to the array instead of making a recursive call.
+    
+### Example: Fibonacci Numbers
+
+$$
+F(n) = \left\{\begin{array}{ll}
+1 & \mbox{if } n = 0 \mbox{ or } n = 1 \\
+F(n-1) + F(n-1) & \mbox{if } n>1
+\end{array} \right.
+$$
+Brute force recursion (exponential time):
+
+```
+RFib(n):
+    if n = 0
+        return 0
+    else if n = 1
+        return 1
+    else
+    return RFib(n − 1) + RFib(n − 2)
+```
+
+Top-down evaluation wastes a lot of effort:
+
+```
+RFib(7) =                   RFib(6)                               + RFib(5)
+           =       RFib(5)          + RFib(4)            + RFib(4)          + RFib(3)
+           = RFib(4) + RFib(3) + RFib(3) + RFib(2) + RFib(3) + RFib(2) + RFib(2) + RFib(1)
+           = etc...
+```
+
+### Better: Memoized Recursion
+
+**Memoization:**  Avoid repeated recursive calls by storing every result in an array.
+Instead of making a recursive call, just use the array value (if defined).
+
+```
+MemFibo(n):
+    if n = 0
+        return 0
+    else if n = 1
+        return 1
+    else
+        if F[n] is undefined
+            F[n] <- MemFibo(n − 1) + MemFibo(n − 2)
+        return F[n]
+```
+
+- The recursion "tree" is trimmed: constant "width"
+- The algorithm is actually iterative.
+    - $F[n]$ gets populated from the bottom up: $F[0], F[1], F[2], \ldots$
+
+### Even Better: Iterative Solution
+
+Notice: 
+
+- $F[n]$ gets populated from the bottom up: $F[0], F[1], F[2], \ldots$
+- So loop from bottom up, and populate $F$ as you go.
+    - Populate $F$ recursively, but in a loop.
+    
+```
+IterFibo(n):
+    F[0] <- 0
+    F[1] <- 1
+    for i <- 2 to n
+        F[i] <- F[i − 1] + F[i − 2]
+    return F[n]
+```
+
+- Time: $\Theta(n)$
+- Space: $\Theta(n)$ 
+    - But we could make it $\Theta(1)$ by just keeping last two $F$'s as we go.
+    
+## Writing Dynamic Programming Algorithms
+
+### Dynamic Programming Steps
+
+1. *Specify* the problem as a recursive function, and *solve it* recursively (with an algorithm or formula).
+
+2. *Build the solutions* from the bottom up:
+    - What are the *subproblems*?
+    - What *data structure* do I store the solutions in? (Usually an array.)
+    - Which subproblem does each subproblem depend on?
+        - Determine an *evaluation order.*
+    - Space and time?
+    - Write the algorithm. Usually it will just be a couple nested loops, with the recursive calls replaced by array look-ups.
+
+### Counting word segmentations
+
+```{javascript, eval=FALSE}
+// A[1..n] is a string (n is constant)
+// IsWord(i,j) returns true iff A[i..j] is a word.
+
+PartitionCount(i):   // how many ways can A[i..n] split into words?
+    if i > n
+        return 1 
+    total <- 0
+    for j <- i to n
+        if IsWord(i, j)
+            total <- total + PartitionCount(j+1)
+    return total
+    
+    
+// Call this function as PartitionCount(1)
+```
+
+Time: $O(2^n)$
+
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(212021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+## just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+### Using dynamic programming
+
+1. *Identify the subproblems.* In order for `PartitionCount(i)` to return a value, which subproblems need to return values? (i.e., what does the Recursion Fairy need to take care of?)
+
+2. *Find an evaluation order.* Let `PC` be an array of numbers for filling in the solutions, so our job is to put the return value of `PartitionCount(i)` in `PC[i]`, for all `i`. What is the first value of `PC` that you can fill in? Based on that first value, what's the second value you can fill in? Third?
+
+3. Write an iterative *algorithm* to fill in the elements of `PC`.
+
+4. What are the *space and time* of your algorithm?
+
+# Dynamic Programming: Tables
+
+## Assignment Comments, Sample Solutions
+
+### Pseudocode is not code
+
+```{javascript, eval=FALSE}
+// Let price[1..N] be a constant array of prices.
+// So price[i] is the cost of a churro of length i.
+
+CutChurro(n):
+    if n = 0
+        return 0
+    maxTotPrice <- -1
+    for i <- 1 to n
+        totPriceTry <- price[i] + CutChurro(n-i)
+        if totPriceTry > maxTotPrice
+            maxTotPrice <- totPriceTry 
+    return maxTotPrice
+```
+
+- The goal is to *communicate* your algorithm in a way that makes its correctness transparent.
+- It's OK to have things a little less "buttoned-up" if it makes it clearer what the algorithm is doing.
+
+### Step 1: understand the recursive structure
+
+```{javascript, eval=FALSE}
+// Let price[1..N] be a constant array of prices.
+// So price[i] is the cost of a churro of length i.
+
+CutChurro(n):
+    if n = 0
+        return 0
+    maxTotPrice <- -1
+    for i <- 1 to n
+        totPriceTry <- price[i] + CutChurro(n-i)
+        if totPriceTry > maxTotPrice
+            maxTotPrice <- totPriceTry 
+    return maxTotPrice
+```
+
+- `CutChurro(n)` depends on the Recursion Fairy taking care of `CutChurro(n-1)`, `CutChurro(n-2)`, ..., `CutChurro(0)`.
+- Data structure: One-dimensional array `CC[0..n]`
+- Evaluation order: `CC[0]` is the first thing to fill in, then `CC[1]`, `CC[2]`, ... etc, in that order.
+    
+### Fast Churro Cutting
+
+```{javascript, eval=FALSE}
+FastCutChurro(n):
+    CC[0] <- 0
+    for i <- 1 to n
+        maxTotPrice <- 0
+        for j <- 1 to i
+            totPriceTry <- price[j] + CC[i-j]
+            if maxTotPrice < totPriceTry
+                maxTotPrice <- totPriceTry
+        CC[i] <- maxTotPrice
+    return CC[n]
+```
+    
+- The recurrence in this algorithm is transparently the same as the recursive call in the recursive algorithm.
+
+### Fast Churro Cutting: Space and Time
+
+```{javascript, eval=FALSE}
+FastCutChurro(n):
+    CC[0] <- 0
+    for i <- 1 to n
+        maxTotPrice <- 0
+        for j <- 1 to i
+            totPriceTry <- price[j] + CC[i-j]
+            if maxTotPrice < totPriceTry
+                maxTotPrice <- totPriceTry
+        CC[i] <- maxTotPrice
+    return CC[n]
+```
+    
+- Old (recursive) version: $O(2^n)$ (exponential time)
+- Dynamic programming (iterative) time: $O(n^2)$ (nested for-loops)
+    - Space: $O(n)$, because of the one-dimensional array
+- Since $n^2 \in o(2^n)$, this time is *subexponential*.
+    - Exponential functions dominate polynomials.
+    
+### Fast Churro Cutting: Exponentially better time
+
+```{javascript, eval=FALSE}
+FastCutChurro(n):
+    CC[0] <- 0
+    for i <- 1 to n
+        maxTotPrice <- 0
+        for j <- 1 to i
+            totPriceTry <- price[j] + CC[i-j]
+            if maxTotPrice < totPriceTry
+                maxTotPrice <- totPriceTry
+        CC[i] <- maxTotPrice
+    return CC[n]
+```
+    
+- Actual timings show that going from $O(2^n)$ to $O(n^2)$ is very noticable, even for small examples:
+    
+```
+> system.time(CutChurro(20))
+   user  system elapsed 
+  0.736   0.002   0.738 
+> system.time(FastCutChurro(20))
+   user  system elapsed 
+      0       0       0 
+```
+
+### Coding Optimizations
+
+- **Note:** Better *code* is not necessarily better *pseudocode*.
+- These examples are cleaner, but the connection between the recursive algorithm is less transparent.
+
+```{javascript, eval=FALSE}
+FastCutChurro(n):
+    CC[0] = 0
+    for (i in 1:n)
+        CC[i] = -1
+        for (j in 1:i)
+            p = price[j] + CC[i-j]
+            if p > CC[i]: CC[i] = p
+    return CC[n]
+    
+
+FastCutChurro(n):
+    Initialize CC[1..n] to price[1..n]
+    for i in 2..n:
+        for j in 1..floor(i/2):
+            if CC[j] + CC[i-j] > CC[i]:
+                CC[i] <- CC[j] + CC[i-j]
+    return CC[n]
+```
+
+## Dynamic Programming
+
+### Dynamic Programming Problems
+
+- Problem has several options, and *recursive substructure.*
+    - String splitting: find a word, then split what's left.
+    - Churro cutting: cut off a piece, then price what's left.
+- Many of the subproblems are the same: *overlapping subproblems*.
+    - The same substrings recur.
+    - Several churro pieces have same length.
+
+Dynamic programming keeps track of the subproblem solutions, and iteratively builds an array/table of solutions.
+
+### Dynamic Programming Steps
+
+1. *Specify* the problem as a recursive function, and *solve it* recursively (with an algorithm or formula).
+
+2. *Build the solutions* from the bottom up:
+    - What are the *subproblems*?
+    - What *data structure* do I store the solutions in? (Usually an array.)
+    - Which subproblem does each subproblem depend on?
+        - Determine an *evaluation order.*
+    - Space and time?
+    - Write the algorithm. Usually it will just be a couple nested loops, with the recursive calls replaced by array look-ups.
+
+## Edit Distance
+
+### Minimum edit distance between two strings
+
+How many operations does it take to transform one string (e.g., DNA sequence) to another? The operations are:
+
+- Mutation: Change one letter to another value.
+- Deletion: Delete one letter.
+- Insertion: Insert a letter.
+
+```
+SATURDAY -mutate-> SUTURDAY -mutate-> SUNURDAY -delete-> SUNRDAY -delete-> SUNDAY
+SATURDAY -delete-> STURDAY -delete-> SURDAY -mutate-> SUNDAY
+KITTEN -mutate-> SITTEN -mutate-> SITTIN -insert-> SITTING
+```
+
+Alignment diagrams: |-bars represent 1 unit of cost.
+
+```
+SATURDAY    SATURDAY    KITTEN     ALGOR I THM
+ ||||        || |       |   | |      || | | ||
+SUN  DAY    S  UNDAY    SITTING    AL TRUISTIC
+```
+
+### Recursive Substructure
+
+```
+SATURDAY    SATURDAY    KITTEN     ALGOR I THM
+ ||||        || |       |   | |      || | | ||
+SUN  DAY    S  UNDAY    SITTING    AL TRUISTIC
+```
+
+The rightmost element in an alignment diagram can be:
+
+- A match (cost 0) $\substack{x \\ | \\ x}$
+- A mutation (cost 1) $\substack{x \\ | \\ y}$
+- An insertion (cost 1) $\substack{- \\ | \\ x}$
+- A deletion (cost 1) $\substack{x \\ | \\ -}$
+
+Try all four, then have the Recursion Fairy optimize the rest.
+
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(232021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+## just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+### Use the Recursion Fairy
+
+Suppose `A[1..m]` and `B[1..n]` are two strings. Suppose also that you have a function `EditDistance(i,j)` that returns the minimum edit distance from `A[1..i]` to `B[1..j]`, as long as $i<m$ or $j<n$.
+
+1. Suppose `A[m] = B[n]` (the last characters of the strings match). If the rightmost element of the alignment diagram is a match $\substack{x \\ | \\ x}$, what is the minimum edit distance from `A[1..m]` to `B[1..n]`? (Use the `EditDistance` function.)
+
+2. Suppose `A[m] != B[n]` (the last characters of the strings don't match). If the rightmost element of the alignment diagram is a mutation $\substack{x \\ | \\ y}$, what is the minimum edit distance?
+
+### Insertions and Deletions
+
+3. If the rightmost element of the alignment diagram is an insertion $\substack{- \\ | \\ x}$, what is the minimum edit distance?
+
+4. If the rightmost element of the alignment diagram is a deletion $\substack{x \\ | \\ -}$, what is the minimum edit distance?
+
+## Using Dynamic Programming
+
+### Data Structure and recurrence
+
+Let `ED[1..m, 1..n]` be an array in which we will store the minimum edit distance from `A[1..i]` to `B[1..j]`. 
+
+`ED[i,j]` will be the minimum of the following:
+
+- `ED[i-1, j-1]` (if `A[i] = B[j]`) 
+    - match
+- `ED[i-1, j-1] + 1` (if `A[i] != B[j]`)
+    - mutation
+- `ED[i, j-1] + 1` 
+    - insertion
+- `ED[i-1, j] + 1`
+    - deletion
+
+### Evaluation Order
+
+`ED[i,j]` is the minimum of the following:
+
+- `ED[i-1, j-1]` (if `A[i] = B[j]`) 
+- `ED[i-1, j-1] + 1` (if `A[i] != B[j]`)
+- `ED[i, j-1] + 1` 
+- `ED[i-1, j] + 1`
+
+So the evaluation order must obey the arrows:
+
+$$
+\begin{array}{cccccc}
+\cdots & \mathtt{ED[i-2, j-2]} & \rightarrow & \mathtt{ED[i-2, j-1]} & \rightarrow &\mathtt{ED[i-2, j]} \\
+ & \downarrow & \searrow & \downarrow & \searrow & \downarrow \\
+\cdots & \mathtt{ED[i-1, j-2]} & \rightarrow & \mathtt{ED[i-1, j-1]} & \rightarrow &\mathtt{ED[i-1, j]} \\
+ & \downarrow & \searrow & \downarrow & \searrow & \downarrow \\
+\cdots & \mathtt{ED[i, j-2]} & \rightarrow & \mathtt{ED[i, j-1]} & \rightarrow & \mathtt{ED[i, j]} \\
+\end{array}
+$$
+
+### Row major or column major
+
+$$
+\begin{array}{cccccc}
+\cdots & \mathtt{ED[i-2, j-2]} & \rightarrow & \mathtt{ED[i-2, j-1]} & \rightarrow &\mathtt{ED[i-2, j]} \\
+ & \downarrow & \searrow & \downarrow & \searrow & \downarrow \\
+\cdots & \mathtt{ED[i-1, j-2]} & \rightarrow & \mathtt{ED[i-1, j-1]} & \rightarrow &\mathtt{ED[i-1, j]} \\
+ & \downarrow & \searrow & \downarrow & \searrow & \downarrow \\
+\cdots & \mathtt{ED[i, j-2]} & \rightarrow & \mathtt{ED[i, j-1]} & \rightarrow & \mathtt{ED[i, j]} \\
+\end{array}
+$$
+
+- Either *row major* (row by row) or *column major* (column by column) order will work.
+- For example, here is row major as a nested for-loop:
+
+```
+for i from 1 to m
+    for j from 1 to n
+         TODO: populate E[i,j]
+```
+
+### Space and Time
+
+- *Data structure:* `ED[1..m, 1..n]`, so **space** is $O(mn)$.
+- *Recursive structure:* `ED[i,j]` is the minimum of the following:
+    - `ED[i-1, j-1]` (if `A[i] = B[j]`) 
+    - `ED[i-1, j-1] + 1` (if `A[i] != B[j]`)
+    - `ED[i, j-1] + 1` 
+    - `ED[i-1, j] + 1`
+        - This minimum can be taken in constant time ($O(1)$).
+- *Evaluation order*:
+
+```
+for i from 1 to m
+    for j from 1 to n
+         TODO: populate E[i,j]
+```
+
+- The `populate` step takes constant time, so **time** is $mn \cdot O(1) = O(mn)$
+
+### Algorithm
+
+Finally, we can write the algorithm. (Note we add a row and a column of 0's as a base case.)
+
+```{python, eval=FALSE}
+EditDistance(A[1 .. m], B[1 .. n]):
+    Initialize ED[0, *] and ED[*, 0] to *, for *=0,1,2,... 
+    for i <- 1 to m
+        for j <- 1 to n
+            insert <- ED[i, j − 1] + 1
+            delete <- ED[i − 1, j] + 1
+            if A[i] = B[j]
+                mutate <- ED[i − 1, j − 1]
+            else
+                mutate <- ED[i − 1, j − 1] + 1
+            ED[i, j] <- min {insert, delete, mutate}
+    return ED[m, n]
+```
+
+Check out the memoization table.
+
+### Exam #1: February 10 (Wed.)
+
+- Are you ready?
+    - You should be able to do [tonight's assignment](../assignments/10changemaking.html) *by yourself*, without getting help from others.
+        - It's OK to get help from others, but before you do you should try to solve the problem *by yourself*.
+    - If you can't do this assignment *by yourself*, that's a sign that you are relying too much on others to do your work for you.
+- What if you're not ready?
+    - Get a notebook and a pencil and redo [all the assignments](../index.html#Written_Assignments) *by yourself* without looking at the solutions.
+    - Try some other Exercises in the book. The goal is to *exercise* the techniques you have learned, not necessarily produce a perfect solution.
+    
+# Dynamic Programming: Subset Sum
+
+## Assignment Comments, Sample Solutions
+
+### Working Together
+
+- It's fine to work together, as long as the work you turn in represents work that you understand and participated in.
+- Consider not always working with the same group.
+- *Invite* other to join you; Feel free to use the `#CS-120` text channel to announce when you'll be working.
+
+For example,
+
+> Hey everyone! I'm planning to be in VC tonight around 7 to work on the assignment. Anyone want to join me?
+
+Feel free to use the voice channels in the Winter Hall Learning Lounge server.
+
+### Describing Algorithms
+
+- Go back and read Section 0.5 again. It might make more sense now that we have a little more context.
+- Remember: the goal is to *communicate*.
+
+### Change Making Examples
+
+```
+dollarValues = [1, 4, 7, 13, 28, 52, 91, 365]
+
+MinDreamDollars(k):
+  # base case
+  if k = 0:
+    return 0
+  
+  # the min is set to the max to begin with
+  minBills <- k
+  
+  # go over every dollar value
+  for i <- 1 to len(dollarValues):
+    # if the current dollar value can go into k
+    if k >= dollarValues[i]:
+      # if the one that we check next is more than the last, we don't want to keep it
+      minBills = Math.min(minBills, 1 + MinDreamDollars(k - dollarValues[i]))
+  
+  return minBills
+  
+  
+MinDreamDollarsDynamicExtravaganza(k):
+    MD <- array of size k
+    MD[0] <- 0
+
+    # memo time
+    for i <- 1 to k:
+      minBills <- k
+      for j <- 1 to len(dollarValues):
+        if k >= dollarValues[j]:
+          # if the one that we check next is more than the last, we don't want to keep it
+          minBills = Math.min(minBills, 1 + MD[i - dollarValues[i]])
+        
+      MD[i] = minBills
+    
+    return MD[k]
+```
+
+### Change Making Examples
+
+```
+ChangeCalc(k):
+  if k=0
+    return 0
+  leastBills <- k
+  for j <- each bill value <= k
+    maybeLeast <- 1 + ChangeCalc(k-j)
+    if maybeLeast < leastBills
+      leastBills <- maybeLeast
+  return leastBills
+  
+  
+FastChangeCalc(k):
+  LB[0] <- 0
+  for i <- 1 through k
+  leastBills <- k
+    for j <- each bill value <= i
+      maybeLeast <- 1 + LB[i-j]
+      if maybeLeast < leastBills
+        leastBills <- maybeLeast
+    LB[i] <- leastBills
+  return LB[k]
+```
+
+### Change Making Examples
+
+```
+bill_values = [1, 4, 7, 13, 28, 52, 91, 365]
+
+MinDreamDollars(i):
+    if i is 0:
+        return 0 // no bills make 0
+    minBills = i
+    for each value in bill_values:
+        if i >= value: // possible bill value must not be greater than desired value
+            minBills = minimum of {minBills, MinDreamDollars(i-value)}
+    return minBills + 1
+
+
+
+FastMinDreamDollars(n):
+    initialize MDD[0..n] to [0, 1, 2, ..., n]
+    for i in 1..n:
+        for each value in bill_values:
+            if i >= value:
+                MDD[i] = min(MDD[i],MDD[i-value]+1)
+    return MDD[n]
+```
+
+### Implementation in R (just for fun)
+
+```{r}
+bills <- c(1,4,7,13,28,52,91,365)
+NumBills <- function(n) {
+  if(n == 0)
+    return(0)
+  if(n<0)
+    return(Inf)
+  nb <- Inf
+  for(b in bills[bills <= n]) {
+    tryNum <- 1 + NumBills(n-b)
+    if(tryNum < nb)
+      nb <- tryNum
+  }
+  return(nb)
+}
+```
+
+Notice that you can use `Inf` for a number that is bigger than all other numbers.
+
+### Memoized version in R
+
+
+```{r}
+bills <- c(1,4,7,13,28,52,91,365)
+FastBills <- function(n){
+  nbills <- rep(Inf, n   +1) # off by one indexing
+  nbills[0  +1] <- 0
+  for (i in 1:n) {
+    for (b in bills[bills <= i]) {
+      tryNum <- 1 + nbills[i - b   +1]
+      if (tryNum < nbills[i   +1])
+        nbills[i   +1] <- tryNum
+    }
+  }
+  return(nbills[n  +1])
+}
+```
+
+We can "pretend" that the `nbills` array is indexed from 1 to n by adding a "`   +1`" to every subscript (with some spaces to remind us why).
+
+### Timing Experiments
+
+```
+> system.time(NumBills(45))
+   user  system elapsed 
+ 23.174   0.048  23.240 
+> system.time(FastBills(45))
+   user  system elapsed 
+  0.000   0.000   0.001 
+> system.time(FastBills(455))
+   user  system elapsed 
+  0.001   0.000   0.001 
+> FastBills(455)
+[1] 5
+> NumBills(455)
+
+```
+
+... still waiting for that last one to finish.
+
+```
+PID  USER      PR  NI    VIRT    RES    SHR S  %CPU  %MEM     TIME+ COMMAND 
+2767 dhunter   20   0 1881376 217652  31936 R 100.0   1.4   3:22.98 rsession 
+```
+
+The size of the recursion tree is just silly:
+
+```
+> NumBills(4554234)
+Error: C stack usage  7979108 is too close to the limit
+> NumBills(4554)
+Error: C stack usage  7979108 is too close to the limit
+> FastBills(4554234)
+[1] 12483
+```
+
+## Dynamic Programming
+
+### Dynamic Programming Problems
+
+- Good for problems with *recursive substructure* and *overlapping subproblems*.
+
+### Dynamic Programming Steps
+
+1. *Specify* the problem as a recursive function, and *solve it* recursively (with an algorithm or formula).
+
+2. *Build the solutions* from the bottom up:
+    - What are the *subproblems*?
+    - What *data structure* do I store the solutions in? (Usually an array.)
+    - Which subproblem does each subproblem depend on?
+        - Determine an *evaluation order.*
+    - Space and time?
+    - Write the algorithm. Usually it will just be a couple nested loops, with the recursive calls replaced by array look-ups.
+
+## Subset Sum
+
+### Recall: Subset Sum
+
+- We have a *set* $X$ of positive integers (so no duplicates).
+- Given a *target* value $T$, is there some *subset* of $X$ that adds up to $T$?
+
+### Subset Sum: Recursive Specification
+
+- For any $x\in X$, the answer is TRUE for target $T$ if
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T$, or
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T-x$.
+- In other words, the cases are:
+    - *without:* There is a subset not containing $x$ that works.
+    - *with:* There is a subset containing $x$ that works.
+- Base Cases:
+    - If $T = 0$, the answer is TRUE. ($\emptyset$ works!)
+    - If $T < 0$, the answer is FALSE. (everything's positive)
+    - If $X = \emptyset$, the answer if FALSE (unless $T=0$, of course.)
+
+### Algorithm description, using indexes (revised)
+
+```{javascript, eval=FALSE}
+// X[1..n] is an array of positive integers (n is constant)
+
+SubsetSum(i, T) :  //  Does any subset of X[i..n] sum to T?  
+    if T = 0
+        return TRUE
+    else if T < 0 or i > n
+        return FALSE
+    else
+        with <- SubsetSum(i + 1, T − X[i])
+        wout <- SubsetSum(i + 1, T)
+        return (with OR wout)
+
+// Call this function as: SubsetSum(1, T)
+```
+
+### Subset Sum: Dynamic programming solution
+
+- Subproblems: `SubsetSum(i,T)` depends on `SubsetSum(i+1, T')`, for $T'\leq T$.
+- Data Structure: Two-dimensional *boolean* array: `SS[0..n, 0..T]`
+
+### Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(252021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+### Evaluation Order?
+
+1. Draw arrows in this diagram that the evaluation order must obey.
+
+$$ \scriptsize
+\begin{array}{ccccccccc}
+       & \vdots & & \vdots && \vdots && \vdots &\\ 
+\cdots & \mathtt{SS[i-1, j-1]} & \phantom{\rightarrow} & \mathtt{SS[i-1, j]} & \phantom{\rightarrow} & \mathtt{SS[i-1, j+1]} & \phantom{\rightarrow} &\mathtt{SS[i-1, j+2]} & \cdots \\[20pt]
+\cdots & \mathtt{SS[i, j-1]}& & \mathtt{SS[i, j]} & \phantom{\rightarrow} & \mathtt{SS[i, j+1]} & \phantom{\rightarrow} &\mathtt{SS[i, j+2]} & \cdots\\[20pt]
+\cdots & \mathtt{SS[i+1, j-1]} & & \mathtt{SS[i+1, j]} & & \mathtt{SS[i+1, j+1]} & &\mathtt{SS[i+1, j+2]} & \cdots \\[20pt]
+\cdots & \mathtt{SS[i+2, j-1]}  & & \mathtt{SS[i+2, j]} & & \mathtt{SS[i+2, j+1]} & & \mathtt{SS[i+2, j+2]} & \cdots \\
+       & \vdots & & \vdots && \vdots && \vdots &\\ 
+\end{array}
+$$
+
+
+
+### Describe the algorithm
+
+3. Propose an evaluation order, and write some for-loops. 
+
+4. Space and time?
+
+5. If time permits, complete the memoized algorithm.
+
+##  Subset Sum postmortem
+
+### Subset Sum: Memoized version (spoiler)
+
+```{javascript, eval=FALSE}
+// X[1..n] is an array of positive integers (n is constant)
+// SS[1..(n+1), 0..T] is a boolean array
+
+FastSubsetSum(T):
+    Initialize SS[*, 0] to TRUE
+    Initialize SS[n + 1, *] to FALSE for * > 0
+    Initialize SS[* , *] to FALSE for * < 0    // hmmm...
+    for i <- n downto 1
+        for t <- 1 to T
+            with <- SS[i + 1, t - X[i]]
+            wout <- SS[i + 1, t]
+            SS[i, t] <- (with OR wout)
+    return S[1, T]
+```
+
+
+### Spiffier Version (avoid negative indexes)
+
+```{javascript, eval=FALSE}
+// X[1..n] is an array of positive integers (n is constant)
+
+FastSubsetSum(T):
+    Initialize SS[*, 0] to TRUE
+    Initialize SS[n + 1, *] to FALSE for * > 0
+    for i <- n downto 1
+        for t <- 1 to X[i] − 1
+            SS[i, t] <- SS[i + 1, t]   // avoid t - X[i] < 0 case
+        for t <- X [i] to T
+            SS[i, t] <- SS[i + 1, t] OR SS[i + 1, t − X[i]]
+    return S[1, T]
+```
+
+- Space and Time are both $O(nT)$.
+
+
+### Not so fast!
+
+- $O(nT)$ seems like an improvement over $O(2^n)$.
+    - It is better for small $T$.
+- However, $O(nT)$ is bad when $T$ is large.
+    - If $m$ is the number of *bits* in $T$, then $T \in O(2^m)$, so the space and time become $O(n\cdot 2^m)$.
+    - So in terms of the *size* of the input, this algorithm is still exponential.
+    
+Fact: The SubsetSum problem is NP-complete.
+    
