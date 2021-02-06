@@ -45,6 +45,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 9. [Dynamic Programming: Introduction](slides/09dynprog1.html)
 10. [Dynamic Programming: Tables](slides/10dynprog2.html)
 11. [Dynamic Programming: Subset Sum](slides/11dynprog3.html)
+    - *Summary:* [Slide notes 1-11, Chapters 1-3](slide01-11notes.html)
 
 # Written Assignments
 
