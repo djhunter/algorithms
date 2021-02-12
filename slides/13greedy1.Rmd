@@ -1,0 +1,235 @@
+---
+title: "Greedy Algorithms: Scheduling"
+date: "February 12, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Greedy Algorithms
+
+## The Greedy Choice
+
+- Problem: Find the optimal (e.g., cheapest/best) long-term sequence of choices.
+- A *greedy algorithm* makes the cheapest/best short-term choice at each stage of the process.
+
+We saw some examples where the greedy choice *doesn't* work:
+
+- Change-making in Nadirian currency.
+- Candy Swap Saga
+
+## Greedy vs. Dynamic Programming
+
+- Both solve *optimization* problems.
+- Problems have *recursive substructure.*
+   - Make a choice, then optimize the remainder.
+- There is one **key difference:**
+    - In the dynamic programming solutions, we had to try all the different choices at each stage.
+        - Churro cutting: Try all the different cuts, then optimize the rest.
+        - Candy swap: Try swapping and not swapping, then optimize the rest.
+    - A greedy algorithm just makes the optimal *short-term* choice.
+        - Cut off the most expensive piece.
+        - Never swap for a different candy.
+   
+## Isn't this easy?
+
+- Writing greedy algorithms is easy. (And they're usually fast.)
+- The hard part is **proving that they actually give you an optimal solution.**
+
+# Scheduling
+
+## Maximize the number of events
+
+- You have a list of potential events to schedule (e.g., Fringe Festival skits.)
+   - Each event has a starting time $S[i]$ and a finish time $F[i]$.
+   - You only have one stage. 
+
+- The organizer of the festival only cares about *maximizing the number* of events.
+- Which events should you choose?
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(2122021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## How many can you schedule?
+
+```{r, echo=FALSE}
+S <- c(5,1,6,1,4,9 ,2,4)
+F <- c(7,5,9,6,7,10,4,6)
+rbind(S,F)
+```
+
+Find the maximum number of events for this input. (Draw a picture?)
+
+# Greedy Scheduling Algorithm
+
+## First: Recursive Structure?
+
+```{javascript, eval=FALSE}
+// There are n events, numbered 1..n
+// S[1..n] is a list of starting times
+// F[1..n] is a corresponding list of finishing times
+
+MaxNumEvents(X)  // the maximum number of events in X ⊆ {1..n} that can be scheduled 
+    if X = ∅ then
+        return 0
+    Choose any element k in X
+    B <- the set of events in X ending BEFORE S[k]
+    A <- the set of events in X starting AFTER F[k]
+    return the maximum of:
+        MaxNumEvents(X \ {k}) // do not use event number k
+        MaxNumEvents(A) + 1 + MaxNumEvents(B)  // use event k
+```
+
+It works, by induction.
+
+## Greedy Scheduler
+
+```{javascript, eval=FALSE}
+// There are n events, numbered 1..n
+// S[1..n] is a list of starting times
+// F[1..n] is a corresponding list of finishing times
+
+MaxNumEvents(X)  // the maximum number of events in X ⊆ {1..n} that can be scheduled 
+    if X = ∅ then
+        return 0
+    Let k in X be the event that ends first // GREEDY CHOICE
+    A <- the set of events in X starting AFTER F[k]
+    return MaxNumEvents(A) + 1
+```
+
+- Summary: Choose the event $k$ that *ends first*, discard events that conflict with $k$, and recurse.
+- How do we know that this works?
+
+# Greedy Proof of Correctness
+
+## Greedy choice property: Idea of proof
+
+To prove that a greedy algorithm works, you need to show that it has the *greedy choice property*.
+
+- Suppose you have a non-greedy (optimal) solution.
+- Show that the greedy solution is just as good.
+    - Find the first place where they differ, and show that you could have used the greedy choice without making the solution less optimal.
+    
+## Group Exercise: Find another solution
+
+Suppose the sequence of events continues, but we don't have all the values:
+
+```
+S <- [5, 1, 6, 1, 4, 9, 2, 4  ... ]
+F <- [7, 5, 9, 6, 7,10, 4, 6, ... ]
+```
+
+- Your greedy solution contains 17 events, starting with: 7, 8, 3, 6, ...
+
+- Buford has found another 17-event solution: 7, 8, 13, 11, ...
+
+> Claim: If you replace the 13 in Buford's solution with a 3, you get yet another 17-event solution.
+
+*Write a couple sentences* to justify this claim.
+
+## Greedy Scheduler Correctness
+
+```{javascript, eval=FALSE}
+// There are n events, numbered 1..n
+// S[1..n] is a list of starting times
+// F[1..n] is a corresponding list of finishing times
+
+MaxNumEvents(X)  // the maximum number of events in X ⊆ {1..n} that can be scheduled 
+    if X = ∅ then
+        return 0
+    Let k in X be the event that ends first // GREEDY CHOICE
+    A <- the set of events in X starting AFTER F[k]
+    return MaxNumEvents(A) + 1
+```
+
+- Suppose that `MaxNumEvents({1..n})` returns $m$.
+- Let $g_1, g_2, \ldots, g_m$ be the events chosen by this greedy algorithm.
+- Suppose that $g_1, g_2, \ldots, g_{j-1}, \mathbf{c_j}, c_{j+1}, \ldots, c_m$ is another sequence of compatible events.
+    - Same length $m$, but different choice for event number $j$.
+    
+Now apply the same reasoning as in the Buford example.
+
+## Proof of correctness
+
+**Proof.**  Suppose that `MaxNumEvents({1..n})` returns $m$. Let $g_1, g_2, \ldots, g_m$ be the events chosen by this greedy algorithm. Suppose that 
+$$g_1, g_2, \ldots, g_{j-1}, \mathbf{c_j}, c_{j+1}, \ldots, c_{m'}$$ 
+is another sequence of compatible events, with $m' \leq m$.
+
+Since event $g_j$ is part of the first solution, it must start after event $g_{j-1}$. Since event $g_j$ was chosen by the greedy algorithm, *it must end before* all the events in $X \setminus \{g_1, g_2, \ldots, g_{j-1}\}$. In particular, it must end before event $c_{j+1}$. Therefore, we can replace $c_j$ with $g_j$ and obtain another solution:
+$$g_1, g_2, \ldots, g_{j-1}, \mathbf{g_j}, c_{j+1}, \ldots, c_{m'}$$ 
+Continuing in this way, all of the $c_i$'s can be replaced with $g_i$'s. Therefore $m = m'$, and the greedy solution is optimal.
+
+# Refinining the algorithm
+
+## Greedy Scheduler Time
+
+```{javascript, eval=FALSE}
+// There are n events, numbered 1..n
+// S[1..n] is a list of starting times
+// F[1..n] is a corresponding list of finishing times
+
+MaxNumEvents(X)  // the maximum number of events in X ⊆ {1..n} that can be scheduled 
+    if X = ∅ then
+        return 0
+    Let k in X be the event that ends first // GREEDY CHOICE
+    A <- the set of events in X starting AFTER F[k]
+    return MaxNumEvents(A) + 1
+```
+
+- Non-recursive work: $O(n)$
+    - Making the greedy choice requires scanning $X$, which is $O(n)$.
+    - Forming $A$ is also $O(n)$
+- The function uses *tail recursion*, so it could be written as a loop.
+    - The number of remaining events decreases by at least 1 each time, so this "loop" runs $O(n)$ times. **Total time:** $O(n^2)$
+
+## Improve using an efficient sort
+
+```{javascript, eval=FALSE}
+MaxNumEvents(S[1..n], F[1 .. n]):
+    sort F and permute S to match  // O(n log(n))
+    count <- 1
+    X[count] <- 1   // Because now event 1 has first finish time. 
+    for i <- 2 to n  // Scan events in order of finish time. 
+        if S[i] > F [X[count]]  // Is event i compatible?
+            count <- count + 1  //    If so, it is the
+            X[count] <- i       //    greedy choice.
+    return count
+```
+
+Time: 
+
+- $O(n \log n)$ to sort (e.g., use MergeSort)
+- After that finishes, there's just a linear time for-loop: $O(n)$.
+- **Total time:** $O(n \log n)$ 
+

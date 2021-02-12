@@ -1,0 +1,16 @@
+---
+title: "Greedy Activity Selection"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](13greedyscheduling.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+**Do Exercise 1, Parts (b), (c), and (d) ** on pages 176-177 of [E]. *Hint:* Exactly one of these algorithms returns an optimal-length selection of activities.
+
+- For the one that is correct, prove that the algorithm produces an optimal schedule. (Mimic [the proof in the slides](../slides/13greedy1.html#/proof-of-correctness), but put it in your own words.)
+- For the two that fail to give an optimal-length selection, describe a small input (`S[] and F[]`) for which they fail.
+
