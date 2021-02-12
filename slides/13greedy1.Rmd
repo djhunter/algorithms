@@ -190,7 +190,7 @@ Since event $g_j$ is part of the first solution, it must start after event $g_{j
 $$g_1, g_2, \ldots, g_{j-1}, \mathbf{g_j}, c_{j+1}, \ldots, c_{m'}$$ 
 Continuing in this way, all of the $c_i$'s can be replaced with $g_i$'s. Therefore $m = m'$, and the greedy solution is optimal.
 
-# Refinining the algorithm
+# Refining the algorithm
 
 ## Greedy Scheduler Time
 
