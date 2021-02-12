@@ -184,7 +184,7 @@ Now apply the same reasoning as in the Buford example.
 
 **Proof.**  Suppose that `MaxNumEvents({1..n})` returns $m$. Let $g_1, g_2, \ldots, g_m$ be the events chosen by this greedy algorithm. Suppose that 
 $$g_1, g_2, \ldots, g_{j-1}, \mathbf{c_j}, c_{j+1}, \ldots, c_{m'}$$ 
-is another sequence of compatible events, with $m' \leq m$.
+is another sequence of compatible events, with $m' \geq m$.
 
 Since event $g_j$ is part of the first solution, it must start after event $g_{j-1}$. Since event $g_j$ was chosen by the greedy algorithm, *it must end before* all the events in $X \setminus \{g_1, g_2, \ldots, g_{j-1}\}$. In particular, it must end before event $c_{j+1}$. Therefore, we can replace $c_j$ with $g_j$ and obtain another solution:
 $$g_1, g_2, \ldots, g_{j-1}, \mathbf{g_j}, c_{j+1}, \ldots, c_{m'}$$ 
