@@ -1,0 +1,118 @@
+---
+title: "Greedy Algorithms: Exchange Arguments"
+date: "February 15, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## Greedy algorithms that don't work
+
+$b)$ Choose the course $x$ that starts first, discard all classes that conflict with $x$, and recurse.
+
+```
+S = [1, 2, 3]
+F = [9, 3, 4]
+```
+- Course 1 gets chosen; other two are discarded.
+
+$d)$ Choose the course $x$ with shortest duration, discard all classes that conflict with $x$, and recurse.
+
+```
+S = [1, 3, 4]
+F = [4, 5, 9]
+```
+
+- Course 2 gets chosen; other two are discarded.
+
+## Exchange Arguments: The General Pattern
+
+- Assume that there is an optimal solution that is different from the greedy
+solution.
+- Find the "first" difference between the two solutions.
+- Argue that we can exchange the optimal choice for the greedy choice without making the solution worse (although the exchange might not make it better).
+
+Notice the "scare quotes" around "first".
+
+## Draw a picture first
+
+$c)$ Choose the course $x$ that *starts last*, discard all classes that conflict with $x$, and recurse.
+
+- Compare *another optimal solution* to greedy solution.
+- Find the "first" difference.
+- *Exchange,* without making it worse.
+
+## Use your own words
+
+Supposing GREEDYSCHEDULE returns $m$, let $g_1, g_2,\ldots,g_m$ be the classes the algorithm chose (in order of being chosen, so in *reverse chronological order*). Suppose also that $g_1,g_2,\ldots, g_{j-1}, c_j, c_{j+1},\ldots, c_{m'}$ is also a compatible list of classes with $m' \geq m$.
+
+Since $g_j$ is part of the first solution, it must end before $g_{j−1}$ and since it was chosen by the algorithm it must start after all the classes excluding $g_1, g_2,\ldots, g_{j-1}$, or specifically it must start after $c_{j+1}$. This means $g_j$ can replace $c_j$, giving another solution: $g_1,g_2,\ldots,g_{j−1},g_j,c_{j+1},\ldots,c_{m'}$.
+
+This can continue, replacing all $c_i$’s with $g_i$’s so that $m=m'$, which proves that the greedy solution is optimal.
+
+## Less confusing? Events in chronological order
+
+Suppose this greedy algorithm returns $m$. Let $g_1, g_2, \ldots, g_m$ be the events chosen by this greedy algorithm.
+
+Suppose that $c_1,c_2, \ldots, c_{j−1},c_j, g_{j+1}, \ldots, g_{m'}$ is another sequence of compatible events, with $m'\geq m$.
+
+Since event $g_j$ is part of the first solution, it must end before $g_{j+1}$. Given the nature of the greedy algorithm, event $g_j$ starts at the same time or after all other events ending before $g_{j+1}$. In particular, it must start after or at the same time as $c_j$. Therefore, we can replace $c_j$ with $g_j$ and obtain another solution $c_1,c_2, \ldots, c_{j−1},g_j,g_{j+1},\ldots, g_{m'}$. Continuing this way, all of the $c_i$'s can be replaced with $g_j$'s. Therefore $m=m'$, and the greedy solution is optimal.
+
+# Process Scheduling
+
+## Scheduling Tasks in Sequence
+
+- Problem: schedule tasks on a single processor, without swapping. 
+    - *minimize* the average completion time of all the tasks.
+- Example: tasks $a_1$ and $a_2$ take $t_1=2$ seconds and $t_2=3$ seconds to complete.
+    - *average completion time:* 
+        - Do $a_1$ before $a_2$: Task $a_1$ would finish at time 2, and $a_2$ would finish at time 5, for an average completion time of $(2+5)/2 = 3.5$. 
+        - Do $a_2$ before $a_1$: The average completion time $= (3+5)/2 = 4$
+        
+Given tasks $a_1, a_2, \ldots, a_n$ with running times $t_1, t_2, \ldots t_n$, describe an algorithm that will determine the ordering of these tasks that minimizes the average completion time.
+
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(2152021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Greedy Process Scheduling
+
+1. Let `T[1..n]` be an array such that $T[i]$ is the time it takes to do task $a_i$. Describe a greedy algorithm that returns a sequence $g_1, g_2, \ldots g_n$ such that executing the tasks in the order $a_{g_1}, a_{g_2}, \ldots a_{g_n}$ has the minimum possible average completion time.
+
+2. Prove your algorithm is correct:
+    - Suppose that $c_1, c_2, \ldots, c_n$ is another sequencing of these events that has minimal average completion time.
+    - Let $c_j$ be the first index in this solution that differs from your greedy solution.
+    - Argue that you can replace $c_j$ with $g_j$, and the solution will still be optimal.

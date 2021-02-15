@@ -1,0 +1,16 @@
+---
+title: "Interval Stabbing"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](14intervalstabbing.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+**Do Exercise 4 on page 178 of [E].**
+
+- Describe a greedy algorithm
+- Prove that it is correct.
+- Give its running time. 
