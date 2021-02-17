@@ -1,0 +1,61 @@
+---
+title: "Prefix Codes"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](15prefixcodes.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+1. Explain why the following code is not a prefix code. Then give a binary string that corresponds to two different sequences of letters.
+
+```
+| letter   |   b   |   l   |   a   |   c   |   k   |   h    |   w   |   s   |
+| codeword |   01  |   11  |  0010 |  0001 |  0011 |  0000  |  010  |  011  |
+```
+
+
+
+
+2. Use the prefix code given by the following tree to decode the binary string `10110110100000101`. Is this an optimal code for encoding this data?
+
+```
+                             #
+                        0/       \1
+                        #         e
+                     0/   \1        
+                     a     #        
+                         0/ \1     
+                         #   g
+                       0/ \1
+                       m   n      
+```
+
+
+
+
+3. Use Huffman's algorithm to construct a binary tree for an optimal Huffman code for the following letters and frequencies. 
+
+```
+| letter    |  a  |  b  |  c  |  d  |  e  |  f  |  g  |  h  |  i  | 
+| frequency | 100 |  20 |  30 |  20 | 150 |  10 |  20 |  40 | 110 |
+```
+
+
+
+
+4. Review your CS-030 notes on **Priority Queues** and **Binary Heaps**. Use your notes (or Google appropriately) to answer the following questions.
+    a. Explain why the following tree is not a max heap. Then turn it into a max heap by performing a single swap.
+    ```
+                  24
+                /    \
+               21    16
+              / \    / 
+             9  18  17
+    ```
+    b. What are the running times of `ExtractMax` on a max-heap of $n$ elements and `ExtractMin` on a min-heap of $n$ elements? (Give an asymptotic estimate.)
+    c. What are the running times of `AddToMaxHeap` and `AddToMinHeap` (or equivalently, the running time of `Insert` into a priority queue)?
+    d. What is the asymptotic running time required to put list of $n$ letters into a priority queue, implemented as a min-heap? (The letter frequencies will be the priorities.)
+    

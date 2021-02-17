@@ -1,0 +1,339 @@
+---
+title: "Binary Character Codes"
+date: "February 17, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## Interval Stabbing
+
+## Easiest Greedy Choice
+
+Choose the interval with the *smallest right endpoint*, stab at this right endpoint, eliminate the intervals that have been stabbed, and recurse.
+
+(picture)
+
+## Exchange Argument
+
+- Let $g_1, g_2,\ldots,g_m$ be the stabs made by the greedy algorithm (in order from left to right), and suppose $g_1,g_2,\ldots, g_{j-1}, c_j, c_{j+1},\ldots, c_{m'}$ is another set of stabs (in order) that stab all the intervals, with $m' \leq m$.
+
+- $c_j$ must stab the interval $I$ with the leftmost right endpoint, after eliminating those stabbed by $g_1,g_2,\ldots, g_{j-1}$.
+
+- Moving $c_j$ to $g_j$ (the right endpoint of $I$) stabs all of the same intervals, because no other intervals end before interval $I$ does.
+
+- In this way, all of the $c_i$'s can be replaced with $g_i$'s, so $m = m'$.
+
+## Recursive Implementation
+
+```
+Algorithm(L[1..n], R[1..n])
+if n = 0 //empty list
+  return 0
+else
+  min = infinity
+  for i <- 1 to n
+    if R[i] < min
+      min = R[i] //finding stabpoint
+  newL = L[1..n]
+  newR = R[1..n]
+  for j <- 1 to n
+    if min >= L[j] && min <= R[j] //finding if stabpoint overlaps with each brick
+      newL[] <- newL \ L[j] //takes away that brick from array
+      newR[] <- newR \ R[j] 
+  return 1 + Algorithm(newL[], newR[])
+```
+
+Time: $O(n^2)$ (linear work inside tail recursion)
+
+## Iterative Implementation
+
+```
+Stabby(R[1..n], L[1..n]):
+  counter <- 0 
+  MergeSort R and permute L to match 
+  i <- 1
+  while i <= n 
+    stab <- R[i]
+    counter++
+    while L[i] <= stab  \\ then it got stabbed
+      i++  \\ keep checking and skipping what gets stabbed
+  return counter
+```
+
+Time: $O(n \log n)$, because the loop runs in $O(n)$ time, incrementing $i$ until it exceeds $n$.
+
+# Encoding Characters as Binary Strings
+
+## Codes
+
+- A **binary code** is a list of *code words*, which are binary strings.
+- Given an *alphabet* of characters, a **binary character code** is a binary code where each character corresponds to a code word.
+    - e.g., ASCII, UTF-8
+
+Example:
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+code word | 000 | 001 | 010 | 011 | 100 | 101 |
+```
+
+- Given a character string, can *encode* it into binary.
+    - $\mathtt{YO} \mapsto \mathtt{101011}$
+- Given a binary string, can *decode* it to a character string.
+    - $\mathtt{011100010} \mapsto \mathtt{OUI}$
+
+## Compression
+
+- Goal: Minimize number of bits needed to encode.
+- Idea: Use code words of different lengths.
+    - Problem: How to parse a binary string so you know where the code words start?
+    
+Example: 
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+code word |  00 |  01 |  10 |  11 | 100 | 101 |
+```
+
+1. Find two different decodings of `10110010`.
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(2172021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+# Prefix Codes
+
+## Unambiguous encoding
+
+- In a **prefix code**, no code word can start with another code word.
+    - i.e., no code word can be a *prefix* for some other code word.
+
+Example:
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+code word |  10 | 111 | 001 | 000 | 110 |  01 |
+```
+
+Now there's only one way to decode anything:
+$$
+\mathtt{101100110} \mapsto \mathtt{AUYA}
+$$
+
+## Prefix Codes and Trees
+
+- A binary tree whose *leaves are the characters* determines a prefix code.
+- Left edges correspond to 0s. Right edges correspond to 1s.
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+code word |  10 | 111 | 001 | 000 | 110 |  01 |
+
+
+                             #
+                        0/       \1
+                        #         #
+                     0/   \1   0/   \1
+                     #     Y   A     #
+                   0/ \1           0/ \1
+                   O   I           U   E 
+```
+
+# Optimal Prefix Codes
+
+## Optimize the number of bits in a message
+
+Suppose we want to encode the following message:
+
+```{r, echo=FALSE}
+mess <- c(rep("E", 80), rep("A", 50), rep("O", 30), rep("I", 30), rep("U", 20), rep("Y", 20))
+cat(paste(sample(mess, length(mess)), collapse=""))
+```
+
+This message contains 80 Es, 50As, 30 Os, 30Is, 20Us, and 20Ys.
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+frequency |  50 |  80 |  30 |  30 |  20 |  20 |
+```
+
+We want to construct a prefix code that uses the fewest number of bits for the whole message.
+
+## Can you do better?
+
+The message contains 80 Es, 50As, 30 Os, 30Is, 20Us, and 20Ys.
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+frequency |  50 |  80 |  30 |  30 |  20 |  20 |
+```
+
+Encode it using the following prefix code:
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+code word |  10 | 111 | 001 | 000 | 110 |  01 |
+```
+
+This requires `50*2 + 80*3 + 30*3 + 30*3 + 20*3 + 20*2` = `r 50*2 + 80*3 + 30*3 + 30*3 + 20*3 + 20*2` bits.
+
+2. Why?
+3. Propose a prefix code that is able to encode the message using fewer bits. How many bits can you save?
+
+# Huffman Encoding
+
+## Huffman's Greedy Algorithm
+
+**Given:** A list of characters `C[1..n]` and their frequencies `F[1..n]` in the message we want to encode.
+
+**Goal:** Construct a binary tree for a prefix code that uses the fewest number of bits to encode the message.
+
+**Algorithm:** Start with a "forest" of leaves: every character is a leaf.
+
+- Find the two trees in this forest with smallest total frequency.
+- Join these two trees under a common root.
+- Recurse, until the forest has just one tree.
+
+## Huffman's Algorithm: Example
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+frequency |  50 |  80 |  30 |  30 |  20 |  20 |
+```
+
+Start with a "forest" of leaves: every character is a leaf:
+
+```
+A:50    E:80    I:30    O:30    U:20    Y:20
+```
+
+Find the two trees in this forest with smallest total frequency. Join these two trees under a common root:
+
+```
+A:50    E:80    I:30    O:30      #:40
+                                 /   \
+                                U     Y
+```
+
+Recurse:
+
+```
+A:50    E:80         #:60          #:40
+                   /   \         /   \
+                  I     O       U     Y
+```
+
+## Huffman's Algorithm: Example, continued
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+frequency |  50 |  80 |  30 |  30 |  20 |  20 |
+```
+
+```
+A:50    E:80         #:60          #:40
+                   /   \         /   \
+                  I     O       U     Y
+```
+
+Recurse:
+
+```
+ E:80                #:60          #:90
+                   /   \         /   \
+                  I     O       A     #
+                                    /   \
+                                   U     Y
+```
+
+Recurse:
+
+```
+                     #:140         #:90
+                   /   \         /   \
+                  E     #       A     #
+                       / \          /   \
+                      I   O        U     Y
+```
+
+## Huffman's Algorithm: Optimal Code?
+
+```
+                     #:140         #:90
+                   /   \         /   \
+                  E     #       A     #
+                       / \          /   \
+                      I   O        U     Y
+```
+
+One final recursion:
+
+```
+                            #
+                       /         \
+                     #             #
+                   /   \         /   \
+                  E     #       A     #
+                       / \          /   \
+                      I   O        U     Y
+```
+
+Optimal code?
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+code word |  10 |  00 | 010 | 011 | 110 | 111 |
+```
+
+## Sizes of code words?
+
+4. Apply Huffman's algorithm to produce a prefix code, given the following frequencies. Does this algorithm minimize the length of the longest code word?
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+frequency |  50 | 100 |  30 |  30 |  20 |  20 |
+```
+
+5. Find an assignment of frequencies to characters in order to produce the widest possible assortment of code word lengths using Huffman's algorithm. Is it possible to produce a code where all the code words have different lengths?
+
+```
+character |  A  |  E  |  I  |  O  |  U  |  Y  |
+frequency |     |     |     |     |     |     |
+```
+
+
+
+
