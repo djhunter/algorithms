@@ -514,6 +514,7 @@ else
       i++  \\ keep checking and skipping what gets stabbed
   return counter</code></pre>
 <p>Time: <span class="math inline">\(O(n \log n)\)</span>, because the loop runs in <span class="math inline">\(O(n)\)</span> time, incrementing <span class="math inline">\(i\)</span> until it exceeds <span class="math inline">\(n\)</span>.</p>
+<p><strong>Note:</strong> The second while loop won’t remove intervals that have later end times than some stabbed interval. But these will get removed eventually, at the very latest, at the last stab. This peculiarity does not affect the greedy choices, or the final value of <code>counter</code>.</p>
 </section></section>
 <section>
 <section id="encoding-characters-as-binary-strings" class="title-slide slide level1">

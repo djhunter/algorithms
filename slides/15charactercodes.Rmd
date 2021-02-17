@@ -82,6 +82,8 @@ Stabby(R[1..n], L[1..n]):
 
 Time: $O(n \log n)$, because the loop runs in $O(n)$ time, incrementing $i$ until it exceeds $n$.
 
+**Note:** The second while loop won't remove intervals that have later end times than some stabbed interval. But these will get removed eventually, at the very latest, at the last stab. This peculiarity does not affect the greedy choices, or the final value of `counter`.
+
 # Encoding Characters as Binary Strings
 
 ## Codes
