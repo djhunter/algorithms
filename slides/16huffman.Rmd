@@ -1,0 +1,253 @@
+---
+title: "Huffman Codes"
+date: "February 19, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## Prefix Codes
+
+```
+| letter   |   b   |   l   |   a   |   c   |   k   |   h    |   w   |   s   |
+| codeword |   01  |   11  |  0010 |  0001 |  0011 |  0000  |  010  |  011  |
+```
+
+Since 01 is a prefix for more than one letter (b,s,w) this is not a prefix code.
+
+
+```
+                             #
+                        0/       \1
+                        #         e
+                     0/   \1        
+                     a     #        
+                         0/ \1     
+                         #   g
+                       0/ \1
+                       m   n      
+```
+
+- 10110110100000101 ---> `eggman`
+- This is not an optimal code because the letter `g` was used the most but it did not use the least amount of code to be encoded to: `g` and `e` switched in the binary tree would have used fewer bits.
+
+## Huffman's algorithm
+
+Notice that the process is not uniquely determined, because sometimes there are multiple options with the same frequencies.
+
+```
+a:100       b:20        c:30        d:20        e:150       f:10        g:20        h:40     i:110
+
+                                                
+a:100       b:20        c:30        e:150       #:30        g:20        h:40        i:110
+                                                /   \
+                                               d     f        
+
+a:100       c:30        e:150       #:30        #:40        h:40        i:110
+                                    /   \      /   \
+                                   d     f    b     g
+
+a:100       e:150       #:60        #:40        h:40        i:110
+                        /   \       /  \
+                       c     #     b    g
+                            / \
+                           d   f     
+
+a:100       e:150       #:60        #:80        i:110
+                        /   \       /   \
+                       c     #     h     #
+                            / \         / \
+                           d   f       b   g
+                           
+a:100       e:150               #:140           i:110
+                                /   \
+                           #           #
+                         /   \       /   \
+                       c     #     h     #
+                            / \         / \
+                           d   f       b   g
+
+e:150       #:210               #:140
+            /   \               /   \
+           a     i         #           #
+                         /   \       /   \
+                       c     #     h     #
+                            / \         / \
+                           d   f       b   g   
+
+#:210         #:290
+ /  \       /      \
+a    i     e        #
+               /      \
+             #         # 
+           /   \     /  \
+          c     #   h    #  
+              /   \     /  \
+             d     f   b    g
+             
+      #:500
+    /       \
+   #            #
+ /  \       /      \
+a    i     e        #
+               /      \
+             #         # 
+           /   \     /  \
+          c     #   h    #  
+              /   \     /  \
+             d     f   b    g
+```
+
+## Internal nodes
+
+You can think of internal nodes as being "combo" characters.
+
+```
+             aifbcdghe
+           /0         1\
+         ai             fbcdghe
+       /0  1\          /0      1\
+      a      i    fbcdgh         e
+                /0      1\
+             fbc          dgh
+            /0  1\       /0 1\
+          fb      c    dg     h
+        /0  1\       /0  1\
+       f      b     d      g
+```
+
+## Priority Queues
+
+- **Max Heap:** For every node, the value of its parent must be greater than its own value. To fix this tree, we must swap 16 and 17.
+
+```
+              24
+            /    \
+           21    17
+          / \    / 
+         9  18  16
+```
+
+- `ExtractMax`, `ExtractMin`, `Insert`, are all $O(\log n)$.
+    - `Peek` is $O(1)$, because you can just read the root value and not change anything.
+
+## {data-background="https://media.giphy.com/media/T3fwN6Pbm3ZPa/giphy.gif" data-background-size="contain"}
+
+## Building a Priority Queue
+
+- Adding elements to the heap takes $O(\log n)$ for each element, but we are doing this for $n$ elements, so we multiply the times together to get $O(n\log n)$.
+    - This is an upper bound, but it is *not tight*.
+- There are at most $\left\lceil n/2^{h+1} \right\rceil$ nodes of height $h$.
+
+$$
+\sum_{h=0}^{\lfloor \log_2 n \rfloor} \left\lceil \frac{n}{2^{h+1}}\right\rceil O(h) = O\left( n \sum_{h=0}^{\lfloor \log_2 n \rfloor}\frac{h}{2^{h+1}} \right)= O\left( n \sum_{h=0}^{\infty}\frac{h}{2^{h+1}} \right) = O(n)
+$$
+
+- So it turns out that $O(n)$ is a **tight** upper bound on the time needed to build a priority queue.
+
+
+
+# Huffman Algorithm Correctness
+
+## Part 1: Exchange Argument
+
+Given a list of characters `C[1..n]` and their frequencies `F[1..n]` in the message we want to encode.
+
+- Let $T_G$ be a tree produced by Huffman's greedy algorithm.
+- Suppose $T$ is some other tree giving an optimal prefix code.
+    - Let $x$ and $y$ be the characters with smallest frequency.
+    - Let $a$ and $b$ be the leaves of the lowest subtree of of $T$.
+        - If $a$ and $b$ are $x$ and $y$, we're done.
+        - Otherwise, swap $a$ with $x$ and $b$ with $y$, and you get a code that is at least as efficient.
+        
+**Upshot:** The first greedy choice is optimal.
+
+## Part 2: Structural Inductive Argument (sketch)
+
+- Let $C'$ be the character set $C$ with the least frequent characters $x$ and $y$ replaced with the character $x\!\!\!y$. 
+- Suppose (inductive hypothesis) $T'$ is an optimal tree for $C'$ that was built by Huffman's algorithm.
+    - $x\!\!\!y$ is a leaf of $T'$.
+    - Replace this leaf with: $\begin{array}{ccc} & /\backslash & \ \\  & x \;\;\; y&  \end{array}$
+    - cost of $T$ = cost of $T'$ + frequencies of $x$ and $y$. (details in book)
+    - Since $T'$ had minimal cost, so must $T$.
+
+## Full Binary Trees
+
+- Usual recursive definition: 
+    - A *full binary tree* is made from two full binary trees joined under new root.
+- Alternative recursive definition: 
+    - A *full binary tree* is made by replacing a leaf of a full binary tree with a two-leaf subtree.
+    
+Either way, a full binary tree with $n$ leaves has $2n-1$ nodes. (picture)
+
+# Huffman Algorithm Implementation
+
+```{javascript, eval=FALSE}
+// indices 1 .. n are the leaves (corresponding to C[1..n])
+// index 2n-1 is the root 
+// P[i] = parent of node i
+// L[i] = left child of node i, R[i] = right child
+BuildHuffman(F[1..n]):
+    for i <- 1 to n
+        L[i] <- 0; R[i] <- 0
+        Insert(i, F[i]) // put indices in priority queue, frequency = priority
+    for i <- n + 1 to 2n − 1  // ??typo in book?? (Book starts this loop at n, not n+1.)
+        x <- ExtractMin()     // extract smallest trees in forest
+        y <- ExtractMin()     //   from the priority queue
+        F[i] <- F[x] + F[y]   // new internal node
+        Insert(i, F[i])       // put new node into priority queue
+        L[i] <- x; P[x] <- i  // update children
+        R[i] <- y; P[y] <- i  //    and parents
+    P[2n − 1] <- 0            // root has no parent
+```
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(2192021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Explore Huffman's Algorithm
+
+1. Find the running time of this implementation of Huffman's Algorithm.
+
+2. Construct the arrays F, P, L and R for the following table of frequencies. In other words, `F[1..6] = [50, 80, 30, 30, 20, 20]`.
+
+```
+            character |  A  |  E  |  I  |  O  |  U  |  Y  |
+            frequency |  50 |  80 |  30 |  30 |  20 |  20 |
+```
+    
+3. Am I right that there's a typo in the book in the limits on the second for-loop??
+
+

@@ -1,0 +1,43 @@
+---
+title: "Huffman Codes"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](16huffmancodes.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+1. In Question 3 of the previous assignment, you constructed a Huffman code for the following letters and frequencies. Compute the total number of bits required to encode the data (all 500 letters) using this Huffman code. 
+```
+| letter    |  a  |  b  |  c  |  d  |  e  |  f  |  g  |  h  |  i  | 
+| frequency | 100 |  20 |  30 |  20 | 150 |  10 |  20 |  40 | 110 |
+```
+  
+
+
+
+
+2. In a *fixed-length code*, each letter is assigned a binary string as a code word, but each of these binary strings has to be the same length. In order to encode the 9 letters `a, b, ..., i`using a fixed-length code, how long must the code words be?  Let $b_1$ be the number of bits required to code all the data using the Huffman code from the previous question.  Compute the number of bits $b_2$ required to encode all of this data using a fixed-length code. Then compute the *compression ratio* $b_1 / b_2$.
+
+
+
+
+3. Determine the code words that correspond to each letter `a,b,c,d,e,f` for the prefix code represented by the following tree. Explain why the following tree does not represent an optimal Huffman code, no matter what frequencies are assigned to the letters. (Demonstrate that you can find a code that will use fewer bits, regardless of frequency.) Can you state a general property that all optimal trees must share?
+```
+                             #
+                        0/       \1
+                        #         #
+                     0/   \1        \1
+                     #     #         #
+                   0/ \1 0/ \1     0/ \1
+                   a   b c   d     e   f 
+```
+
+
+
+4. Consider Exercise 23a on pp. 184-5 of [E]. Instead of describing an algorithm in detail, give an English summary of how a greedy algorithm would work, in the form "[Do something with the tree] and recurse." Then consider the optimal solution shown in the tree in Figure 4.6. If your greedy algorithm would not produce this exact solution, explain how to modify this solution to match what your greedy algorithm would produce. (That is, give an informal exchange argument.)
+
+
+
