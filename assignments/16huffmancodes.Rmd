@@ -37,7 +37,7 @@ Edit the [RMarkdown source file](16huffmancodes.Rmd) for this assignment in RStu
 
 
 
-4. Consider Exercise 23a on pp. 184-5 of [E]. Instead of describing an algorithm in detail, give an English summary of how a greedy algorithm would work, in the form "[Do something with the tree] and recurse." Then consider the optimal solution shown in the tree in Figure 4.6. If your greedy algorithm would not produce this exact solution, explain how to modify this solution to match what your greedy algorithm would produce. (That is, give an informal exchange argument.)
+4. Consider Exercise 23a on pp. 184-5 of [E]. Instead of describing an algorithm in detail, give an English summary of how a greedy algorithm would work, in the form "[Do something with the tree] and recurse." Then consider the non-optimal solution shown in the tree in Figure 4.6. Explain how to improve this solution to match what your greedy algorithm would produce. (That is, give an informal exchange argument.)
 
 
 

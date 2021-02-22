@@ -1,0 +1,57 @@
+---
+title: "Adjacency Lists"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](17adjacency.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+## Complete Graphs 
+
+The graph $K_n$, called *complete graph* on $n$ vertices, is the undirected graph where every vertex shares and edge with every other vertex. For example, the following code block shows how to construct and plot $K_6$ using an adjacency list.
+
+```{r, message=FALSE}
+if(!require(igraph)){install.packages("igraph")} # installs igraph if not installed
+k6_adj_list <- list(c(2,3,4,5,6), 
+                    c(1,3,4,5,6), 
+                    c(1,2,4,5,6), 
+                    c(1,2,3,5,6), 
+                    c(1,2,3,4,6), 
+                    c(1,2,3,4,5))
+k6 <- graph_from_adj_list(k6_adj_list, mode="all") 
+set.seed(1234) # fix the randomization of the following plot command
+plot(k6)
+```
+
+1. Suppose that $\mathcal{L} = (A_1, A_2, \ldots, A_i)$ is the adjacency list for $K_i$, the complete graph on $i$ vertices. 
+    a. Give the elements of the linked list $A_1$.
+    b. Describe how you could modify $\mathcal{L}$ to obtain the adjacency list for $K_{i+1}$, the complete graph on $i+1$ vertices. (How would the array change? How would each linked list change?)
+    
+
+
+
+
+
+
+## Map Graphs
+
+Consider the following map showing the 7 provinces that make up the country of Costa Rica. Given a map of regions like this, we can construct an undirected graph $M$ with 7 vertices, where each vertex corresponds to a region, and two vertices are connected by an edge iff the corresponding regions share a border. 
+
+![](https://upload.wikimedia.org/wikipedia/commons/f/f1/Costa_Rica_provinces_named.png)
+
+2. Use the following code block to construct and draw the graph $M$ using the `igraph` library. Define your graph using an adjacency list, as in the above example. (Notice that the province of Puntarenas is not connected. That's OK. We still represent it as a single vertex. Since Puntarenas (all components considered) shares a border with Limón, San José, Alajuela, and Guanacaste, its vertex should have degree 4.)
+
+```{r}
+library(igraph) #load the igraph library
+
+# TODO: construct and plot the graph M
+```
+
+3. A *vertex coloring* of a graph is an assignment of colors to the vertices so that no two vertices of the same color share an edge. What is the fewest number of colors required to vertex color the graph $M$ of question 2? Justify your answer.
+
+
+
+

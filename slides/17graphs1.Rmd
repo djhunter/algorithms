@@ -1,0 +1,198 @@
+---
+title: "Graphs: Introduction"
+date: "February 22, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+##  Huffman Codes
+
+Use R!
+
+```{r}
+( b1 <- sum(c(100,20,30,20,150,10,20,40,110)*c(2,5,4,5,2,5,5,4,2)) )
+( fixed_length <- ceiling(log2(9)) )
+b1/(fixed_length*500)
+```
+
+## Optimal trees must be full
+
+```
+                             #
+                        0/       \1
+                        #         #
+                     0/   \1        \1
+                     #     #         #
+                   0/ \1 0/ \1     0/ \1
+                   a   b c   d     e   f 
+                   
+| letter    |  a  |  b  |  c  |  d  |  e  |  f  | 
+| code word | 000 | 001 | 010 | 011 | 110 | 111 | 
+```
+
+- This code is not optimal, because the second bit of `e` and `f` is wasted. You can remove the second bit in the encoding of `e` and `f` without suffering any tradeoffs anywhere else.
+
+- More generally, an optimal binary tree is going to be one where there are no wasted bits, or in other words *every parent node has exactly two child nodes*.
+
+## Greedy Rock Climbing
+
+> Start with a node furthest away from the root, then travel upwards. If the length of the path is equal to $k$, remove the highest node in this path and all the nodes below it. Add 1 to the count, then recurse to the next furthest node. 
+
+## Informal Exchange Argument
+
+> Let $G$ be the set of all paths chosen by the greedy algorithm, and suppose $T$ is a different set of paths chosen by a different algorithm. Each path in $T$ that differs from $G$ can be shifted down the tree until it reaches 1) the lowest available leaf in its subtree (available meaning there are no taken nodes between the leaf and the current path in question) or 2) another path. After this process has been completed with each path, the paths of $T$ will all be replaced by greedy choices. So $G$ must have at least as many paths as $T$.
+
+
+# Graphs: Terminology
+
+## A graph is a set of pairs
+
+- The *vertex set* $V$ of a graph could be anything.
+    - websites, countries, numbers, game states, etc.
+- The edge set $E$ is a set of pairs of vertices.
+    - If the pairs are *ordered pairs* $(u,v)$, the graph is a *directed* graph.
+    - If the pairs are *unordered pairs* $\{u,v\}$, the graph is *undirected*.
+    
+## Terms to know
+
+Section 5.2 of [E] defines the following terms:
+
+- simple graphs, multigraphs
+- neighbor, adjacent
+- degree, predecessor, successor, in-degree, out-degree
+- subgraph, walk, directed walk, path, closed walk
+- reachable, connected, strongly connected, components
+- cycle, acyclic 
+- forest, tree, spanning tree/forest, dag
+
+If you ever encounter an unfamiliar term about graphs, you can probably find the definition in Section 5.2.
+
+# Graphs: Representation
+
+## Graphical representation
+
+- Vertices are *dots*, undirected edges are *lines*, directed edges are *arrows*.
+- There are lots of different ways to draw the same graph.
+
+```{r, message=FALSE, echo=FALSE, fig.height=3.5}
+library(gridExtra)
+library(igraph)
+library(ggraph)
+pg <- make_graph("Petersen")
+g1 <- ggraph(pg, layout="igraph", algorithm="nicely") + geom_node_point() + geom_edge_link()
+g2 <- ggraph(pg, layout="igraph", algorithm="nicely") + geom_node_point() + geom_edge_link()
+g3 <- ggraph(pg, layout="igraph", algorithm="nicely") + geom_node_point() + geom_edge_link()
+g4 <- ggraph(pg, layout="igraph", algorithm="nicely") + geom_node_point() + geom_edge_link()
+grid.arrange(g1,g2,g3,g4, nrow=1)
+```
+
+
+## Adjacency Lists
+
+<div class="column-left">
+```{r, echo=FALSE, fig.height=5, fig.width=5, fig.align='center'}
+set.seed(67423)
+par(mar=c(0,0,0,0)+.1)
+plot(pg, edge.width=3, edge.color="black")
+```
+</div>
+
+<div class="column-right">
+```{r, echo = FALSE}
+pgatt <- as_adj_list(pg)
+lapply(pgatt, as.vector)
+```
+</div>
+
+## Adjacency List Definition
+
+Abuse of notation: $V$ is the number of vertices.
+
+- `A[1..V]` is an *array* of *lists*.
+    - Undirected: `A[i]` is a list of neighbors of vertex `i`
+    - Directed: `A[i]` is a list of out-neighbors of vertex `i`
+        - Can implement as a linked list or hash table.
+
+See Figure 5.9 of [E].
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(2192021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Cost of linked list implementation
+
+Let `A[1..V]` be the adjacency list for an *undirected* graph with $V$ vertices and $E$ edges.
+
+- The list `A[i]` contains all the neighbors of vertex `i`.
+- Let's assume `A[i]` is implemented as a standard *linked list*.
+- For the following questions, give asymptotic estimates in terms of $V$ and $E$.
+
+## Space and Time?
+
+1. How much *space* does `A[1..V]` require?
+2. Give an asymptotic upper bound for the *degree* of a vertex in this graph. (Note: the degree of vertex `i` is the length of the linked list `A[i]`.)
+3. What is the *time* required to check to see *if there is an edge* between vertex `i` and vertex `j`?
+4. What is the *time* required to *list all vertices*?
+5. What is the *time* required to *list all edges*?
+6. What is the *time* required to *add an edge* between a pair of existing vertices?
+7. What is the *time* required to *remove an existing edge*? 
+
+# Example: Bipartite Graphs
+
+## Bipartite Graph
+
+An undirected graph is called *bipartite* if it can be vertex colored with two colors.
+
+```{r, echo=FALSE, fig.align='center', fig.width=5, fig.height=4}
+set.seed(1623)
+cube <- make_graph("Cubical")
+par(mar=c(0,0,0,0)+.1)
+plot(cube, vertex.size=20, 
+     edge.width=4,
+     edge.color="black",
+     vertex.color = c(rep(c("purple", "green"), 2), rep(c("green", "purple"), 2)))
+```
+
+
+## Find a two-coloring 
+
+Given: a connected, *bipartite*, graph represented as an adjacency list `A[1..V]`. 
+
+Assume that you have an iterator on the linked list `A[i]` for each vertex `i`. That is, you can go through the linked list `A[i]` sequentially with a `while` or `for` loop.
+
+8. Describe an algorithm for filling in the values of an array `C[1..V]` with "colors" `0` and `1` that form a valid two-coloring of the graph.
+
+9. What is the running time of your algorithm?

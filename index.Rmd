@@ -51,6 +51,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 14. [Greedy Algorithms: Exchange Arguments](slides/14greedy2.html)
 15. [Binary Character Codes](slides/15charactercodes.html)
 16. [Huffman Codes](slides/16huffman.html)
+17. [Graphs: Introduction](slides/17graphs1.html)
 
 # Written Assignments
 
@@ -70,6 +71,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 14. [Interval Stabbing](assignments/14intervalstabbing.html)
 15. [Prefix Codes](assignments/15prefixcodes.html)
 16. [Huffman Codes](assignments/16huffmancodes.html)
+17. [Adjacency Lists](assignments/17adjacency.html)
 
 # Other Resources
 
