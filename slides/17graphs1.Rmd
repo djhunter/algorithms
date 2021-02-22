@@ -54,9 +54,15 @@ b1/(fixed_length*500)
 
 - More generally, an optimal binary tree is going to be one where there are no wasted bits, or in other words *every parent node has exactly two child nodes*.
 
-## Greedy Rock Climbing
+## Greedy Rock Climbing?
 
 > Start with a node furthest away from the root, then travel upwards. If the length of the path is equal to $k$, remove the highest node in this path and all the nodes below it. Add 1 to the count, then recurse to the next furthest node. 
+
+See Figure 4.6. Does this algorithm produce more paths?
+
+## Start at top?
+
+> Draw a path from the root of the tree to a node k levels down from the root whose subtree has minimal height. Recurse on any remaining subtrees whose heights are greater than or equal to k.
 
 ## Informal Exchange Argument
 
