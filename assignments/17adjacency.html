@@ -197,7 +197,7 @@ summary {
 <p>Edit the <a href="17adjacency.Rmd">RMarkdown source file</a> for this assignment in RStudio. When you finish, Knit the file to HTML and upload the <code>.html</code> output to Canvas.</p>
 <div id="complete-graphs" class="section level2">
 <h2>Complete Graphs</h2>
-<p>The graph <span class="math inline">\(K_n\)</span>, called <em>complete graph</em> on <span class="math inline">\(n\)</span> vertices, is the undirected graph where every vertex shares and edge with every other vertex. For example, the following code block shows how to construct and plot <span class="math inline">\(K_6\)</span> using an adjacency list.</p>
+<p>The graph <span class="math inline">\(K_n\)</span>, called <em>complete graph</em> on <span class="math inline">\(n\)</span> vertices, is the undirected graph where every vertex shares an edge with every other vertex. For example, the following code block shows how to construct and plot <span class="math inline">\(K_6\)</span> using an adjacency list.</p>
 <pre class="r"><code>if(!require(igraph)){install.packages(&quot;igraph&quot;)} # installs igraph if not installed
 k6_adj_list &lt;- list(c(2,3,4,5,6), 
                     c(1,3,4,5,6), 

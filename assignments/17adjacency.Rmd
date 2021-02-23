@@ -11,7 +11,7 @@ Edit the [RMarkdown source file](17adjacency.Rmd) for this assignment in RStudio
 
 ## Complete Graphs 
 
-The graph $K_n$, called *complete graph* on $n$ vertices, is the undirected graph where every vertex shares and edge with every other vertex. For example, the following code block shows how to construct and plot $K_6$ using an adjacency list.
+The graph $K_n$, called *complete graph* on $n$ vertices, is the undirected graph where every vertex shares an edge with every other vertex. For example, the following code block shows how to construct and plot $K_6$ using an adjacency list.
 
 ```{r, message=FALSE}
 if(!require(igraph)){install.packages("igraph")} # installs igraph if not installed
