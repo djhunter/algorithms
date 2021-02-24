@@ -52,6 +52,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 15. [Binary Character Codes](slides/15charactercodes.html)
 16. [Huffman Codes](slides/16huffman.html)
 17. [Graphs: Introduction](slides/17graphs1.html)
+18. [Graphs: Searching](slides/18graphs2.html)
 
 # Written Assignments
 
@@ -72,6 +73,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 15. [Prefix Codes](assignments/15prefixcodes.html)
 16. [Huffman Codes](assignments/16huffmancodes.html)
 17. [Adjacency Lists](assignments/17adjacency.html)
+18. [Depth-first and breadth-first search](assignments/18dfsandbfs.html)
 
 # Other Resources
 

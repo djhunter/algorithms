@@ -1,0 +1,44 @@
+---
+title: "Depth-first and breadth-first search"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](18dfsandbfs.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+
+1. Recall that the graph $K_n$, called *complete graph* on $n$ vertices, is the undirected graph where every vertex shares an edge with every other vertex. 
+    a. Describe the depth-first spanning tree for $K_n$.
+    b. Describe the breadth-first spanning tree for $K_n$. 
+
+
+
+
+
+2. Give an example of a graph $G$ with two different adjacency lists $\mathcal{L}_1$ and $\mathcal{L}_2$ such that the breadth-first spanning tree computed using $\mathcal{L}_1$ is different from the breadth-first spanning tree computed using $\mathcal{L}_2$. (And show that they're different.)
+
+
+
+
+
+3. Consider the following modification to the `DepthFirstSearch` function, which adds a `time` attribute to each vertex. 
+    ```{javascript, eval=FALSE}
+DepthFirstSearch(s):
+    Push(s)
+    count <- 0
+    while the stack is not empty
+        v <- Pop
+        if v is unmarked
+            mark v
+            v.time <- count
+            count <- count + 1
+            for each edge vw
+                Push(w)
+    ```
+Give an example of a graph $G$ with two different adjacency lists $\mathcal{L}_1$ and $\mathcal{L}_2$ to show the time attribute of a vertex depends on the adjacency list that is used to represent the graph.
+
+
+

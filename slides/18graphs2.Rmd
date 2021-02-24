@@ -1,0 +1,371 @@
+---
+title: "Graphs: Searching"
+date: "February 24, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+##  Complete Graphs: Recursive structure
+
+Suppose that $\mathcal{L} = (A_1, A_2, \ldots, A_i)$ is the adjacency list for $K_i$, the complete graph on $i$ vertices. 
+
+- $A_1 = 2 \rightarrow 3 \rightarrow 4 \rightarrow \cdots \rightarrow i$.
+- Describe how you could modify $\mathcal{L}$ to obtain the adjacency list for $K_{i+1}$, the complete graph on $i+1$ vertices. (How would the array change? How would each linked list change?)
+
+> For $i+1$ vertices, simply add vertex $i+1$ to each linked list, and then add an additional linked list to $\mathcal{L}$ that contains all vertices except for $i+1$.  
+
+$$
+A_{i+1} = 1\rightarrow 2 \rightarrow 3 \rightarrow \cdots \rightarrow i
+$$
+
+## Map graphs and coloring
+
+Guanacaste (1),Alajuela(2), Heredia(3), Limón (4), Cartago (5), San José (6), Puntarenas (7)
+
+<div class="column-left">
+```{r, echo=FALSE, message=FALSE, fig.width=4, fig.height=4, fig.align='center'}
+library(igraph) #load the igraph library
+costaRica_list <- list(c(2,7), 
+                    c(1,7,3,6), 
+                    c(2,4,6), 
+                    c(5,3,6,7), 
+                    c(4,6), 
+                    c(7,5,3,4,2),
+                    c(6,4,2,1))
+M <- graph_from_adj_list(costaRica_list, mode="all") 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+set.seed(1234) # fix the randomization of the following plot command
+plot(M, vertex.color= c("blue","yellow","red","yellow","red","blue","red"))
+par(oldPar) # restore the default margins
+```
+</div>
+
+<div class="column-right">
+- Three colors suffice as shown. 
+- Three colors are necessary because the graph contains a $K_3$ subgraph.
+</div>
+
+## `igraph` plot options
+
+```{r, eval=FALSE}
+library(igraph) #load the igraph library
+costaRica_list <- list(c(2,7), 
+                    c(1,7,3,6), 
+                    c(2,4,6), 
+                    c(5,3,6,7), 
+                    c(4,6), 
+                    c(7,5,3,4,2),
+                    c(6,4,2,1))
+M <- graph_from_adj_list(costaRica_list, mode="all") 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+set.seed(1234) # fix the randomization of the following plot command
+plot(M, vertex.color= c("blue","yellow","red","yellow","red","blue","red"))
+par(oldPar) # restore the default margins
+```
+
+For a list of options for plotting using `igraph`:
+
+```{r, eval=FALSE}
+?igraph.plotting
+```
+
+## Change seed for different configuration
+
+<div class="column-left">
+```{r, echo=FALSE, message=FALSE, fig.width=4, fig.height=4, fig.align='center'}
+library(igraph) #load the igraph library
+costaRica_list <- list(c(2,7), 
+                    c(1,7,3,6), 
+                    c(2,4,6), 
+                    c(5,3,6,7), 
+                    c(4,6), 
+                    c(7,5,3,4,2),
+                    c(6,4,2,1))
+M <- graph_from_adj_list(costaRica_list, mode="all") 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+set.seed(8723) # fix the randomization of the following plot command
+plot(M, vertex.color= c("blue","yellow","red","yellow","red","blue","red"))
+par(oldPar) # restore the default margins
+```
+</div>
+
+<div class="column-right">
+```{r, eval=FALSE, message=FALSE, fig.width=4, fig.height=4, fig.align='center'}
+library(igraph) #load the igraph library
+costaRica_list <- list(c(2,7), 
+                    c(1,7,3,6), 
+                    c(2,4,6), 
+                    c(5,3,6,7), 
+                    c(4,6), 
+                    c(7,5,3,4,2),
+                    c(6,4,2,1))
+M <- graph_from_adj_list(costaRica_list, mode="all") 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+set.seed(8723) # fix the randomization of the following plot command
+plot(M, vertex.color= c("blue","yellow","red","yellow","red","blue","red"))
+par(oldPar) # restore the default margins
+```
+</div>
+
+## Fun with labels
+
+<div class="column-left">
+```{r, echo=FALSE, message=FALSE, fig.width=4, fig.height=4, fig.align='center'}
+library(igraph) #load the igraph library
+costaRica_list <- list(c(2,7), 
+                    c(1,7,3,6), 
+                    c(2,4,6), 
+                    c(5,3,6,7), 
+                    c(4,6), 
+                    c(7,5,3,4,2),
+                    c(6,4,2,1))
+M <- graph_from_adj_list(costaRica_list, mode="all") 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+set.seed(31205) # fix the randomization of the following plot command
+plot(M, vertex.color= c("orange","yellow","red","yellow","red","orange","red"),
+     vertex.label=c("Guanacaste","Alajuela","Heredia","Limón","Cartago","San José","Puntarenas"),
+     vertex.size=55)
+par(oldPar) # restore the default margins
+```
+</div>
+
+<div class="column-right">
+```{r, eval=FALSE, message=FALSE, fig.width=4, fig.height=4, fig.align='center'}
+library(igraph) #load the igraph library
+costaRica_list <- list(c(2,7), 
+                    c(1,7,3,6), 
+                    c(2,4,6), 
+                    c(5,3,6,7), 
+                    c(4,6), 
+                    c(7,5,3,4,2),
+                    c(6,4,2,1))
+M <- graph_from_adj_list(costaRica_list, mode="all") 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+set.seed(31205) # fix the randomization of the following plot command
+plot(M, vertex.color= c("orange","yellow","red","yellow","red","orange","red"),
+     vertex.label=c("Guanacaste","Alajuela","Heredia","Limón","Cartago","San José","Puntarenas"),
+     vertex.size=55)
+par(oldPar) # restore the default margins
+```
+</div>
+
+## {data-background="https://www.licensestorehouse.com/t/629/political-map-costa-rica-flag-20251049.jpg.webp" data-background-size="contain"}
+
+## Four Color Theorem
+
+> Any *planar graph* can be four colored.
+
+- A planar graph is a graph that can be drawn without edges crossing. 
+- Graphs made from maps are planar.
+
+[Proof](https://www.ams.org/notices/200811/tx081101382p.pdf)
+
+# Graphs: Representation
+
+## Adjacency Lists
+
+Our default representation will be as an **adjacency list**.
+
+- `A[1..V]` is an *array* of *lists*.
+    - Undirected: `A[i]` is a list of neighbors of vertex `i`
+    - Directed: `A[i]` is a list of out-neighbors of vertex `i`
+        - Default: these are linked lists.
+
+## Aside: Adjacency Matrices
+
+Sometimes it is convenient to represent a graph as a $V \times V$ *matrix*:
+
+$$
+\begin{bmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1,V} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,V} \\
+\vdots & \vdots && \vdots \\
+a_{V,1} & a_{V,2} & \cdots & a_{V,V} 
+\end{bmatrix}
+$$
+
+- $a_{i,j} = 1$ if there is an edge from vertex $i$ to vertex $j$.
+- $a_{i,j} = 0$ if there isn't.
+- More efficient for *dense* graphs (lots of edges). Less efficient for *sparse* graphs.
+- See Figure 5.11.
+
+# Depth-First Search
+
+## DFS = Recursive backtracking
+
+```{javascript, eval=FALSE}
+RecursiveDFS(v):
+    if v is unmarked
+        mark v
+        for each edge vw
+            RecursiveDFS(w)
+```
+
+## Recall: Stack
+
+- LIFO: Last in, First out
+- `Push(x)` inserts `x` at the top of the stack
+- `Pop` removes the element from the top of the stack and returns it.
+- Think stack of plates.
+
+## DFS implemented with a stack
+
+```{javascript, eval=FALSE}
+DepthFirstSearch(s):
+    Push(s)
+    while the stack is not empty
+        v <- Pop
+        if v is unmarked
+            mark v
+            for each edge vw
+                Push(w)
+```
+
+## Step through
+
+# Breadth-First Search
+
+## Recall: Queue
+
+- FIFO: First in, First out
+- `Enqueue(x)` inserts `x` at the back of the queue
+- `Dequeue` removes the element from the front of the queue and returns it.
+- Think waiting in line.
+
+## BFS: Replace stack with queue
+
+```{javascript, eval=FALSE}
+BreadthFirstSearch(s):
+    Enqueue(s)
+    while the queue is not empty
+        v <- Dequeue
+        if v is unmarked
+            mark v
+            for each edge vw
+                Enqueue(w)
+```
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(2242021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+<br>
+
+1. Step through BFS on the Jamboard for the given graph and adjacency list. Keep track of the queue and make sure you record the order in which the nodes were visited.
+
+2. How could you modify the DFS and BFS algorithms to deal with *directed* graphs?
+
+# Spanning Trees
+
+## Depth-first spanning tree
+
+Modified `DepthFirstSearch`:
+
+- Store ordered pairs `(p,v)` in the stack, where `p` is the previously visited node.
+- Keep track of `parent` attribute for each vertex.
+- Every vertex gets a parent, and this defines a tree containing all the vertices, called the *depth-first spanning tree*.
+
+```{javascript, eval=FALSE}
+DepthFirstSearch(s):                        DepthFirstSearchPlus(s):
+    Push(s)                                     Push((∅,s))
+    while the stack is not empty                while the stack is not empty
+        v <- Pop                                    (p,v) <- Pop
+        if v is unmarked                            if v is unmarked
+            mark v                                      mark v
+            for each edge vw                            v.parent <- p
+                Push(w)                                 for each edge vw 
+                                                            Push((v,w))
+```
+
+## Breadth-first spanning tree
+
+Similarly, we can modify `BreadthFirstSearch` to get the *breadth-first spanning tree*.
+
+```{javascript, eval=FALSE}
+BreadthFirstSearch(s):                      BreadthFirstSearchPlus(s):
+    Enqueue(s)                                  Enqueue((∅,s))
+    while the queue is not empty                while the queue is not empty
+        v <- Dequeue                                (p,v) <- Dequeue
+        if v is unmarked                            if v is unmarked
+            mark v                                      mark v
+            for each edge vw                            v.parent <- p
+                Enqueue(w)                              for each edge vw 
+                                                            Enqueue((v,w))
+```
+
+Bonus: The breadth-first spanning tree contains the *shortest path* from `s` to every node.
+
+# WhateverFirstSearch: variations
+
+## Meta-algorithm: WhateverFirstSearch
+
+```{javascript, eval=FALSE}
+WhateverFirstSearch(s):
+    put s into the bag
+    while the bag is not empty
+        take v from the bag
+        if v is unmarked
+            mark v
+            for each edge vw
+                put w into the bag
+```
+
+- bag = stack: DFS
+- bag = queue: BFS
+- bag = priority queue: Best-first search
+    - priority = weights: minimum weight spanning tree (Prim)
+    - priority = total distance from `s`: shortest paths from `s` (Dijkstra)
+    - priority = minimum weight of edges in path from `s`: widest paths (Maximum Flow) 
+
+
+## WhateverFirstSearch Time
+
+```{javascript, eval=FALSE}
+WhateverFirstSearch(s):
+    put s into the bag
+    while the bag is not empty
+        take v from the bag
+        if v is unmarked
+            mark v
+            for each edge vw
+                put w into the bag
+```
+
+Time: $O(V + ET)$ where $T$ is the time to insert/delete to/from bag
+
+- DFS: $O(V+E)$
+- BFS: $O(V+E)$
+- bag = priority queue: $O(V + E \log E)$
