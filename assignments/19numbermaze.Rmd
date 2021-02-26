@@ -1,0 +1,17 @@
+---
+title: "Number Maze"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](19numbermaze.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+**Do Exercise 11 on p. 212 of [E].**
+
+- Assume that the number maze is given you you as an array `M[1..n,1..n]` of positive integers.
+- Describe your algorithm in the appropriate level of detail. (Section 0.5)
+- Your function is supposed to return a number: the minimum number of moves required to solve the number maze. If the maze has no solution, return `NO SOLUTION`. (Pseudocode is never strongly typed!)
+- Give the running time of your algorithm as an asymptotic estimate in terms of $n$, and give a reason for your choice.

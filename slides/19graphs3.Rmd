@@ -1,0 +1,234 @@
+---
+title: "Graphs: Reductions"
+date: "February 26, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## DFST and BFST on $K_n$
+
+- The depth-first spanning tree would look like a single linked list or line of vertices since each vertex is a child of the last vertex in the last grouping.
+- A breadth-first spanning tree would look like an octopus with the first vertex being the parent of every other vertex in this complete graph. Since every vertex in this graph would also touch the first one, they would all be children of the first one.
+
+## Different adjacency list, different BFST
+
+<div class="column-left">
+```{r, echo=FALSE, message=FALSE, fig.align='center', fig.width=3, fig.height=3}
+library(igraph)
+g_adj_list <- list(c(2,3), 
+                    c(1,4), 
+                    c(1,4),
+                    c(3,2))
+g <- graph_from_adj_list(g_adj_list, mode="all") 
+set.seed(1234) # fix the randomization of the following plot command
+
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+plot(g, vertex.label=c("A", "B", "C", "D"))
+par(oldPar)
+```
+
+- A:1, B:2, C:3, D:4
+</div>
+
+
+<div class="column-right">
+```
+L1[1..4] = [2->3,  1->4, 1->4, 2->3]
+Queue order with parents: 
+(∅,1),(1,2),(1,3),(2,1),(2,4),(3,1),(3,4),...
+   ^     ^     ^           ^
+
+    A
+   / \
+  B   C
+  |
+  D
+  
+L2[1..4] = [3->2,  1->4, 1->4, 2->3]
+Queue order with parents: 
+(∅,1),(1,3),(1,2),(3,1),(3,4),(2,1),(2,4),...
+   ^     ^     ^           ^
+
+    A
+   / \
+  C   B
+  |
+  D
+```
+</div>
+
+## Time attribute
+
+<div class="column-left">
+```
+L1_adj_list <- list(c(2,3,4,6), 
+                    c(1,4), 
+                    c(1,5), 
+                    c(1,2), 
+                    c(3), 
+                    c(1))
+
+L2_adj_list <- list(c(2,4), 
+                    c(1,3,4,6),
+                    c(2,5), 
+                    c(1,2), 
+                    c(3), 
+                    c(2))
+```
+</div>
+
+<div class="column-right">
+- Vertex 1..6 times using $\mathcal{L}_1$: 0,3,4,2,5,1
+    - mark 1, stack: 6 4 3 2
+    - mark 6, stack: 1 6 4 3 2
+    - mark 4, stack: 2 1 3 2
+    - mark 2, stack: 4 1 1 3 2
+    - mark 3, stack: 5 1 2
+    - mark 5
+- Vertex 1..6 times using $\mathcal{L}_2$: 0,2,4,1,5,3
+</div>
+
+## Question leftover from last time
+
+2. How could you modify the DFS and BFS algorithms to deal with *directed* graphs?
+
+>- Answer: If the graph is represented as an adjacency list, the algoritm is *exactly the same.*
+>- An adjacency list for an undirected graph is secretly an adjaceny list for a directed graph, where every edge has a twin in the opposite direction.
+
+# Reductions
+
+## Applying graph algorithms
+
+- A graph is a set of pairs of things.
+- Any problem that satisfies this basic structure can be represented as a graph and (potentially) solved  by a graph algorithm.
+    - The "things" (i.e., vertices) need to have a "pairing" (i.e., undirected or directed edges)
+    
+Examples:
+
+- Things: Webpages. Directed pairing: links
+- Things: Provinces. Undirected pairing: sharing a border
+- Things: Events. Undirected pairing: conflict
+
+## Operations on an Adjacency List
+
+- Look up a vertex (array look-up)
+- List the neighbors of a vertex in some order (traverse a linked list)
+
+If our problem has these two operations on "things" and "pairings", then it **reduces** to a graph problem.
+
+# Example: Paint Fill
+
+## {data-background="https://girinstud.io/log/wp-content/uploads/2019/02/ctrl-click-bucket-fill.gif" data-background-size="contain"}
+
+## Paint Fill
+
+Problem: Color contiguous regions of a raster image with the same color.
+
+Crude Paint Fill Tool: https://viliusle.github.io/miniPaint/
+
+## Graph Structure
+
+- Vertices: pixels
+- Edges: pixels are connected if they are the same color and they share a border.
+
+**Reduction:** Do BFS (or DFS) and instead of marking the vertices, paint them.
+
+## Raster Image = Adjacency List
+
+A raster image is an array `P[1..m, 1..n]` of pixel colors.
+
+- Can look up any pixel `P[i,j]`.
+- For any pixel `P[i,j]`, its neighbors are `P[i+1,j]`, `P[i-1,j]`, `P[i,j+1]`, `P[i,j-1]`, unless these have different color values or are out of range.
+
+So Paint Fill reduces to WFS, where "mark" means "change the color to the paint color"
+
+## Paint Fill Algorithm Description
+
+Modify BFS to match the reduction:
+
+```{javascript, eval=FALSE}
+BreadthFirstSearch(s):                PaintFill(i,j, fillColor, P[1..m, 1..n]):
+                                          bgColor <- P[i,j].color
+     Enqueue(s)                           Enqueue((i,j))
+     while the queue is not empty         while the queue is not empty
+        v <- Dequeue                          (v1,v2) <- Dequeue
+        if v is unmarked                      if P[v1,v2].color == bgColor 
+            mark v                                P[v1,v2].color <- paintColor
+            for each edge vw                      if i+1 <= m AND P[i+1,j].color == bgColor 
+                Enqueue(w)                            Enqueue((i+1,j))
+                                                  if i-1 >= 1 AND P[i-1,j].color == bgColor 
+                                                      Enqueue((i-1,j))
+                                                  if j+1 <= n AND P[i,j+1].color == bgColor 
+                                                      Enqueue((i,j+1))
+                                                  if j-1 >= 1 AND P[i,j-1].color == bgColor 
+                                                      Enqueue((i,j-1))
+```
+
+We could clean this up a little, but it should work.
+
+# Example: Number Maze
+
+## Number Maze
+
+- Start at upper left. Goal is to get to lower right *.
+- Can move left/right or up/down # you are on.
+- Can you minimize the number of moves it takes (or show that the maze is unsolvable)?
+
+
+$$
+\begin{array}{|c|c|c|c|c|}
+\hline
+\color{red}3 & 5 & 7 & 4 & 6 \\ \hline
+5 & 3 & 1 & 5 & 3 \\ \hline
+2 & 8 & 3 & 1 & 4 \\ \hline
+4 & 5 & 7 & 2 & 3 \\ \hline
+3 & 1 & 3 & 2 &\color{green} * \\ \hline
+\end{array}
+$$
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(2262021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Describe a Reduction
+
+Let `M[1..n, 1..n]` be an array of numbers, representing a Number Maze.
+
+1. Describe a reduction. Specifically, given a vertex `M[i,j]`, what vertices are its neighbors? Is the graph directed or undirected?
+
+2. What kind of search is appropriate: DFS or BFS? Why?
+
+3. In the WFS search algorithm (whichever it is), when should we stop?
