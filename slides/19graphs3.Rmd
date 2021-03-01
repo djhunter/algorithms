@@ -173,7 +173,7 @@ BreadthFirstSearch(s):                PaintFill(i,j, fillColor, P[1..m, 1..n]):
      while the queue is not empty         while the queue is not empty
         v <- Dequeue                          (v1,v2) <- Dequeue
         if v is unmarked                      if P[v1,v2].color == bgColor 
-            mark v                                P[v1,v2].color <- paintColor
+            mark v                                P[v1,v2].color <- fillColor
             for each edge vw                      if i+1 <= m AND P[i+1,j].color == bgColor 
                 Enqueue(w)                            Enqueue((i+1,j))
                                                   if i-1 >= 1 AND P[i-1,j].color == bgColor 

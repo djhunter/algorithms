@@ -1,0 +1,53 @@
+---
+title: "DFS Parentheses Theorem"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](20dfsparens.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+For this assignment, we will use the following version of depth-first search.
+
+```
+DFS(v, clock):
+    mark v
+    clock <- clock + 1; v.pre <- clock
+    for each edge vw
+        if w is unmarked
+            w.parent <- v
+            clock <- DFS(w, clock)
+    clock <- clock + 1; v.post <- clock
+    return clock
+```
+
+Suppose the `DFS` algorithm is called on the following graph as `DFS(v1, 0)`. When a vertex `v` has more than one outgoing edge `vw`, assume that the `for`-loop considers the vertices `w` $=v_i$ in order of subscript. 
+
+![](https://djhunter.github.io/algorithms/images/digraph2.png)
+
+1. Give the discovery time `v.pre` and finish time `v.post` for each vertex.
+
+2. Use ASCII art to create a number line figure illustrating the active intervals for each vertex, like the one in Figure 6.4 on p. 229 of [E]. (The interval for `v1` is done for you.)
+
+```
+[-------------------------v1-----------------------]
+
+
+
+
+
+1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
+```
+
+3. Classify each edge as *tree edge*, *forward edge*, *back edge*, or *cross edge*.
+
+
+
+4. List the vertices in the order of a *preorder* traversal and also in the order of a *postorder* traversal.
+
+
+
+5. Find two vertices $v_i$ and $v_j$ such that the trees produced by `DFS(v_i,0)` and `DFS(v_j,0)` overlap, but in a way such that neither tree is contained in the other.
+
