@@ -54,6 +54,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 17. [Graphs: Introduction](slides/17graphs1.html)
 18. [Graphs: Searching](slides/18graphs2.html)
 19. [Graphs: Reductions](slides/19graphs3.html)
+20. [Depth-First Search: Revisited](slides/20dfsrevisited.html)
 
 # Written Assignments
 
@@ -76,6 +77,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 17. [Adjacency Lists](assignments/17adjacency.html)
 18. [Depth-first and Breadth-first Searches](assignments/18dfsandbfs.html)
 19. [Number Maze](assignments/19numbermaze.html)
+20. [DFS Parentheses Theorem](assignments/20dfsparens.html)
 
 # Other Resources
 
