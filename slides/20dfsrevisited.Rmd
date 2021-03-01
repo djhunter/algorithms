@@ -46,7 +46,7 @@ NumberMaze(i, j, M):
   while the queue is not empty:
     (x,y) <- Dequeue
     if 1 <= x <= n and 1 <= y <= n:
-      ret <- (x,y).moves
+      ret <- (x,y).moves + 1
       if (x,y) = (n,n):
         return ret
       checkIfMarked(x, y + M[x,y], ret)
@@ -61,9 +61,9 @@ checkIfMarked(x, y, moves):
     Enqueue(x, y)
 ```
 
-## Number Maze: stack of counters
+## Number Maze: queue of counters
 
-Keep a stack of counters (or a stack of triples (i, j, counter)).
+Keep a queue of counters (or a stack of triples (i, j, counter)).
 
 ```{javascript, eval=FALSE}
 MazeSolution(M[1...n, 1...n]){

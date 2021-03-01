@@ -555,7 +555,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span> the queue is not empty<span class="op">:</span></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    (x<span class="op">,</span>y) <span class="op">&lt;-</span> Dequeue</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="dv">1</span> <span class="op">&lt;=</span> x <span class="op">&lt;=</span> n and <span class="dv">1</span> <span class="op">&lt;=</span> y <span class="op">&lt;=</span> n<span class="op">:</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      ret <span class="op">&lt;-</span> (x<span class="op">,</span>y)<span class="op">.</span><span class="at">moves</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      ret <span class="op">&lt;-</span> (x<span class="op">,</span>y)<span class="op">.</span><span class="at">moves</span> <span class="op">+</span> <span class="dv">1</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> (x<span class="op">,</span>y) <span class="op">=</span> (n<span class="op">,</span>n)<span class="op">:</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> ret</span>
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">checkIfMarked</span>(x<span class="op">,</span> y <span class="op">+</span> M[x<span class="op">,</span>y]<span class="op">,</span> ret)</span>
@@ -569,9 +569,9 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    M[x<span class="op">,</span>y]<span class="op">.</span><span class="at">moves</span> <span class="op">&lt;-</span> ret</span>
 <span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Enqueue</span>(x<span class="op">,</span> y)</span></code></pre></div>
 </section>
-<section id="number-maze-stack-of-counters" class="slide level2">
-<h2>Number Maze: stack of counters</h2>
-<p>Keep a stack of counters (or a stack of triples (i, j, counter)).</p>
+<section id="number-maze-queue-of-counters" class="slide level2">
+<h2>Number Maze: queue of counters</h2>
+<p>Keep a queue of counters (or a stack of triples (i, j, counter)).</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">MazeSolution</span>(M[<span class="dv">1</span><span class="op">...</span>n<span class="op">,</span> <span class="dv">1</span><span class="op">...</span>n]){</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  Initialize queues <span class="bu">Coordinates</span> and Counter</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  Initialize Marked[<span class="dv">1</span> <span class="op">..</span> <span class="at">n</span><span class="op">,</span> <span class="dv">1</span> <span class="op">..</span> <span class="at">n</span>] to hold all 0s</span>
