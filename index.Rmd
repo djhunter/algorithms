@@ -55,6 +55,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 18. [Graphs: Searching](slides/18graphs2.html)
 19. [Graphs: Reductions](slides/19graphs3.html)
 20. [Depth-First Search: Revisited](slides/20dfsrevisited.html)
+21. [DAGs and Topological Sorting](slides/21dagtopsort.html)
 
 # Written Assignments
 
@@ -78,6 +79,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 18. [Depth-first and Breadth-first Searches](assignments/18dfsandbfs.html)
 19. [Number Maze](assignments/19numbermaze.html)
 20. [DFS Parentheses Theorem](assignments/20dfsparens.html)
+21. [Topological Sort](assignments/21topsort.html)
 
 # Other Resources
 

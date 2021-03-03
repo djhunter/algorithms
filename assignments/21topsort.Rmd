@@ -1,0 +1,67 @@
+---
+title: "Topological Sort"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](21topsort.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+Recall to the following functions.
+
+```
+DFS(v, clock):
+    mark v
+    clock <- clock + 1; v.pre <- clock
+    for each edge vw
+        if w is unmarked
+            w.parent <- v
+            clock <- DFS(w, clock)
+    clock <- clock + 1; v.post <- clock
+    return clock
+    
+DFSAll(G):
+    clock <- 0
+    for all vertices v
+        unmark v
+    for all vertices v
+        if v is unmarked
+            clock <- DFS(v, clock)
+            
+TopologicalSort(G):
+    Call DFSAll(G) to compute finishing times v.post for all v in G
+    Return vertices in order of decreasing finishing times
+```
+
+## Lots of edges
+
+1. Use the `igraph` library to draw a directed graph $G$ with the following properties:
+    - $G$ has six vertices 1,2,3,4,5,6.
+    - $G$ is a DAG.
+    - Every topological sort of $G$ yields the topological order 1,2,3,4,5,6.
+    - $G$ has the maximum number of possible directed edges, subject to the above conditions.
+
+```{r, message=FALSE}
+library(igraph)
+
+## TODO: draw G
+## NOTE: when calling graph_from_adj_list(), you have to set
+##       the mode parameter to "out" to get a directed graph:
+##           graph_from_adj_list(..., mode="out")
+
+```
+
+## One-way cities
+
+![](https://www.cozumelwatersports.com/InfoDirectory/roadmap.gif)
+
+2. The streets in the center of Cozumel, Mexico, are all one-way streets. In such a city, the intersections form the vertices of a directed graph $G$, where two vertices $u$ and $v$ are connected by a directed edge if they are on the same block and you can drive from $u$ to $v$. (For example, there is directed edge connecting the intersections of Avenida Benito Juarez/Avenida 15 Sur and Avenida Benito Juarez/Avenida 20 Sur, but there is no directed edge between Avenida Benito Juarez/Avenida 15 Sur and Avenida Benito Juarez/Avenida 25 Sur, because you can get there via an intermediate intersection.)
+    a. Suppose that $G$ is a directed graph representing the streets in the center of Cozumel, as shown in the above map. Explain why $G$ is not a DAG.
+    b. Suppose that the city of Dagville is one-way city like Cozumel, but in Dagville, the graph $G$ representing its streets *is* a DAG. Moreover, in Dagville, vertex $a$ is the only source intersection, and vertex $z$ is the only sink. Explain why any directed path from $a$ to $z$ must follow a topological ordering.
+    c. Describe an algorithm that returns the number of directed paths from $a$ to $z$ in Dagville's $G$, subject to the following conditions.
+        - Your algorithm should call `ToplogicalSort(G)` as a subroutine.
+        - Your algorithm should populate an array `P[1..n]`, which gives the number of directed paths from $a$ (vertex 1) to vertex $i$. Here $z$ is vertex $n$.
+        - Your algorithm should run in $O(V+E)$ time.
+    
