@@ -226,8 +226,8 @@ TopologicalSort(G):
 
 ## Sources and Sinks
 
-- A vertex in a DAG that has no incoming vertices is called a *source*.
-- A vertex in a DAG that has no outgoing vertices is called a *sink*.
+- A vertex in a DAG that has no incoming edges is called a *source*.
+- A vertex in a DAG that has no outgoing edges is called a *sink*.
     - So isolated vertices are both sources and sinks.
     
 Facts: 
