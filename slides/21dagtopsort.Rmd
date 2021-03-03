@@ -25,6 +25,39 @@ knitr::opts_chunk$set(comment = NA)
 
 # Assignment Comments, Sample Solutions
 
+## Interval diagram
+
+```
+[-------------------------v1-----------------------]
+  [-------v2------] [-------------v6-------------]
+     [----v3---]       [----------v5----------]
+        [-v4-]             [------v7------]
+                              [---v8---]
+                                [-v9-]
+
+
+
+1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20
+```
+
+<center>
+![](https://djhunter.github.io/algorithms/images/digraph2.png)
+</center>
+
+## Edge Classification
+
+- Tree edges: (v1,v2), (v2,v3), (v1,v6), (v6,v5), (v5,v7), (v7,v8), (v8,v9)
+
+- Back edges: (v5,v6), (v9,v8)
+
+- Cross edges: (v8,v4), (v9,v3), (v5,v4)
+
+- There are no forward edges.
+
+## Overlapping Trees
+
+Two possible vertices are $v_2$ and $v_9$. The tree for $v_2$ would only have the root of $v_2$, $v_3$ as its child, and v4 as its grandchild. The tree for $v_9$ would have $v_9$ as the root with 2 children being $v_3$ and $v_8$, and then one more grandchild, $v_4$, attached to $v_3$. We see that both the trees have the $v_3$ and $v_4$ vertices, but they each have other vertices in their tree.
+
 # DFS Starting and Finishing Times
 
 ## Starting and Finishing Times
