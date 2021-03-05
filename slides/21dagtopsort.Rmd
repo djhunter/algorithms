@@ -161,7 +161,7 @@ DoesGraphHaveACycle(G)
 
 ```{javascript, eval=FALSE}
 // wrapper:                                   // Modified DFS:
-sAcyclic(G):                                  IsAcyclicDFS(v):
+IsAcyclic(G):                                 IsAcyclicDFS(v):
     for all vertices v                            v.status <- Active
         v.status <- New                           for each edge vw
     for all vertices v                                if w.status = Active

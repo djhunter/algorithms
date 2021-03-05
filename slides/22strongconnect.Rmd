@@ -1,0 +1,276 @@
+---
+title: "Strong Connectivity"
+date: "March 5, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## You should be reading the book
+
+- The notation [E] refers to the book.
+    - The "E" is for Erickson (the author)
+        - That's a standard way to cite references.
+- I've been following the book pretty closely.
+- I refer to the book often (every day, maybe).
+- The book has a table of contents and an index.
+
+
+## Think for yourself
+
+- Working with others is NOT OK if you are not thinking for yourself.
+- Don't hand in work that doesn't make sense to you.
+- Remember to cite your collaboration on your work.
+
+## Complete DAGs
+
+<div class="column-left">
+```{r, message=FALSE}
+library(igraph)
+
+G_al <- list(c(2,3,4,5,6), 
+             c(3,4,5,6), 
+             c(4,5,6), 
+             c(5,6), 
+             c(6), 
+             c())
+G <- graph_from_adj_list(G_al, mode="out") 
+```
+</div>
+
+<div class="column-right">
+```{r, echo=FALSE, fig.height=4, fig.width=4, fig.align='center'}
+set.seed(1) 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+plot(G)
+par(oldPar)
+```
+</div>
+
+## Cozumel is not a DAG
+
+<div class="column-left">
+![](https://www.cozumelwatersports.com/InfoDirectory/roadmap.gif)
+</div>
+
+<div class="column-right">
+
+- There are cycles. 
+- (Go around the block.) Starting at the intersection of Avenue 15 Sur and Calle 3 Sur, traveling down Avenue 15 Sur, turning left onto Calle JM Morrelos at the intersection of Calle JM Morrelos and Avenue 15 Sur, turning left again onto Avenue 20 Sur at the intersection of Calle Morrelos and Avenue 20 Sur, and then turning left again onto Calle 3 Sur, would lead you right back to where you started. 
+</div>
+
+## Paths in DAGs
+
+- DAGs can be topologically sorted (non-DAGs cannot).
+- A topological ordering is a listing of vertices that respects the arrows, so by definition, any possible path in a DAG must follow a topological ordering.
+
+## Dagville Paths: recursive structure
+
+- Suppose we know `P[k]` for $k < i$. (Inductive hypothesis/Recursion Fairy)
+    - So we know how many paths there are from $a$ to vertex $v_k$, for $k<i$.
+- A path from $a$ to vertex $v_i$ is either a single edge, or it goes from $a$ through some vertex $v_k$, with $k<i$.
+- Consider each *in-neighbor* $v_k$ of vertex $v_i$:
+    - For each $k<i$, there are `P[k]` paths to $v_k$.
+    - Because $v_k$ is an in-neighbor of $v_i$, each of these paths contributes (uniquely) to $v_i$'s total number of paths (`P[i]`).
+
+See Figure 6.8.
+
+## Dagville Paths
+
+```
+DagvillePaths(G):
+    initialize an array P[1..n]
+    P[1] <- 1
+    TG <- TopologicalSort(G)       // a=v_1, v_2, v_3, ..., v_n = z
+    for each vertex v in TG        // or for i = 1..n
+        count <- 0
+        for each directed edge uv  // scan each in-neighbor of v
+            count <- count + P[k]  // v_k = u
+        P[i] <- count              // v_i = v 
+    return P[n]                    // v_n = z
+```
+
+Time:
+
+- Nested for-loops?
+- However, inner loop only considers the in-neighbors of $v$.
+    - How do we find the in-neighbors from an adjacency list representation? (*stay tuned*)
+- Each directed edge in $G$ gets used only once.
+- $O(V + E)$
+
+
+## Another way:  increment target edges
+
+```
+CountPaths(G):
+    P[1..n] = all 0s
+    P[1] <- 1   ?? Otherwise everything is just going to be zero
+    sorted = TopologicalSort(G)         #Finishes in O(V+E) time
+    for vertex in sorted:               #Runs V times total
+        for edge in vertex edges:       #Runs E times total
+            P[edge target] += P[vertex]
+    return P[n]
+    
+    
+NumPaths(G):
+    G <- TopologicalSort(G)
+    P[1..n]   // will be the number of paths that visit the ith node of G. Initialize to zero.
+    P[1] = 1; // there is only one path that visits the first node from the first node.
+    for i <- 1 up to n:           // make P[i] equal to the sum of the number of paths of each parent node
+        for each edge in G[i]:    // guranteed (i < edge) is true because of the topological ordering of G
+            increase P[edge] by P[i]
+    return P[n] // the only sink is guranteed to be last, since G is in topological order.
+```
+
+# Strong connectivity
+
+## Strongly connected graphs
+
+A directed graph $G$ is called *strongly connected* if, for any vertices $u,v \in V(G)$, there is a directed path from $u$ to $v$ and there is also a directed path from $v$ to $u$.
+
+```{r, message=FALSE, echo=FALSE, fig.align='center', fig.width=3, fig.height=3}
+library(igraph) #load the igraph library
+digraph_list <- list(c(2,3), 
+                    c(3,6), 
+                    c(4,5,6), 
+                    c(1,5,6), 
+                    c(2), 
+                    c(1))
+M <- graph_from_adj_list(digraph_list, mode="out") 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+set.seed(1234) # fix the randomization of the following plot command
+plot(M)
+par(oldPar) # restore the default margins
+```
+
+```
+-poll "Is this graph strongly connected?" "Yes" "No" "There is no way to tell."
+```
+
+## Reach of a vertex
+
+- $\mbox{reach}(v)$ is the set of all vertices that can be reached by following a directed path starting at $v$,
+- So $G$ is strongly connected if, for any pair $u,v \in V(G)$, $u\in \mbox{reach}(v)$ and $v \in \mbox{reach}(u)$.
+- In other words, any two vertices can reach each other.
+- "Reaching each other" is a relation on vertices:
+    - Reflexive, symmetric, transitive $\checkmark$
+    - Equivalence relation $\checkmark$
+
+## Strongly connected components
+
+Let $G$ be a directed graph.
+
+- "Strong connectivity" (i.e., "reaching each other") is an equivalence relation on the vertices of $G$.
+- The *equivalence classes* are called the *strongly connected components* of $G$.
+- The strongly connected components form another graph, denoted $\mbox{scc}(G)$.
+    - Vertices of $\mbox{scc}(G)$: strongly connected components
+    - Edges of $\mbox{scc}(G)$: there's an edge in $\mbox{scc}(G)$ whenever there's an edge in $G$ connecting the components.
+    - $\mbox{scc}(G)$ is also called the "condensation" of $G$.
+    
+See Figure 6.13.
+
+## DFS trees and SCC's
+
+- In a depth-first forest, each depth-first tree is the reach of the root.
+- So a strongly connected component can't span two different trees.
+
+See Figure 6.14.
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(352021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+1. Let $G$ be a directed graph. Explain why $\mbox{scc}(G)$ must be a DAG. (Hint: Prove by contradiction: what if $\mbox{scc}(G)$ weren't a DAG?)
+
+2. Suppose $D$ is a DAG. What is $\mbox{scc}(D)$?
+
+3. Suppose $v \in V(G)$ is the last vertex to finish in the call `DFSAll(G)`. In other words, $v$ is the root of the last DFS tree discovered in the depth-first forest. Explain why $v$'s strongly connected component must be a source in $\mbox{scc}(G)$. 
+
+# Computing Strong Components
+
+## Key observation
+
+- If we start in a *sink component*, we will never cross into another component.
+- So we just have to start in a sink component, and see what is reachable.
+- Then delete the sink component and repeat.
+
+
+## Helper function: `FindSinkComponentVertex(G)`
+
+- The *reversal* $\mbox{rev}(G)$ of a directed graph $G$ is the graph with the same vertices, but with edges reversed.
+- $\mbox{rev}(G)$ can be computed in $O(V+E)$ time (exercise).
+- $\mbox{scc}(\mbox{rev}(G)) = \mbox{rev}(\mbox{scc}(G))$
+- So a sink component of $\mbox{scc}(G)$ will be a source in $\mbox{scc}(\mbox{rev}(G))$.
+
+```
+FindSinkComponentVertex(G):
+    G' <- rev(G)
+    v_1...v_n <- a postordering of G' (using DFSAll(G'))
+    return v_n
+```
+
+Time: $O(V+E)$
+
+## Strong Components
+
+```
+StrongComponents(G):
+    count <- 0
+    while G is non-empty
+        C <- ∅
+        count <- count + 1
+        v <- FindSinkComponentVertex(G)
+        for all vertices w in reach(v)
+            w.label <- count
+            add w to C
+        remove C and its incoming edges from G
+```
+
+## Try it.
+
+4. Make up a non-DAG $G$. See if you can trace the algorithm on it.
+
+```
+StrongComponents(G):
+    count <- 0
+    while G is non-empty
+        C <- ∅
+        count <- count + 1
+        v <- FindSinkComponentVertex(G)
+        for all vertices w in reach(v)
+            w.label <- count
+            add w to C
+        remove C and its incoming edges from G
+```

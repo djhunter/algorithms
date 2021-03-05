@@ -1,0 +1,69 @@
+---
+title: "Strongly Connected Components"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](22scc.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+## Reversal of a graph
+
+Consider the following graph $G$.
+
+```{r, message=FALSE}
+library(igraph) #load the igraph library
+digraph_list <- list(c(2,3), 
+                    c(3,6), 
+                    c(4,5,6), 
+                    c(1,5,6), 
+                    c(2), 
+                    c(1))
+M <- graph_from_adj_list(digraph_list, mode="out") 
+```
+
+```{r, echo=FALSE}
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+set.seed(1234) # fix the randomization of the following plot command
+plot(M)
+par(oldPar) # restore the default margins
+```
+
+1. Create an adjacency list for the reversal $\mbox{rev}(G)$ of the above graph $G$, and use the `igraph` package to check your answer by plotting the reversal. 
+
+
+
+
+2. Let `A[1..V]` be an adjacency list for a directed graph $G$, where `A[i]` is a linked list of out-neighbors of vertex `i`. Describe an algorithm for computing the adjacency list `B[1..V]` for $\mbox{rev}(G)$ in $O(V+E)$ time.
+
+
+
+
+## Semiconnected graphs
+
+A directed graph $G$ is called *semi-connected* if, for any pair of vertices $u,v$, there is a directed path from $u$ to $v$, or there is a directed path from $v$ to $u$. The following algorithm returns `True` iff the the graph `G` is semi-connected.
+
+```
+IsSemiConnected(G):
+   compute scc(G)
+   let v_1..v_n be a topological sort of scc(G)
+   for i in 1..n
+      if v_i v_[i+1] is not an edge of scc(G)
+         return False
+   return True
+```
+
+3. Explain why this algorithm is correct. In particular,
+    a. Why is it correct to return `False` if there is no edge from `v_i` to `v_[i+1]`?
+    b. Why is it correct to return `True` at the end?
+    
+    
+
+
+4. Give the running time of the `IsSemiConnected` function as an asymptotic estimate in terms of the number of vertices $V$ and the number of edges $E$ in the graph $G$. Explain your reasoning.
+
+
+
+

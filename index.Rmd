@@ -56,6 +56,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 19. [Graphs: Reductions](slides/19graphs3.html)
 20. [Depth-First Search: Revisited](slides/20dfsrevisited.html)
 21. [DAGs and Topological Sorting](slides/21dagtopsort.html)
+22. [Strong Connectivity](slides/22strongconnect.html)
 
 # Written Assignments
 
@@ -80,6 +81,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 19. [Number Maze](assignments/19numbermaze.html)
 20. [DFS Parentheses Theorem](assignments/20dfsparens.html)
 21. [Topological Sort](assignments/21topsort.html)
+22. [Strongly Connected Components](assignments/22scc.html)
 
 # Other Resources
 
