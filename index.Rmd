@@ -57,6 +57,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 20. [Depth-First Search: Revisited](slides/20dfsrevisited.html)
 21. [DAGs and Topological Sorting](slides/21dagtopsort.html)
 22. [Strong Connectivity](slides/22strongconnect.html)
+    - *Summary:* [Slide notes 13-22, Chapters 4-6](slide13-22notes.html)
 
 # Written Assignments
 
