@@ -613,6 +613,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
    return True</code></pre>
 <ul>
 <li>The <a href="22strongconnect.html#/computing-strong-components">running time</a> of <code>compute scc(G)</code> is <span class="math inline">\(O(V+E)\)</span>.</li>
+<li>Topological sort costs <span class="math inline">\(O(V_\text{scc} + E_\text{scc})\)</span>.</li>
 <li><span class="math inline">\(V_\text{scc} \in O(V)\)</span> and <span class="math inline">\(E_\text{scc} \in O(E)\)</span>.</li>
 <li>The <code>for</code>-loop requires <span class="math inline">\(O(V_\text{scc} + E_\text{scc} )\)</span></li>
 <li>Total Time: <span class="math inline">\(O(V+E)\)</span>.</li>

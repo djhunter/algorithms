@@ -132,6 +132,7 @@ IsSemiConnected(G):
 ```
 
 - The [running time](22strongconnect.html#/computing-strong-components) of `compute scc(G)` is $O(V+E)$.
+- Topological sort costs $O(V_\text{scc} + E_\text{scc})$.
 - $V_\text{scc} \in O(V)$ and $E_\text{scc} \in O(E)$.
 - The `for`-loop requires $O(V_\text{scc} + E_\text{scc} )$
 - Total Time: $O(V+E)$.
