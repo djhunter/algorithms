@@ -1,0 +1,164 @@
+---
+title: "Test #3 Review"
+date: "March 8, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+library(igraph)
+```
+
+# Assignment Comments, Sample Solutions
+
+## Reversal of a graph
+
+<div class="column-left">
+```{r, message=FALSE}
+digraph_list <- list(c(2,3), 
+                    c(3,6), 
+                    c(4,5,6), 
+                    c(1,5,6), 
+                    c(2), 
+                    c(1))
+M <- graph_from_adj_list(digraph_list, mode="out") 
+```
+
+```{r, echo=FALSE, fig.height=3, fig.width=3, fig.align='center'}
+set.seed(1234) 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+plot(M, layout=layout_as_star(M))
+par(oldPar)
+```
+</div>
+
+<div class="column-right">
+```{r, message=FALSE}
+reversed_list <- list(c(4,6), 
+                      c(1,5), 
+                      c(1,2), 
+                      c(3), 
+                      c(3,4), 
+                      c(2,3,4))
+M <- graph_from_adj_list(reversed_list, mode="out") 
+```
+
+```{r, echo=FALSE, fig.height=3, fig.width=3, fig.align='center'}
+set.seed(1234) 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+plot(M, layout=layout_as_star(M))
+par(oldPar)
+```
+</div>
+
+## Reversal Algorithm
+
+```
+RevG(A[1..V])
+   initialize B[1..V], same vertex names, empty linked lists
+   for i <- 1 through V
+      for each out-neighbor e in A[i]
+         add i to the beginning of the linked-list B[e] 
+   return B[1..V]
+```
+
+- Adding to *beginning* of linked list is constant time.
+    - Adding to *end* of linked list requires traversing the whole list, which would increase the asymptotic running time.
+- Processes each out-neighbor of each vertex exactly once.
+- Time: $O(V+E)$
+
+## Begging the question
+
+You are asked to explain why $X$ implies $Y$. "Begging the question" is an argument of the following form:
+
+> $X$ implies $Y$ because if $X$ is true, then $Y$ must be true.
+
+- Example of *begging the question:* All prime numbers greater than 2 are odd, because, in order for $n$ to be prime, it has to be odd, unless $n = 2$.
+- The English term is a mistranslation of the Latin *petitio principii*, which means "assuming the premise."
+
+## Semiconnected graphs: False
+
+```
+IsSemiConnected(G):
+   compute scc(G)
+   let v_1..v_n be a topological sort of scc(G)
+   for i in 1..n
+      if v_i v_[i+1] is not an edge of scc(G)
+         return False
+   return True
+```
+
+$a.$ The graph `scc(G)` is a DAG, meaning that you can’t loop back to an earlier component in the topological order, so there is not a path from v[i+1] to v[i] in scc(G). So if there also isn’t an edge from v[i] to v[i+1], there is no connection between v[i] and v[i+1]. This means that if u is a vertex of G that lies in the component v[i] and v is a vertex in G that lies in v[i+1], there can be no path from u to v, and no path from v to u. So the graph is not semi-connected.
+
+## Semiconnected graphs: True
+
+```
+IsSemiConnected(G):
+   compute scc(G)
+   let v_1..v_n be a topological sort of scc(G)
+   for i in 1..n
+      if v_i v_[i+1] is not an edge of scc(G)
+         return False
+   return True
+```
+
+$b.$ The function can only return `True` if we’ve gone through all the components and all of them had an edge to the component after them. Let `u` and `v` be any two vertices of `G`. If `u` and `v` are in the same component, then there is a path between them because the component is strongly connected. Suppose `u` and `v` are in different components. If `u.post` > `v.post`, then `u`'s component comes before `v`'s in topological order, so there is a path from `u`'s component to `v`'s component in `scc(G)`. Therefore there is a path from `u` to `v` in `G`. Similarly, if `v.post` > `u.post`, there is a path from `v` to `u` in `G`.
+
+## Semiconnected graphs: Time
+
+```
+IsSemiConnected(G):
+   compute scc(G)
+   let v_1..v_n be a topological sort of scc(G)
+   for i in 1..n
+      if v_i v_[i+1] is not an edge of scc(G)
+         return False
+   return True
+```
+
+- The [running time](22strongconnect.html#/computing-strong-components) of `compute scc(G)` is $O(V+E)$.
+- $V_\text{scc} \in O(V)$ and $E_\text{scc} \in O(E)$.
+- The `for`-loop requires $O(V_\text{scc} + E_\text{scc} )$
+- Total Time: $O(V+E)$.
+
+# Test #1 Contents
+
+## Study Guide on Canvas
+
+- Questions on the [Study Guide](https://westmont.instructure.com/courses/5960/assignments/57341)?
+- See also the [slide summary](../slide13-22notes.html).
+
+# Practice Exercises
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(382021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
