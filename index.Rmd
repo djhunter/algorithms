@@ -59,6 +59,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 22. [Strong Connectivity](slides/22strongconnect.html)
     - *Summary:* [Slide notes 13-22, Chapters 4-6](slide13-22notes.html)
 23. [Review for Test #2](slides/23test2review.html)
+24. [Trees](slides/24trees.html)
 
 # Written Assignments
 
@@ -85,7 +86,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 21. [Topological Sort](assignments/21topsort.html)
 22. [Strongly Connected Components](assignments/22scc.html)
 23. Test #2
-
+24. Spring Break: No assignment
 
 # Other Resources
 

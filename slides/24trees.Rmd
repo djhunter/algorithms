@@ -1,0 +1,135 @@
+---
+title: "Trees"
+date: "March 12, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Trees
+
+## Applications of Trees
+
+- Binary search trees
+- Recursion trees
+- DFS and BFS trees
+- Binary heaps
+- Huffman Codes
+- etc.
+
+Most of these trees had a preferred *root*, and a preferred *direction* (away from the root).
+
+## Tree: General Definition
+
+> A **tree** is a connected, acyclic graph.
+
+By default, a generic tree is *undirected*. To understand this definition, we need to be precise about the meaning of *acyclic*.
+
+- A **walk** in an undirected graph $G$ is a sequence of vertices, where each
+adjacent pair of vertices are adjacent in $G$.
+- A walk is **closed** if it starts and ends at the same vertex. 
+- A walk is called a **path** if it visits each vertex at most once.
+- A **cycle** is a closed walk that enters and leaves each vertex at most once.
+- An undirected graph is **acyclic** if no subgraph is a cycle.
+
+## Unravel the definitions
+
+1. Draw an example of a walk that is not a path.
+
+2. Draw an example of a closed walk that is not a cycle.
+
+3. What is a closed path? Can you draw an example?
+
+4. Draw a tree with 6 vertices. How many edges does it have?
+
+5. How many edges does a tree with $n$ vertices have? Can you prove your answer?
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(3122021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+# Paths in trees
+
+## Unique Paths
+
+**Lemma.** Suppose $T$ is a tree, and $u$ and $v$ are two vertices in $T$. Then there is a unique path from $u$ to $v$.
+
+- There exists a path from $u$ to $v$ because $T$ is connected.
+- Suppose to the contrary that there are two different paths from $u$ to $v$.
+    - Path 1: $a_0 = u, a_1, a_2, \ldots, a_k = v$.
+    - Path 2: $b_0 = u, b_1, b_2, \ldots, b_j = v$.
+        - Let $a_s = b_s$ be the last vertex at the start of these paths that are the same.
+        - Let $a_{k-e} = b_{j-e}$ be the first vertex at the end of these paths that are the same.
+    - Then $a_s, \ldots, a_{k-e}, b_{j-e-1}, \ldots, b_s$ is a cycle, contradicting that $T$ is a tree.
+
+## Equivalent Condition
+
+The converse of the Lemma is also true: If $G$ is a graph with the property that every pair of vertices are joined by a unique path, then $G$ is a tree.
+
+- Connected: $\checkmark$
+- Acyclic: A cycle would contradict the unique path condition.
+
+# Weighted Graphs
+
+## Weighted Edges
+
+A graph is called *weighted* if there is an assignment of real numbers (weights) to the edges.  For example,
+
+- Cost function in a network.
+- Distance function in a spatial arrangement.
+
+## Minimum Spanning Tree of a Weighted Graph
+
+Given a weighted graph $G$, a **minimum spanning tree** $T$ is a subgraph of $G$ such that:
+
+- $T$ contains all the vertices of $G$, and
+- The sum of weights of the edges of $T$ is as small as possible.
+
+6.  Why do the above two conditions guarantee that $T$ is a tree?
+
+7. Draw an example of a weighted graph with two different minimum spanning trees (if possible).
+
+8. Draw an example of a weighted graph with a unique smallest edge $e$, such that the minimum spanning tree does not contain $e$ (if possible).
+
+# Uniqueness
+
+## Minimum spanning is unique (almost)
+
+**Lemma.** If all edge weights in a connected graph $G$ are distinct, then $G$ has a unique minimum spanning tree.
+
+- Suppose $G$ has two minimum spanning trees $T$ and $T'$.
+- Let $e$ be the smallest edge in $(T\setminus T')\cup(T'\setminus T)$.
+    - WLOG, $e\in T\setminus T'$.
+- Adding this edge to $T'$ creates a cycle.
+    - One of the edges in this cycle is not in $T$.
+    - Exchange this edge for $e$, and you reduce the weight of $T'$, a contradiction.
