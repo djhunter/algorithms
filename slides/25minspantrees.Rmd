@@ -62,12 +62,12 @@ kable(t(groups))
 
 ## Smallest edge
 
-1. Let $G$ be a weighted graph with an edge $e$ that is lighter than all the other edges. Prove that any minimum spanning tree must contain $e$.
+1. Let $G$ be a weighted graph with an edge $e$ that is lighter (i.e., smaller) than all the other edges. Prove that any minimum spanning tree must contain $e$.
 
 Hints: 
 
 - Suppose to the contrary that $T$ is a minimum spanning tree of $G$ and that ___________________.
-- What happens is you add an edge to $T$?
+- What happens if you add an edge to $T$?
 - Show you can make a lighter spanning tree (contradiction).
 
 # Uniqueness
