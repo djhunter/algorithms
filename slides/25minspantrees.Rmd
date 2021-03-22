@@ -1,0 +1,143 @@
+---
+title: "Minimum Spanning Trees"
+date: "March 22, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Trees
+
+## Tree: Definition and equvalent notions
+
+A **tree** is a *connected*, *acyclic* graph. (By default, a generic tree is *undirected*.) Equivalently,
+
+- *Unique paths:* A tree is an undirected graph $T$ such that, for any two vertices $u$ and $v$ in $T$, there is a unique path from $u$ to $v$.
+- *$V-1$ edges:* A tree is a connected, undirected graph with $V-1$ edges.
+    - *Can't add an edge:* Adding an edge to a tree makes a cycle.
+
+## Minimum Spanning Tree of a Weighted Graph
+
+- A graph is called *weighted* if there is an assignment of real numbers (weights) to the edges.  
+- Given a weighted graph $G$, a **minimum spanning tree** $T$ is a subgraph of $G$ such that:
+    - $T$ contains all the vertices of $G$, and
+    - The sum of weights of the edges of $T$ is as small as possible.
+- [Applications](https://en.wikipedia.org/wiki/Minimum_spanning_tree#Applications): network optimization, image recognition, data analysis, etc.
+
+(See Jamboard from last time.)
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(3222021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Smallest edge
+
+1. Let $G$ be a weighted graph with an edge $e$ that is lighter than all the other edges. Prove that any minimum spanning tree must contain $e$.
+
+Hints: 
+
+- Suppose to the contrary that $T$ is a minimum spanning tree of $G$ and that ___________________.
+- What happens is you add an edge to $T$?
+- Show you can make a lighter spanning tree (contradiction).
+
+# Uniqueness
+
+## Simplifying assumption: distinct weights
+
+Without losing generality, we can *assume our edge weights are distinct.*
+
+Why is this OK?
+
+- In most applications, they are distinct.
+- We could break ties by adding an insignificant $\varepsilon$ to a weight.
+- We could break ties some other systematic way.
+- Two floats are "never" equal (at least you shouldn't expect them to be).
+
+```{r}
+sqrt(3)^2 == 3
+```
+
+## Two minimum spanning trees?
+
+Suppose a connected, weighted, undirected graph $G$ has *distinct edge weights* and *two minimum spanning trees* $T$ and $T'$.
+
+>- Suppose to the contrary that $T \neq T'$. 
+>    - Then there are edges in $T$ that are not in $T'$, and edges in $T'$ that are not in $T$. Let $e$ be the smallest of these edges.
+>    - In other words, $e$ is the smallest edge in $(T\setminus T')\cup(T'\setminus T)$. 
+>    - WLOG, $e\in T\setminus T'$.
+>- Adding this edge to $T'$ creates a cycle in $T'$.
+>    - One of the edges in this cycle is not in $T$.
+>    - Exchange this edge for $e$, and you reduce the weight of $T'$, a contradiction.
+
+## **The** minimum spanning tree
+
+We have proved the following.
+
+**Lemma.** If all the edge weights of a graph are distinct, then its minimum spanning tree is *unique*.
+
+So we will henceforth refer to "the" minimum spanning tree of a graph.
+
+# Edge Classification
+
+## Intermediate spanning forests
+
+- We can build a spanning tree by selecting edges.
+- At each stage, we avoid cycles, so we have a forest (maybe not a tree).
+
+An *intermediate spanning forest* of a weighted graph $G$ is a subgraph of the minimum spanning tree of $G$.
+
+## Safe and Useless edges
+
+For any intermediate spanning forest $F$ of a graph $G$,
+
+- An edge of $G$ is **useless** if it is not an edge of $F$, but both its endpoints are in the same component of $F$.
+- An edge of $G$ is **safe** if it is the minimum-weight edge with exactly one endpoint in some component of $F$.
+
+## Example
+
+In the following graph $G$, the bold edges form an intermediate spanning forest $F$.
+
+<center>
+![](../images/wtgraph1.png)
+</center>
+
+## Safe and Useless
+
+2. Identify all the safe edges and all the useless edges.
+
+3. What happens if you add a useless edge to $F$?
+
+4. Add all the safe edges to $F$. Is the resulting forest $F'$ still an intermediate spanning forest?
+
+5. Repeat: Add all of the safe edges of $F'$ to $F'$, and continue. How will this process terminate?
+

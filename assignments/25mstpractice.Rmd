@@ -1,0 +1,27 @@
+---
+title: "Spanning Tree Practice"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](25mstpractice.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+For the following problems, we are assuming that every graph has distinct edge weights.
+
+1. Give an example of a weighted undirected graph that is not a tree, but whose minimum spanning tree contains the largest edge in the graph. (ASCII-art is fine, or you could use [`igraph`](https://stackoverflow.com/questions/44077403/show-edge-attributes-as-label-with-igraph).)
+
+
+
+
+2. Let $G$ be a weighted, undirected graph. Prove that for any cycle in $G$, the minimum spanning tree *does not include* the largest edge in the cycle.
+
+
+
+
+3. Prove or disprove: The minimum spanning tree of a weighted, undirected graph $G$ includes the smallest edge in *every* cycle in $G$.
+
+
+
