@@ -1,0 +1,15 @@
+---
+title: "Edge Contraction"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](26contraction.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+Do Problem 8a on pp. 269-270 of [E]. In addition to describing your algorithm appropriately, explain why it really is $O(V+E)$ time. Make sure you are using the fact that the graph is represented as an adjacency list.
+
+
+

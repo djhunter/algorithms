@@ -1,0 +1,215 @@
+---
+title: "Borůvka's MST Algorithm"
+date: "March 24, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments, Sample Solutions
+
+## MST with largest edge
+
+1. Give an example of a weighted undirected graph that is not a tree, but whose minimum spanning tree contains the largest edge in the graph.
+
+```
+         1.1
+       0--------0
+   6.7/ \        \2.4
+     /   \5.2     0
+    0     \       /2.3
+           0-----0
+             3.3
+```
+
+
+## Largest cycle edge excluded
+
+2. Let $G$ be a weighted, undirected graph. Prove that for any cycle in $G$, the minimum spanning tree *does not include* the largest edge in the cycle.
+
+(Common wrong answer on Jamboard.)
+
+## Proof considering components (sketch)
+
+- Suppose there exists a minimum spanning tree $T$ that includes a maximum edge $e_\text{max} = uv$ of  some cycle. Remove $e_\text{max}$ from $T$. 
+
+- The tree is no longer a minimum spanning tree but instead two components, one containing $u$ and the other containing $v$. But since there was a cycle in $G$ containing $e_{max}$, there is a path in $G$ from $u$ to $v$. Therefore, some edge $e$ on this path must connect the two components.
+
+- Exchange $e$ and $e_\text{max}$, contradicting minimality.
+
+## Disprove with a counterexample
+
+3. Prove or disprove: The minimum spanning tree of a weighted, undirected graph $G$ includes the smallest edge in *every* cycle in $G$.
+
+```
+     (10)     (3)      (11)
+e --------- a --- b ----------- d
+ \           \   /             /
+  \_      (2) \ / (1)        _/
+    \          c            /
+     \_                   _/
+       \                 /
+   (16) \_             _/ (15)
+          \           /
+           \_       _/
+             \     /
+              \_ _/
+                f
+```
+
+# Safe and Useless
+
+## Minimum Spanning Tree of a Weighted Graph
+
+- Given a weighted graph $G$, a **minimum spanning tree** $T$ is a subgraph of $G$ such that:
+    - $T$ contains all the vertices of $G$, and
+    - The sum of weights of the edges of $T$ is as small as possible.
+- An *intermediate spanning forest* is a subgraph of the MST.
+
+For any intermediate spanning forest $F$ of a graph $G$,
+
+- An edge of $G$ is **useless** if it is not an edge of $F$, but both its endpoints are in the same component of $F$.
+- An edge of $G$ is **safe** if, in some component of $F$, it is the minimum-weight edge with exactly one endpoint in the component.
+
+## Prim's Theorem
+
+**Theorem.** Let $F$ be an intermediate spanning forest of a weighted graph $G$, and suppose $e$ is a safe edge. Then the minimum spanning tree contains $e$.
+
+>- Let $C$ be the component of $F$ that $e$ is "safe" for, so $e$ has an endpoint in $C$ and an endpoint in $G \setminus C$, and $e$ is the smallest such edge.
+>- Suppose to the contrary that the minimum spanning tree $T$ does not contain $e$. The endpoints $u$ and $v$ of $e$ must be connected by a path in $T$, and since exactly one of the endpoints of $e$ is in $C$, one of the edges $e'$ of this path must have an endpoint in $C$ and an endpoint not in $C$. 
+>- Removing $e'$ from $T$ creates a spanning forest with two components, one containing $u$ and another containing $v$. Adding $e$ to this forest connects these components, and so creates a tree. But this new tree has smaller total weight than $T$, because $e$ is smaller than $e'$. That's a contradiction.
+
+## Greedy MST Meta-Algorithm
+
+Let $G$ be a weighted graph with vertex set $V$ and edge set $E$.
+
+```{javascript, eval=FALSE}
+MetaMST(V,E)
+    F = (V, ∅)
+    while F is not a tree
+        add a safe edge to F   // NOTE: This choice needs to be specified!!
+    return F
+```
+
+(See Jamboard from last time.)
+
+# Borůvka's Algorithm for the minimum spanning tree
+
+## General idea
+
+Use `MetaMST`, but add *all* the safe edges inside the `while`-loop.
+
+```{javascript, eval=FALSE}
+MetaMST(V,E)
+    F = (V, ∅)
+    while F is not a tree
+        add a safe edge to F   // NOTE: This choice needs to be specified!!
+    return F
+```
+
+In order to analyze the time, we need to specify how the safe edges are located.
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(3242021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Label the vertices with their component number
+
+```{javascript, eval=FALSE}
+CountAndLabel(G):                         LabelOneComponent(s,count):
+    count <- 0                                Enqueue(s)
+    for all vertices v                        while the queue is not empty
+        unmark v                                  v <- Dequeue
+    for all vertices v                            if v is unmarked
+        if v is unmarked                              mark v               // Line #1
+            count <- count + 1                        v.comp <- count
+            LabelOneComponent(v, count)               for each edge vw 
+    return count                                          Enqueue(w)       // Line #2
+```
+
+Suppose $G$ has $V$ vertices and $E$ edges.
+
+1. What is another name for the `LabelOneComponent` algorithm?
+
+2. How many times does `CountAndLabel` execute Line #1?
+
+3. How many times does `CountAndLabel` execute Line #2?
+
+4. What is the running time of `CountAndLabel`?
+
+## Borůvka's Algorithm
+
+```{javascript, eval=FALSE}
+Borůvka(V, E):                              AddAllSafeEdges(E, F, count):
+    F = (V, ∅)                                  for i <- 1 to count
+    count <- CountAndLabel(F)                       safe[i] <- Null
+    while count > 1                             for each edge uv ∈ E
+        AddAllSafeEdges(E, F, count)                if comp(u) != comp(v)
+        count <- CountAndLabel(F)                       if safe[comp(u)] = Null or w(uv) < w(safe[comp(u)])
+    return F                                                safe[comp(u)] <- uv
+                                                        if safe[comp(v)] = Null or w(uv) < w(safe[comp(v)])
+                                                            safe[comp(v)] <- uv
+                                                for i <- 1 to count
+                                                    add safe[i] to F   
+```
+
+## Borůvka's Algorithm
+
+```{javascript, eval=FALSE}
+Borůvka(V, E):                              AddAllSafeEdges(E, F, count):
+    F = (V, ∅)                                  for i <- 1 to count
+    count <- CountAndLabel(F)                       safe[i] <- Null
+    while count > 1                             for each edge uv ∈ E
+        AddAllSafeEdges(E, F, count)                if comp(u) != comp(v)
+        count <- CountAndLabel(F)                       if safe[comp(u)] = Null or w(uv) < w(safe[comp(u)])
+    return F                                                safe[comp(u)] <- uv
+                                                        if safe[comp(v)] = Null or w(uv) < w(safe[comp(v)])
+                                                            safe[comp(v)] <- uv
+                                                for i <- 1 to count
+                                                    add safe[i] to F   
+```
+
+5. What is the running time of the *first* `CountAndLabel` call?
+
+6. After the *first* `AddAllSafeEdges` call, how many components (at most) are there? (i.e., what is the maximum possible value of `count`?)
+
+7. What is the worst-case number of iterations of the `while`-loop?
+
+8. What is the running time of subsequent `CountAndLabel` calls?
+
+9. Give an upper bound on the running time of `AddAllSafeEdges`.
+
+
+## Bonus Reading
+
+Read pp. 262-263. *Upshot:* Borůvka's Algorithm often beats its worst-case $O(E \log V)$ running time.

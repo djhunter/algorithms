@@ -61,6 +61,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 23. [Review for Test #2](slides/23test2review.html)
 24. [Trees](slides/24trees.html)
 25. [Minimum Spanning Trees](slides/25minspantrees.html)
+26. [Borůvka's MST Algorithm](slides/26boruvka.html)
 
 # Written Assignments
 
@@ -89,6 +90,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 23. Test #2
 24. Spring Break: No assignment
 25. [Spanning Tree Practice](assignments/25mstpractice.html)
+26. [Edge Contraction](assignments/26contraction.html)
 
 # Other Resources
 
