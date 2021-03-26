@@ -1,0 +1,33 @@
+---
+title: "Jarník's Algorithm"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](27jarnik.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+1. Jarník's algorithm is described (roughly) in Section 7.4 of [E]. Step through this algorithm on the following graph, and record a list of the vertices of the minimum spanning tree in the order that they are added to $T$. Start at vertex $K$.
+
+![](https://djhunter.github.io/algorithms/images/wtgraph.png)
+
+
+
+
+2. In Section 7.4 of [E], the book does not give a complete description of Jarník's algorithm, and it does not explain in detail where the running time calculation comes from. Use pseudocode to give a description of Jarník's algorithm, and explain why it runs in $O(E \log E) = O(E \log V)$ time. (Take into account the priority queue operations that you reviewed in [assignment #15, problem 4](15prefixcodes.html).)
+
+
+
+
+3. Recall the *adjacency matrix* representation of a graph described on pp. 196-197 of [E]. In an adjacency matrix for a *weighted* graph, the weights are the entries of the matrix. A weight of zero means that the vertices have no edge between them. Give the adjacency matrix for the graph in problem #1.
+
+
+
+
+4. Rewrite your description of Jarník's algorithm using an adjacency matrix representation (and *not* using a priority queue), and compute its running time. 
+
+
+
+

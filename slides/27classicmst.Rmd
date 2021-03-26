@@ -1,0 +1,211 @@
+---
+title: "Classical MST Algorithms"
+date: "March 26, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Announcement: CS Candidate
+
+## Invitation for Feedback
+
+Dr. Wonjun Lee will be interviewing next week for our open CS professor position.
+
+- **Colloquium:** MG Tent #1: 3:30-5pm, Tuesday, March 30 (location tentative).
+- **Teaching Demo:** Monday, March 29, 9:10-10:15: https://youtu.be/IFvpuv5k_ZU
+
+I have to attend the Teaching Demo, so **class is cancelled for Monday, 3/29.** (Also office hours will end early on Tuesday.)
+
+- Please consider **attending Tuesday's colloquium** as a substitute.
+
+# Assignment Comments, Sample Solutions
+
+## One pass: High level description
+
+(See Jamboard)
+
+- Mark the edges to contract (find min, should be $O(E)$).
+- For each marked edge $uv$:
+    - Make a new vertex/linked list $n$
+    - Add all of $u$'s neighbors to $n$, and weight them appropriately.
+    - Add all of $v$'s neighbors to $n$, and weight them. (avoiding duplicates somehow)
+    - Add $n$ to the linked lists of the vertices in $n$'s list.
+    - Remove $u$ and $v$'s lists.
+
+Need to add some details to this to specify completely. $O(V+E)$?
+
+## Partial solution? Could we speed it up?
+
+```
+Boruvka(G) {
+  initalize set edges_to_collapse
+  
+  for each vertex v in G {
+      min_edge = null
+      min_weight = infinity
+      for each edge uv according to the adjacency list {
+          if uv.weight < min_weight {
+              min_edge = uv
+              min_weight = uv.weight
+          }
+      }
+      add min_edge to edges_to_collapse
+  }
+  
+  for each edge uv in edges_to_collapse {
+      add new node x to adjacency list
+      for each neighbor n of u
+        add n to x's linked list
+        change "u" in n's linked list to "x"
+      for each neighbor n of v
+        if n is already in x's linked list
+          if nv.weight > nu.weight
+            nx.weight = nv.weight
+        else
+          add n to x's linked list
+          change "v" in n's linked list to "x"
+      remove u and v nodes from adjacency list
+  }
+}
+```
+
+## Another nice try
+
+```
+BoruvkaContraction(A[1..V]):
+  //iterate over all edges and mark those to be contracted
+  for i <- 1..V:
+    edges <- A[i] //has indices 1..n
+    min <- (edge with weight of infinity)
+    for j <- 1..n:
+      if edges[j].weight < min.weight:
+        min <- the edge from i to edges[j]
+    mark the edge min
+  for i <- 1..V:
+    if A[i] contains a marked edge uv:
+      //add v's out-edges to u
+      new <- A[u]
+      old <- A[v]
+      for j <- 1..n:
+        if old[j] is not in new:
+          add old to A[u] // new
+        else: //only add smallest parallel edge
+          parallel <- from new to old[j]
+          if old[j].weight < parallel.weight:
+            delete parallel from A[u] // new
+            add A[v][j] to A[u]
+        replace v in A[old[j]] with u
+      delete old
+```
+
+# Classical MST Algorithms
+
+## Prim's Theorem; Meta-algorithm
+
+**Theorem.** Let $F$ be an intermediate spanning forest of a weighted graph $G$, and suppose $e$ is a safe edge. Then the minimum spanning tree contains $e$.
+
+```{javascript, eval=FALSE}
+MetaMST(V,E)
+    F = (V, ∅)
+    while F is not a tree
+        add a safe edge to F   // NOTE: This choice needs to be specified!!
+    return F
+```
+
+## Jarník's Algorithm (aka Prim's algorithm)
+
+- Start with any vertex $T$.
+- Add $T$'s safe edge to $T$.
+    - Repeat until you run out of vertices.
+    
+Exercise: Describe this completely, and verify its running time.
+
+
+## Kruskal's Algorithm
+
+- Start with the forest $F$ of vertices.
+- Scan all edges by increasing weight; if an edge is safe, add it to $F$.
+
+```
+Kruskal(V, E):
+    sort E by increasing weight (e.g., MergeSort)
+    F <- (V, ∅)
+    for each vertex v ∈ V
+        MakeSet(v) // Set data structure partitioning V
+    for i <- 1 to |E|
+        uv <- ith lightest edge in E
+        if Find(u) != Find(v) // Are u and v in different partitions?
+            Union(u, v)
+            add uv to F
+    return F
+```
+
+- Need $O(E \log E)$ to sort, and that's the most expensive step. 
+- In general, $E$ is going to be bigger than $V$ for connected graphs, but at most $E = O(V^2)$. So $\Theta(\log E) = \Theta(\log V)$.
+- So the time is $O(E \log V)$ (which is the same as $O(E \log E)$, in this case).
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(3262021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Step through Jarník and Kruskal
+
+1. On the Jamboard, step through Jarník's algorithm on the given graph. Label the edges in the order they get added. Start at the vertex at the top.
+
+2. On the Jamboard, step through Kruskal's algorithm on the given graph. Label the edges in the order they get added. 
+
+# Adjacency Matrices
+
+## Recall: Adjacency Matrix
+
+Weighted graphs can be represented with $V \times V$ *matrix*:
+
+$$
+\begin{bmatrix}
+a_{1,1} & a_{1,2} & \cdots & a_{1,V} \\
+a_{2,1} & a_{2,2} & \cdots & a_{2,V} \\
+\vdots & \vdots && \vdots \\
+a_{V,1} & a_{V,2} & \cdots & a_{V,V} 
+\end{bmatrix}
+$$
+
+- $a_{i,j} = w$ if there is an edge from vertex $i$ to vertex $j$ of weight $w$.
+- $a_{i,j} = 0$ if there isn't an edge.
+- More efficient for *dense* graphs (lots of edges). Less efficient for *sparse* graphs.
+
+## Compute the adjacency matrix
+
+3. Compute the adjacency matrix for the graph given on the Jamboard.
+
+
