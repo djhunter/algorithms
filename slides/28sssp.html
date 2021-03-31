@@ -472,7 +472,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </section>
 <section id="jarník-description-and-time" class="slide level2">
 <h2>Jarník Description and Time</h2>
-<p>Use a priority queue that does <code>DecreaseKey</code>, <code>Insert</code>, and <code>ExtractMin</code> each in <span class="math inline">\(O(V)\)</span> time.</p>
+<p>Use a priority queue that does <code>DecreaseKey</code>, <code>Insert</code>, and <code>ExtractMin</code> each in <span class="math inline">\(O(\log V)\)</span> time.</p>
 <pre><code>Jarník(G):
   pick random vertex v
   T &lt;- graph containing just v

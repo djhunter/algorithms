@@ -33,7 +33,7 @@ Order of addition: KH KJ JI IF FC FG FE GD DB DA
 
 ## Jarník Description and Time
 
-Use a priority queue that does `DecreaseKey`, `Insert`, and `ExtractMin` each in $O(V)$ time.
+Use a priority queue that does `DecreaseKey`, `Insert`, and `ExtractMin` each in $O(\log V)$ time.
 
 ```
 Jarník(G):
