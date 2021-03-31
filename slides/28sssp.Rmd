@@ -1,0 +1,248 @@
+---
+title: "Single Source Shortest Path Algorithms"
+date: "March 31, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments
+
+## Jarník Example
+
+Order of addition: KH KJ JI IF FC FG FE GD DB DA
+
+![](../images/wtgraph.png)
+
+## Jarník Description and Time
+
+Use a priority queue that does `DecreaseKey`, `Insert`, and `ExtractMin` each in $O(V)$ time.
+
+```
+Jarník(G):
+  pick random vertex v
+  T <- graph containing just v
+  Insert all neighboring edges into priority queue (key = weight)
+  while the priority queue is not empty:
+    ExtractMin edge uv
+    if uv is unmarked and u and v are not both in T:
+      mark uv
+      add uv to T
+      for each unmarked edge neighboring u and v
+        Insert edge (key = weight)
+```
+
+- Each edge gets marked once, so there are $O(E)$ `ExtractMin` and `Insert`'s.
+- Time $O(E \log E)$.
+- Recall that $O(E \log E) = O(E \log V)$ since $E \in O(V^2)$.
+
+## Another Jarník Description
+
+```
+JarnikTree(G, start_vertex):
+  tree = Tree()
+  active_edges = PriorityQueue()
+  add G[start_vertex].edges to active_edges (sorted by edge weight)
+  while tree.node_count != G.node_count:
+    safe = pop from active_edges
+    if G[safe] in tree: continue
+    add G[safe] to tree
+    add G[safe].edges to active_edges (sorted by edge weight)
+  return tree
+```
+
+- See also Figure 7.5 (and just use a binary heap)
+
+## Adjacency Matrix Example
+
+```
+    A   B   C   D   E   F   G   H   I   J   K 
+A   0   7   0  3.2  0   0   0   0   0   0   0
+B   7   0  8.9  3   0   0   0   0   0   0   0
+C   0  8.9  0   9   6   2   0   0   0   0   0
+D  3.2  3   9   0   0   5  4.1  0   0   0   0
+E   0   0   6   0   0   4   0  5.7  0   0   0 
+F   0   0   2   5   4   0  2.6  0  3.7  0   0
+G   0   0   0  4.1  0  2.6  0   0   0  7.5  0
+H   0   0   0   0  5.7  0   0   0   8   0  4.7
+I   0   0   0   0   0  3.7  0   8   0   1  6.2
+J   0   0   0   0   0   0  7.5  0   1   0  5.3
+K   0   0   0   0   0   0   0  4.7 6.2 5.3  0
+```
+
+## Adjacency Matrix Jarník description/time
+
+```
+// s is starting vertex
+// M is adjancency matrix
+Jarnik(M[V,V],s):
+  T <-({s},∅)
+  neighbors <- []
+  neighbors.add(s)
+  while neighbors is not empty
+    for each e ∈ neighbors
+      min <- infinity
+        for i <- 1 to |V|
+          if M[e,i] != 0 and M[e,i] < min
+            min <- M[e,i]
+            newNeighbor <- i
+        add newNeighbor to T
+    neighbors.add(newNeighbor)
+  return T
+```
+
+Time: $O(V^3)$
+
+
+# Shortest Paths
+
+## Shortest Paths, SSSP
+
+- Now we consider **directed**, **weighted** graphs with *positive* weights.
+- The natural problem is how to get from one vertex to another following the directed path of least weight.
+    - e.g., transportation optimization, network routing, LaTeX line breaking, Rubik's Cube, etc.
+- Finding the shortest path from $s$ to $f$ usually means we have to find the shortest path from $s$ to everything.
+    - Find the **SSSP Tree.**
+        - Similar to Breadth-First spanning tree, but with weights.
+
+## Tentative Shortest Paths and Predecessors
+
+- $s$ is the start vertex.
+- $s \rightsquigarrow v$ is the **tentative shortest path** from $s$ to $v$.
+- $\text{dist}(v)$ is the **weight** of the tentative shortest path $s \rightsquigarrow v$.
+- $\text{pred}(v)$ is the **predecessor** of $v$ in $s \rightsquigarrow v$.
+
+We find the shortest path by updating the tentative shortest paths until we can't make them any better.
+
+## Tense edges
+
+- $\text{dist}(v)$ is the *weight* of the tentative shortest path $s \rightsquigarrow v$.
+- $\text{pred}(v)$ is the *predecessor* of $v$ in $s \rightsquigarrow v$.
+
+An edge $u\rightarrow v$ is called **tense** if $\text{dist}(u) + w(u\rightarrow v) < \text{dist}(v)$.
+
+- So we can improve things by going through $u\rightarrow v$. (**relax**ing)
+- That is, replace the tentative $s \rightsquigarrow v$ with $s \rightsquigarrow u \rightarrow v$, and update $\text{dist}(v)$ and $\text{pred}(v)$.
+
+## SSSP by Repeated Relaxing: Meta-Algorithm
+
+```
+InitSSSP(s):                          Relax(uv):
+    dist(s) <- 0                          dist(v) <- dist(u) + w(uv)
+    pred(s) <- Null                       pred(v) <- u
+    for all vertices v != s
+        dist(v) <- Infinity
+        pred(v) ← Null
+        
+MetaSSSP(s):
+    InitSSSP(s)
+    while there is at least one tense edge      // NOTE: need to specify how to check
+        Relax any tense edge                    // NOTE: need to specify how to choose
+```
+
+
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(3302021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Find the SSSP Tree: Jamboard
+
+Starting at the leftmost vertex $s$, apply repeated `Relax`ings to produce the SSSP tree for the given graph. Make note of a relaxing that you do where none of the distances are $\infty$.
+
+# Variations
+
+## Dijkstra's Algorithm
+
+Use a priority queue that does `DecreaseKey`, `Insert`, and `ExtractMin` each in $O(V)$ time.
+    - The vertices go in the priority queue.
+    - The key for vertex $v$ is $\text{dist}(v)$.
+    - Starting with $s$, process the smallest edge and loop.
+
+```
+DijkstraSSSP(s):
+    InitSSSP(s)
+    for all vertices v
+        Insert(v, dist(v))
+    while the priority queue is not empty
+        u <- ExtractMin()
+        for all edges uv
+            if uv is tense
+                Relax(uv)
+                DecreaseKey(v, dist(v))
+```
+
+(See Figure 8.12)
+
+## Jamboard
+
+Step through `DijkstraSSSP` on the Jamboard. Keep track of each `Relax` call (which edge gets relaxed, and in which order). 
+
+## Dijkstra running time
+
+```
+DijkstraSSSP(s):
+    InitSSSP(s)
+    for all vertices v
+        Insert(v, dist(v))
+    while the priority queue is not empty
+        u <- ExtractMin()
+        for all edges uv
+            if uv is tense
+                Relax(uv)
+                DecreaseKey(v, dist(v))
+```
+
+- `DecreaseKey`, `Insert`, and `ExtractMin` are all $O(\log V)$.
+- At most $E$ `DecreaseKey`, at most $V$ `Insert`, and `ExtractMin`.
+- Graphs are connected, so $E$ is "bigger" than $V$.
+- Total time: $O(E \log V)$
+
+## Bellman-Ford
+
+- Relax *all* the tense edges, and recurse.
+- Use an array `dist[]` to store the distances for each vertex.
+
+```
+BellmanFordSSSP(s)
+    dist[s] <- 0
+    for every vertex v != s
+        dist[v] <- Infinity
+    for i <- 1 to V − 1
+        for every edge uv
+            if dist[v] > dist[u] + w(uv)
+                dist[v] <- dist[u] + w(uv)
+```
+
+Time: $O(VE)$
+

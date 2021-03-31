@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70218" creator="Ipe 7.2.23">
-<info created="D:20170411091510" modified="D:20210330143305"/>
+<info created="D:20170411091510" modified="D:20210331080633"/>
 <preamble>\usepackage[charter]{mathdesign}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
@@ -322,7 +322,7 @@ h
 64 640 m
 96 672 l
 </path>
-<text matrix="1 0 0 1 7.43416 -2.19645" transformations="translations" pos="48 640" stroke="black" type="label" width="3.778" height="4.64" depth="0.07" valign="baseline">$s$</text>
+<text matrix="1 0 0 1 7.43416 -2.19645" transformations="translations" pos="48 640" stroke="black" type="label" width="3.778" height="4.64" depth="0.07" valign="baseline" style="math">s</text>
 <path stroke="black" arrow="pointed/small">
 64 640 m
 112 608 l
@@ -385,6 +385,10 @@ h
 </path>
 <path stroke="black" arrow="pointed/small">
 240 608 m
+256 640 l
+</path>
+<path stroke="black" arrow="pointed/normal">
+208 608 m
 256 640 l
 </path>
 </page>

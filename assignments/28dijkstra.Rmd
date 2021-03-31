@@ -1,0 +1,17 @@
+---
+title: "Dijkstra's Algorithm"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](28dijkstra.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+1. Step through [Dijkstra's Algorithm](../slides/28sssp.html#/dijkstras-algorithm) and list the edges (identified by their weights) in the order in which they are `Relax`ed.
+
+![](https://djhunter.github.io/algorithms/images/dirwtgraph.png)
+
+2. Do Exercise 1 (both parts) on page 297 of [E]. Note that, in both parts (a) and (b), your time estimates should be in terms of $n$, not in terms of $V$ and $E$.
+
