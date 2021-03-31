@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70218" creator="Ipe 7.2.23">
-<info created="D:20170411091510" modified="D:20210331080633"/>
+<info created="D:20170411091510" modified="D:20210331082340"/>
 <preamble>\usepackage[charter]{mathdesign}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
@@ -306,7 +306,7 @@ h
 <text matrix="1 0 0 1 -52 20" transformations="translations" pos="192 624" stroke="black" type="label" width="13.294" height="6.909" depth="0.13" valign="baseline">6.3</text>
 <text matrix="1 0 0 1 -24 20" transformations="translations" pos="192 624" stroke="black" type="label" width="13.294" height="6.527" depth="0.13" valign="baseline">5.5</text>
 <text matrix="1 0 0 1 16 24" transformations="translations" pos="192 624" stroke="black" type="label" width="13.294" height="6.528" depth="0.42" valign="baseline">4.8</text>
-<text matrix="1 0 0 1 28 0" transformations="translations" pos="192 624" stroke="black" type="label" width="13.294" height="6.528" depth="0.42" valign="baseline">5.4</text>
+<text matrix="1 0 0 1 27.6098 0.390161" transformations="translations" pos="192 624" stroke="black" type="label" width="13.294" height="6.528" depth="0.42" valign="baseline">5.4</text>
 <text matrix="1 0 0 1 -100 0" transformations="translations" pos="192 624" stroke="black" type="label" width="13.294" height="6.528" depth="0.42" valign="baseline">4.5</text>
 <text matrix="1 0 0 1 -75.1893 -13.0809" transformations="translations" pos="192 624" stroke="black" type="label" width="15.963" height="6.528" depth="0.42" valign="baseline">3.9
 </text>
