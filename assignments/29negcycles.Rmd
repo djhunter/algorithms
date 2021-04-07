@@ -1,0 +1,24 @@
+---
+title: "Negative Cycles"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](29negcycles.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+1. Give an example of a graph with negative edges on which [Dijkstra's Algorithm](https://djhunter.github.io/algorithms/slides/28sssp.html#/dijkstras-algorithm) never terminates. Explain why the algorithm fails to terminate.
+
+
+
+
+2. For the generic [`MetaSSSP` algorithm](https://djhunter.github.io/algorithms/slides/28sssp.html#/sssp-by-repeated-relaxing-meta-algorithm), explain why, if `pred(s)` ever changes after `InitSSSP`, then the input graph contains a negative cycle through $s$.
+
+
+
+3. In the generic `MetaSSSP` algorithm, the tense edges can be relaxed in any order you choose. Let $P$ denote the current graph of predecessor edges $\text{pred}(v)\rightarrow v$, and let $X$ denote the set of all currently tense edges; both of these sets evolve as the algorithm executes. 
+    a. Prove that, if the input graph has no negative cycles, then $P \cup X$ is always a dag. 
+    b. Prove that, if $P \cup X$ is always a dag, then the input graph has no negative
+cycles.

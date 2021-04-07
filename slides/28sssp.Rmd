@@ -185,9 +185,10 @@ Starting at the leftmost vertex $s$, apply repeated `Relax`ings to produce the S
 ## Dijkstra's Algorithm
 
 Use a priority queue that does `DecreaseKey`, `Insert`, and `ExtractMin` each in $O(V)$ time.
-    - The vertices go in the priority queue.
-    - The key for vertex $v$ is $\text{dist}(v)$.
-    - Starting with $s$, process the smallest edge and loop.
+
+- The vertices go in the priority queue.
+- The key for vertex $v$ is $\text{dist}(v)$.
+- Starting with $s$, process the smallest edge and loop.
 
 ```
 DijkstraSSSP(s):

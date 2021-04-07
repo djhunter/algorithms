@@ -64,6 +64,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 26. [Borůvka's MST Algorithm](slides/26boruvka.html)
 27. [Classical MST Algorithms](slides/27classicmst.html)
 28. [Single Source Shortest Path Algorithms](slides/28sssp.html)
+29. [SSSP Trees, Continued](slides/29sssp2.html)
 
 # Written Assignments
 
@@ -95,6 +96,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 26. [Edge Contraction](assignments/26contraction.html)
 27. [Jarník's Algorithm](assignments/27jarnik.html)
 28. [Dijkstra's Algorithm](assignments/28dijkstra.html)
+29. [Negative Cycles](assignments/29negcycles.html)
 
 # Other Resources
 
