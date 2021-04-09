@@ -1,0 +1,162 @@
+---
+title: "Flow Networks"
+date: "April 9, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments
+
+## Negative cycles
+
+```{r, echo=FALSE, message=FALSE}
+library(igraph)
+
+G <- list(c(2), 
+          c(3,4), 
+          c(1), 
+          c())
+M <- graph_from_adj_list(G, mode="out") 
+oldPar <- par(mar=c(0.1,0.1,0.1,0.1)) # reduce the margins
+set.seed(1234) # fix the randomization of the following plot command
+nod <- data.frame(wt = c(1,-100,4,2))
+plot(M, vertex.color= c("blue","yellow","red","green"), edge.label = nod$wt)
+```
+
+## What if `pred(s)` ever changes?
+
+If `pred(s)` changes after `InitSSSP`, it would signify that the algorithm had taken a path through the input graph already that had led it back to `s`, meaning that there was some path `s -> u-> u_1 ... -> u_k -> s`, and the edge `u_k -> s` would have to be tense. This would mean that the cycle was negative, since `s` starts with a distance of zero. Thus, the input graph contains a negative cycle that travels back through `s`.
+
+## Logic review
+
+- **Converses:** $P \Rightarrow Q$ is not the same statement as $Q \Rightarrow P$.
+- **Contrapositives:** $P \Rightarrow Q$ is logically equivalent to $\neg Q \Rightarrow \neg P$.
+    - Sometimes it is easier to *prove the contrapositive* of the statement you are trying to prove.
+
+## Necessary condition for no negative cycles
+
+Prove that, if the input graph has no negative cycles, then $P \cup X$ is always a dag. 
+
+- Suppose $P \cup X$ is not a dag at some point, so it contains a cycle. 
+    - We can assume that the first time this happens, $P$ does not contain the cycle.
+- This means that adding tense edges to $P$ would result in a cycle.
+- But the only way these edges could be tense would be if they improved the distance on some node, which would mean the input graph has a negative cycle.
+
+## Sufficient condition for no negative cycles
+
+Prove that, if $P \cup X$ is always a dag, then the input graph has no negative cycles.
+
+- Suppose that the input graph has a negative cycle.
+- Apply `MetaSSSP`, and start by relaxing edges to form a path to this negative cycle from $s$.
+- Then relax the edges in this cycle. Since it is a negative cycle, you will encounter a vertex again through a tense edge. So at this point, $P \cup X$ is not a dag.
+
+
+# Flow Networks
+
+## Flow in a directed graph
+
+- There is a start vertex $s$ and a terminal vertex $t$.
+- Every vertex is reachable from $s$, and $t$ is reachable from every vertex.
+    - There are paths $s \rightsquigarrow v \rightsquigarrow t$ for all $v$.
+- Each edge has a *capacity* measuring how much flow it can carry.
+- The total flow *into* a vertex must equal the total flow *out*.
+    - Analogies: Water pipes, Freeways
+- **Maximum flow problem:** Given a flow network, find the maximum flow from $s$ to $t$.
+
+**Applications:** Optimizing transportation, scheduling, distributed systems, image processing, baseball elimination, etc.
+
+## Flows: Definitions
+
+Let $G$ be a directed graph where each edge $e$ has capacity $c(e)$.
+
+- An *$(s,t)$-flow* is an assignment of values $f(e)$ to each edge $e$ of $G$ such that the total flow into each vertex $v$ equals the total flow out (except, possibly, at $s$ and $t$).
+
+$$
+\sum_a f(a\rightarrow v) = \sum_z f(v \rightarrow z)
+$$
+- The *value* $|f|$ of a flow $f$ is the total net flow out of $s$ (or equivalently, into $t$.)
+
+$$
+|f| = \sum_z f(s \rightarrow z) - \sum_a f(a \rightarrow s)
+$$
+
+- A flow is *feasible* if it obeys the capacity limits on each edge $e$: $0 \leq f(e) \leq c(e)$. See Figure 10.2.
+
+
+
+## Table Groups
+
+```{r, echo=FALSE}
+library(knitr)
+roster <- c("Ethan", "Talia", "Drake", "Jack", "Andrew", "Blake", "Jordan", "Graham", "Kevin", "Logan", "Claire", "Bri", "Trevor", "James", "Kristen", "Levi", "Grace", "John", "Isaac", "Josiah", "Nathan")
+set.seed(492021) 
+n <- length(roster)
+ngps <- 7
+maxingp <- ceiling(n/ngps)
+# just make random groups
+groups <- matrix(c(roster[sample(n)], 
+                   rep("",(maxingp - (n %% maxingp)) %% maxingp)), 
+                 ncol=maxingp, byrow=FALSE)
+rownames(groups) <- paste0("Table #", 1:nrow(groups))
+kable(t(groups))
+```
+
+## Improve the flow?
+
+Can you increase the flow in Figure 10.2, keeping it feasible? If so, try to make its value as big as possible.
+
+# Cuts
+
+## Cuts: Definitions
+
+Let $G$ be a directed graph where each edge $e$ has capacity $c(e)$.
+
+- An *$(s,t)$-cut* is a partition of the vertices into two sets $S$ and $T$, such that $s\in S$ and $t\in T$.
+- The *capacity* $\lVert S, T \rVert$ of a cut $S,T$ is the sum of the capacities of the edges that go from $S$ to $T$.
+    - Cutting these edges would eliminate the flow from $s$ to $t$.
+    - See Figure 10.2.
+    
+## Find a cut
+
+1. Find a cut in the graph in Figure 10.2, and try to make its capacity as small as possible.
+
+2. Try to find a flow whose value is bigger than the capacity of the cut that you found.
+
+## Flows can't exceed cuts
+
+**Lemma.** The value of any feasible $(s,t)$-flow is less than or equal to the capacity of any $(S,T)$-cut.
+
+*Proof.*
+
+>- The value of the flow is the net flow out of $s$.
+>- The net flow out of $s$ is the sum of the net flows through all the vertices in $S$ (since all the others have a net of zero).
+>- This remains true if we remove the edges that go from $S$ to $S$ (zero sum).
+>- The only edges left go from $S$ to $T$. 
+>    - So the total flow from $S$ to $T$ can't be more than the capacity.
+>    - The max happens when all the edges across are *saturated*, and all the edges back are *avoided*.
+
+## Maxflow-Mincut Theorem
+
+>- **Lemma.** The value of any feasible $(s,t)$-flow is less than or equal to the capacity of any $(S,T)$-cut.
+>- **Corollary.** If you can find a cut and a flow such that the capacity of the cut equals the value of the flow, you have found a maximum flow.
+>- **Theorem.** You *can* always find such a cut and flow.
+>    - (Proof next week.)
+

@@ -1,0 +1,18 @@
+---
+title: "Flows and Cuts"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](30cutsflows.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+1. Find a maximum flow in the following flow network. Do this by finding a cut with minimum capacity, and label each edge with a value that results in a flow equal to this capacity. (Annotate the image.)
+ 
+![](https://djhunter.github.io/algorithms/images/flownet1.png)
+
+2. Bert and Ernie have two very hostile dogs. These dogs refuse to walk together, and they even refuse to walk down any street that the other has walked on that day. (They are OK with crossing the same intersection, though.) Bert and Ernie have a directed graph representing their neighborhood, and they would like to know if it is possible to walk both dogs on the same day from their house at vertex $s$ to the veterinarian at vertex $t$. Explain how you could *reduce* this problem to a maximum flow problem. What capacities would you assign? What flow would you need?
+
+

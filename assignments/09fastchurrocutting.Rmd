@@ -1,0 +1,160 @@
+---
+title: "Churro Cutting"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](07churrocutting.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+The world-famous *La Xurrería* churrería in the central district of Querétaro, Mexico, sells the best churros you can buy, and offers them in various integer lengths (measured in inches). The price of a churro depends on its length, according to the following table (prices have been converted to US cents). Click on the play button to see the results in the source pane, or knit to see the results in HTML.
+
+```{r, echo=FALSE}
+price <- c(1,5,8,9,10,17,17,20,24,30)
+length <- 1:10
+print(rbind(length,price))
+```
+
+When the churros come out of the churro-maker, they are $n$ inches long, but they can be cut into smaller pieces before they are sold. (Here we will consider $n \leq 10$, but rumor has it that their equipment is being upgraded.) The question is, **what is the optimal way to cut an $n$-inch churro to maximize the total price of all the pieces?**
+
+> 1. Consider the case $n=4$. List all the possible ways to cut a 4-inch churro, and give the total price of each. What is the maximum total price?
+
+
+
+## Recursive Churro Cutting
+
+Consider the following recursive algorithm for finding the maximum total price among all the ways to cut an $n$-inch churro into pieces.
+
+```
+Let price[1..n] be a constant array of prices.
+So price[i] is the cost of a churro of length i.
+
+CutChurro(n):
+    if n = 0
+        return 0
+    maxTotPrice <- -1
+    for i <- 1 to n
+        totPriceTry <- price[i] + CutChurro(n-i)
+        if totPriceTry > maxTotPrice
+            maxTotPrice <- totPriceTry 
+    return maxTotPrice
+```
+
+> 2. Determine the number of `CutChurro` calls made by `CutChurro(n)` as a function of $n$, for $n \geq 0$. You don't need to give a formal proof (though a formal proof would certainly be sufficient), but if you don't, you still need to justify your answer in a way that is convincing.
+
+
+
+## CutChurro in R
+
+Here is an implementation of `CutChurro` in R. Press the play button to load this function into the current environment.
+
+```{r}
+price <- c(1,5,8,9,10,17,17,20,24,30,34,34,38,40,45,46,47,50,52,55)
+CutChurro <- function(n) {
+  if (n == 0)
+    return(0)
+  maxTotPrice <- -1
+  for(i in 1:n) {
+    totPriceTry <- price[i] + CutChurro(n-i)
+    if(totPriceTry > maxTotPrice)
+            maxTotPrice <- totPriceTry 
+  }
+  return(maxTotPrice)
+}
+```
+
+Execute the following code chunk to check your answer from #1.
+
+```{r}
+CutChurro(4)
+```
+
+In R, you can check the running time of an algorithm using the `system.time` command:
+
+```{r}
+system.time(CutChurro(20))
+```
+
+> 3. Compute the elapsed system time for `CutChurro(n)` for values of $n$ from 10 to 20. What do you notice about this sequence of numbers? Does it seem consistent with your answer to #2?
+
+
+```{python}
+price = [0,1,5,8,9,10,17,17,20,24,30,34,34,38,40,45,46,47,50,52,55]
+
+def FastCutChurro(n):
+  maxPrice= [-10] * (n+1)
+  maxPrice[0] = 0
+  for j in range(1,n+1):
+    maxPrice[j] = -1
+    for i in range(1,j+1):
+      totPriceTry = price[i] + maxPrice[j-i]
+      if totPriceTry > maxPrice[j]:
+        maxPrice[j] = totPriceTry
+  return maxPrice[n]
+
+print(FastCutChurro(20))
+```
+
+```{r}
+bills <- c(1,4,7,13,28,52,91,365)
+n <- 5*91
+change <- list()
+i <- 1
+while(n > 0) {
+  left <- n-bills
+  left[which(left<0)] <- Inf
+  change[[i]] <- bills[which.min(left)]
+  n <- n - change[[i]]
+  i <- i + 1
+}
+```
+
+```{r}
+bills <- c(1,4,7,13,28,52,91,365)
+NumBills <- function(n) {
+  if(n == 0)
+    return(0)
+  if(n<0)
+    return(Inf)
+  nb <- Inf
+  for(b in bills[bills <= n]) {
+    tryNum <- 1 + NumBills(n-b)
+    if(tryNum < nb)
+      nb <- tryNum
+  }
+  return(nb)
+}
+```
+
+```{r}
+bills <- c(1,4,7,13,28,52,91,365)
+FastBills <- function(n){
+  nbills <- rep(Inf, n   +1) # off by one indexing
+  nbills[0  +1] <- 0
+  for (i in 1:n) {
+    for (b in bills[bills <= i]) {
+      tryNum <- 1 + nbills[i - b   +1]
+      if (tryNum < nbills[i   +1])
+        nbills[i   +1] <- tryNum
+    }
+  }
+  return(nbills[n  +1])
+}
+```
+
+```{r}
+price <- c(1,5,8,9,10,17,17,20,24,30,34,34,38,40,45,46,47,50,52,55)
+CC <- price
+FastCutChurro <- function(n) {
+  for (i in 2:n) {
+    for (j in 1:floor(i/2)) {
+        if (CC[j] + CC[i-j] > CC[i])
+            CC[i] <- CC[j] + CC[i-j]
+    }
+  }
+  return(CC[n])
+}
+```
+

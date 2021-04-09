@@ -65,6 +65,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 27. [Classical MST Algorithms](slides/27classicmst.html)
 28. [Single Source Shortest Path Algorithms](slides/28sssp.html)
 29. [SSSP Trees, Continued](slides/29sssp2.html)
+30. [Flow Networks](slides/30flows.html)
 
 # Written Assignments
 
@@ -97,6 +98,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 27. [Jarník's Algorithm](assignments/27jarnik.html)
 28. [Dijkstra's Algorithm](assignments/28dijkstra.html)
 29. [Negative Cycles](assignments/29negcycles.html)
+30. [Flows and Cuts](assignments/30cutsflows.html)
 
 # Other Resources
 
