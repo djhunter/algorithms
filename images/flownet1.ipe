@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE ipe SYSTEM "ipe.dtd">
 <ipe version="70218" creator="Ipe 7.2.23">
-<info created="D:20170411091510" modified="D:20210409072000"/>
+<info created="D:20170411091510" modified="D:20210409072906"/>
 <preamble>\usepackage[charter]{mathdesign}</preamble>
 <ipestyle name="basic">
 <symbol name="arrow/arc(spx)">
@@ -455,5 +455,6 @@ h
 <text matrix="1 0 0 1 196 -100" transformations="translations" pos="48 520" stroke="black" type="label" width="10.157" height="7.451" depth="1.86" valign="baseline">/5</text>
 <text matrix="1 0 0 1 148 -92" transformations="translations" pos="48 520" stroke="black" type="label" width="10.157" height="7.451" depth="1.86" valign="baseline">/2</text>
 <text matrix="1 0 0 1 148 8" transformations="translations" pos="80 384" stroke="black" type="label" width="10.157" height="7.451" depth="1.86" valign="baseline">/8</text>
+<text matrix="1 0 0 1 196 56" transformations="translations" pos="80 384" stroke="black" type="label" width="10.157" height="7.451" depth="1.86" valign="baseline">/8</text>
 </page>
 </ipe>
