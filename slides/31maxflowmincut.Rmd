@@ -1,0 +1,132 @@
+---
+title: "The Maxflow-Mincut Theorem"
+date: "April 12, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments
+
+## Maximum flow = minimum cut
+
+See Jamboard
+
+## Hostile Dogs
+
+# Maxflow-Mincut Theorem Proof/Algorithm
+
+## Maxflow-Mincut Theorem
+
+- **Lemma.** The value of any feasible $(s,t)$-flow is less than or equal to the capacity of any $(S,T)$-cut.
+- **Corollary.** If you can find a cut and a flow such that the capacity of the cut equals the value of the flow, you have found a maximum flow.
+    - In this situation, all the edges from $S$ to $T$ will be saturated, and all the edges from $T$ to $S$ will be avoided.
+- **Theorem.** You *can* always find such a cut and flow.
+
+**Maxflow-Mincut Theorem.** In every flow network with source $s$ and
+target $t$, the value of the maximum $(s,t)$-flow is equal to the capacity of the minimum $(s,t)$-cut.
+
+*Proof.* Ford-Fulkerson Algorithm
+
+## Residual Graph
+
+Given a flow network $G$ and a flow $f$, the **residual graph** $G_f$ is the graph with the same vertex set as $G$, but whose edges indicate how much $f$ could be increased/decreased on each edge of $G$.
+
+- If $u\rightarrow v$ in $G$ has spare capacity $x$, then $u\rightarrow v$ has capacity $x$ in $G_f$.
+- If $u \rightarrow v$ in $G$ has flow value $y$, then the *reverse* edge $v \rightarrow u$ in $G_f$ has capacity $y$.
+
+See Figure 10.5.
+
+## Group exercise
+
+Draw the residual graph for the graph on the Jamboard.
+
+## Augmenting paths
+
+Now suppose $G_f$ has a path from $s$ to $t$.
+
+- Let $F$ be the capacity of the smallest edge in this path.
+    - So this path can handle a flow of $F$.
+- Now **augment** the flow $f$ in $G$:
+    - Add $F$ to edge $u \rightarrow v$ if $u\rightarrow v$ is in the augmenting path.
+    - Subtract $F$ from edge $u \rightarrow v$ if the reverse $v \rightarrow u$ is in the augmenting path.
+
+See Figure 10.5 again.
+
+## Flow stays feasible when augmented
+
+- Since $F$ is the *smallest* common increment/decrement, the capacity limits are still obeyed.
+- Since the augmenting path is itself a flow, the conservation property is conserved at each vertex.
+    - Details in book.
+
+## No augmenting path? That's a min cut!
+
+Suppose there is no path from $s$ to $t$ in $G_f$.
+
+- Let $S$ be the vertices reachable from $s$ in $G_f$, and let $T$ be the complement.
+- There is no edge from $S$ to $T$ in $G_f$.
+    - So every edge from $S$ to $T$ in $G$ is saturated.
+    - And every edge from $T$ to $S$ in $G$ is avoided.
+    
+That means we've found a cut with the same capacity as the value of the flow.
+
+>- This proves the theorem! (You *can* always find a matching cut/flow).
+>- This gives us the algorithm too.
+
+## Group exercise
+
+- Find an augmenting path on your residual graph.
+- Augment the flow.
+- Update the residual graph.
+
+Repeat until no path from $s$ to $t$ exists.
+
+# The Ford-Fulkerson Algorithm
+
+## Ford-Fulkerson Method/Algorithm
+
+Start with a zero flow and construct the residual graph $G_f$. Repeat the following until there's no path from $s$ to $t$ in $G_f$.
+
+- Find an augmenting path in the residual graph.
+- Augment the flow.
+- Update the residual graph.
+
+## Ford-Fulkerson Time?
+
+Each iteration is linear time: $O(E)$ since the graph is connected.
+
+- *Assume* capacities are integers. 
+    - So $f$ and $F$ will always be integers.
+- Let $|f^*|$ be the value of the maximum flow.
+    - Each iteration increases the flow by $F$, which is at least 1.
+    - So there could only be $|f^*|$ iterations, worst case.
+    
+**Total Time:** $O(E|f^*|)$.
+
+## There are faster max flow algorithms
+
+- Maximum flow algorithms is still an active area of research.
+- Current best algorithm: [Orlin (2012)](https://dspace.mit.edu/handle/1721.1/88020)
+    - Time: $O(VE)$
+
+So when estimating running times of algorithms that use maximum flows, you can assume the maximum flow part has running time $O(VE)$.
+
+
+

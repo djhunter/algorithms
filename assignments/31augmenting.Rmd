@@ -1,0 +1,31 @@
+---
+title: "Augmenting Paths"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Instead of editing the [RMarkdown source file](31augmenting.Rmd) for this assignment, you can just draw diagrams on paper and scan them to PDF using a scanning app, or you could produce a PDF file some other way. Upload the `.pdf` to Canvas.
+
+Consider the following flow network $G$. Values of a flow $f$ and edge capacities are given as "value/capacity" pairs.
+ 
+![](https://djhunter.github.io/algorithms/images/flownet2.png)
+
+1. Draw the residual graph $G_f$.
+
+2. Find a path from $s$ to $t$ in $G_f$, and determine $F$, the maximum amount of flow through this path. (Choose this path so that $F$ is as large as possible.)
+
+3. Augment the flow $f$ using the augmenting path you found in #2 to obtain a new flow $f'$.
+
+4. Repeat steps 1-3 (update the residual graph, find an augmenting path, augment the flow) as many times as necessary to obtain a maximum flow in $G$.
+
+5. Show that your maximum flow is actually a maximum flow by finding a cut whose capacity equals the total value of the flow.
+
+6. Does your minimum cut correspond to the set of vertices that are reachable from $s$ in the residual graph?
+
+
+
+
+
