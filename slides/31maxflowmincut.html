@@ -467,10 +467,27 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </section>
 <section id="maximum-flow-minimum-cut" class="slide level2">
 <h2>Maximum flow = minimum cut</h2>
-<p>See Jamboard</p>
+<ul>
+<li>See Jamboard. More than one cut: minimum capacity = 14.</li>
+<li><em>Note:</em> Across the cut, in the max flow, all edges are <em>saturated</em> (to capacity) and all returning edges are <em>avoided</em> (zero).</li>
+</ul>
 </section>
 <section id="hostile-dogs" class="slide level2">
 <h2>Hostile Dogs</h2>
+<ul>
+<li>Take the directed graph representing their neighborhood (with each street being an edge and each intersection being a vertex) and assigning a capacity of 1 to every street.
+<ul>
+<li>Ensures that only one dog can use that street.</li>
+<li>Direct the edges toward the vet.</li>
+</ul></li>
+<li>You would need a flow of at least 2.
+<ul>
+<li>2 dogs would leave s and 2 dogs would enter t.</li>
+</ul></li>
+</ul>
+<ul>
+<li class="fragment"><em>Note:</em> a minimum cut of 1 would be a street both dogs were forced to walk on.</li>
+</ul>
 </section></section>
 <section>
 <section id="maxflow-mincut-theorem-proofalgorithm" class="title-slide slide level1">
@@ -501,7 +518,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 </section>
 <section id="group-exercise" class="slide level2">
 <h2>Group exercise</h2>
-<p>Draw the residual graph for the graph on the Jamboard.</p>
+<p>Draw the residual graph for the given graph. (See Jamboard)</p>
 </section>
 <section id="augmenting-paths" class="slide level2">
 <h2>Augmenting paths</h2>
@@ -523,7 +540,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <h2>Flow stays feasible when augmented</h2>
 <ul>
 <li>Since <span class="math inline">\(F\)</span> is the <em>smallest</em> common increment/decrement, the capacity limits are still obeyed.</li>
-<li>Since the augmenting path is itself a flow, the conservation property is conserved at each vertex.
+<li>Since the augmenting path is itself a flow, the conservation property is still satisfied at each vertex.
 <ul>
 <li>Details in book.</li>
 </ul></li>
@@ -588,7 +605,7 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <section id="there-are-faster-max-flow-algorithms" class="slide level2">
 <h2>There are faster max flow algorithms</h2>
 <ul>
-<li>Maximum flow algorithms is still an active area of research.</li>
+<li>Maximum flow algorithms are still an active area of research.</li>
 <li>Current best algorithm: <a href="https://dspace.mit.edu/handle/1721.1/88020">Orlin (2012)</a>
 <ul>
 <li>Time: <span class="math inline">\(O(VE)\)</span></li>

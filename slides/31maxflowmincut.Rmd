@@ -27,10 +27,19 @@ knitr::opts_chunk$set(comment = NA)
 
 ## Maximum flow = minimum cut
 
-See Jamboard
+- See Jamboard. More than one cut: minimum capacity = 14.
+- *Note:* Across the cut, in the max flow, all edges are *saturated* (to capacity) and all returning edges are *avoided* (zero).
 
 ## Hostile Dogs
 
+- Take the directed graph representing their neighborhood (with each street being an edge and each intersection being a vertex) and assigning a capacity of 1 to every street. 
+    - Ensures that only one dog can use that street.
+    - Direct the edges toward the vet.
+- You would need a flow of at least 2. 
+    - 2 dogs would leave s and 2 dogs would enter t.
+    
+>- *Note:* a minimum cut of 1 would be a street both dogs were forced to walk on.
+    
 # Maxflow-Mincut Theorem Proof/Algorithm
 
 ## Maxflow-Mincut Theorem
@@ -56,7 +65,7 @@ See Figure 10.5.
 
 ## Group exercise
 
-Draw the residual graph for the graph on the Jamboard.
+Draw the residual graph for the given graph. (See Jamboard)
 
 ## Augmenting paths
 
@@ -73,7 +82,7 @@ See Figure 10.5 again.
 ## Flow stays feasible when augmented
 
 - Since $F$ is the *smallest* common increment/decrement, the capacity limits are still obeyed.
-- Since the augmenting path is itself a flow, the conservation property is conserved at each vertex.
+- Since the augmenting path is itself a flow, the conservation property is still satisfied at each vertex.
     - Details in book.
 
 ## No augmenting path? That's a min cut!
@@ -122,7 +131,7 @@ Each iteration is linear time: $O(E)$ since the graph is connected.
 
 ## There are faster max flow algorithms
 
-- Maximum flow algorithms is still an active area of research.
+- Maximum flow algorithms are still an active area of research.
 - Current best algorithm: [Orlin (2012)](https://dspace.mit.edu/handle/1721.1/88020)
     - Time: $O(VE)$
 
