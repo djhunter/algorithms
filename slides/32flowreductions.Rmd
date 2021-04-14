@@ -1,0 +1,134 @@
+---
+title: "Reductions to Maxflow Problems"
+date: "April 14, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+```
+
+# Assignment Comments
+
+## Ford-Fulkerson Method (Chapter 10)
+
+- Notice that you need several steps (3?).
+- At the end, to find the cut, you need to calculate the final $G_f$.
+- See Jamboard. 
+    
+# Reductions (Chapter 11)
+
+## Reductions to Maxflow Problems
+
+- Can solve using Ford-Fulkerson in $O(E|f^*|)$ time.
+- Can solve using really fancy algorithms in $O(VE)$ time.
+- So if you can *translate a given problem to a maxflow problem*, you can solve it in $O(X + VE)$ time, where the translation process takes $O(X)$ time.
+    - This is called *reducing* the given problem to a maxflow problem.
+- Example: Hostile Dogs *reduces to* maxflow. 
+    - Translation is $O(E)$. (Put weights on edges.)
+    - $|f^*|$ can be taken to be 2. (Stop when you reach 2.)
+    - Hostile dogs time: $O(E|f^*|) = O(E)$. (Can just use FF.)
+
+## Bipartite Matching
+
+- A **bipartite** graph is an *undirected* graph whose vertex set consists of two partitions, $L$ and $R$, such that every edge goes from $L$ to $R$.
+    - i.e., a bipartite graph is 2-colorable.
+- A *bipartite matching* is a selection of edges in a bipartite graph that doesn't duplicate vertices.
+    - The edges *match* a vertex in $L$ with a vertex in $R$.
+
+>- *Example.* Given a bipartite graph where $L$ represents workers $R$ represents jobs, and an edge from a worker to a job means the worker can do that job:
+>    - Assign each worker a job.
+>    - Do so *maximally* (assign as many jobs as possible)
+>- Bipartite matching **reduces** to a maximum flow problem.
+
+## Group Exercise
+
+The flow network on the Jamboard purports to solve a bipartite matching problem by finding a maximum flow. Show that this really is a maximum flow by finding a minimum cut.
+
+# More Reductions
+
+## Tuple Selection
+
+- Extension of bipartite matching.
+- Vertex set partitioned: $X_1, X_2, X_3, \ldots$.
+- Each $X_i$ is a different finite resource.
+- Edges represent constraints among these resources.
+
+## Example: Sheduling Finals
+
+You have to assign rooms, times, and proctors for final exams in 9 different classes. There are 5 rooms, 4 exam times, and 7 proctors.
+
+- Each class has one final exam.
+- Each class has a list of rooms that are big enough.
+- No two rooms can be scheduled at the same time (duh).
+- Each proctor has a list of times they are available.
+- No proctor should have to give more than 5 exams.
+
+See Figure 11.5.
+
+## Scheduling Finals Time
+
+- Let $N$ be the total number of classes, rooms, times, proctors combined.
+- $O(N)$ vertices, $O(N^2)$ edges.
+- Translating takes $O(E) = O(N^2)$ time.
+- Computing max flow takes $O(VE) = O(N^3)$ time, using Orlin's algorithm.
+    - Could also just use Ford-Fulkerson, because $|f^*|$ is bounded by the number of classes.
+- Time: $O(N^2 + N^3) = O(N^3)$.
+
+## Baseball Elimination
+
+Can a team still finish with the most wins?
+
+- You know how many games each team has left to play.
+- You know how many wins each team has.
+- You know which team has to play which other team.
+
+| Team | Won–Lost | Left | NYY | BAL | BOS | TOR | DET |
+| ---- | -------- | ---- | --- | --- | --- | --- | --- |
+| New York Yankees | 75–59 | 28 |  | 3 | 8 | 7 | 3 |
+| Baltimore Orioles | 71–63 | 28 | 3 |  | 2 | 7 | 4 |
+| Boston Red Sox | 69–66 | 27 | 8 | 2 |  | 0 | 0 |
+| Toronto Blue Jays | 63–72 | 27 |  7 | 7 | 0 |  | 0 |
+| Detroit Tigers | 49–86 | 27 | 3 | 4 | 0 | 0 |  |
+
+See Figure 11.7.
+
+## Baseball elimination time?
+
+Suppose there are $n$ teams. The flow model has a start vertex $s$, a list of *pairing vertices*, a list of *team vertices*, and a terminal vertex $t$.
+
+1. How many possible pairings of teams are there? (Give an exact answer, and an asymptotic estimate.)
+
+2. How many vertices are in the flow model? (asymptotically)
+
+3. How many edges leave each pairing vertex? How many edges are in the flow model?
+
+4. What is the running time, using Orlin's algorithm?
+
+5. Would using the Floyd-Fulkerson algorithm ever have a lower asymptotic running time?
+
+## Disjoint Path Covers
+
+- You are given a dag. 
+    - e.g., vertices are tasks with some prerequisite constraints.
+- What is the fewest number of paths in the dag that cover all the vertices?
+    - e.g., the tasks in each path can be performed by the same person.
+    
+**Reduces** to bipartite matching (which reduces to maxflow).
+
+See Figure 11.6.

@@ -67,6 +67,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 29. [SSSP Trees, Continued](slides/29sssp2.html)
 30. [Flow Networks](slides/30flows.html)
 31. [Maxflow-Mincut Theorem](slides/31maxflowmincut.html)
+32. [Reductions to Maxflow Problems](slides/32flowreductions.html)
 
 # Written Assignments
 
@@ -101,6 +102,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 29. [Negative Cycles](assignments/29negcycles.html)
 30. [Flows and Cuts](assignments/30cutsflows.html)
 31. [Augmenting Paths](assignments/31augmenting.html)
+32. [Applications of Maxflow Algorithms](assignments/32flowapplications.html)
 
 # Other Resources
 

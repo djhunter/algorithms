@@ -1,0 +1,24 @@
+---
+title: "Applications of Maxflow Algorithms"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Instead of editing the [RMarkdown source file](32flowapplications.Rmd) for this assignment, you can just do your work on paper and scan it to PDF using a scanning app, or you could produce a PDF file some other way. Upload the `.pdf` to Canvas.
+
+## Reductions to Maxflow problems
+
+Each of these exercises from [E] asks you to "describe" an algorithm to solve some problem. In Chapter 11, you will notice that none of the algorithm descriptions (e.g., Sections 11.3, 11.4, 11.5, 11.6) were given in pseudocode; rather a description of a *reduction* to a flow problem was sufficient. This description always included constructing a flow network of some sort, *specifying the vertices, edges, and capacities.* So you don't need to write pseudocode for these exercises, but strive to describe your algorithms *using diagrams and prose* in enough detail that you can analyze the running time.
+
+1. Do Exercise 4 on page 369 of [E]. Hint: Consider replacing each station (besides Skarloey and Tidmouth) with a "gadget" consisting of two vertices joined by a single edge.
+
+2. Do Exercise 12 on page 373 of [E].
+
+3. Do Exercise 15 on page 374 of [E].
+
+
+
+
