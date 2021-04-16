@@ -69,13 +69,12 @@ The flow network on the Jamboard purports to solve a bipartite matching problem 
 - Each $X_i$ is a different finite resource.
 - Edges represent constraints among these resources.
 
-## Example: Sheduling Finals
+## Example: Scheduling Finals
 
 You have to assign rooms, times, and proctors for final exams in 9 different classes. There are 5 rooms, 4 exam times, and 7 proctors.
 
 - Each class has one final exam.
 - Each class has a list of rooms that are big enough.
-- No two rooms can be scheduled at the same time (duh).
 - Each proctor has a list of times they are available.
 - No proctor should have to give more than 5 exams.
 

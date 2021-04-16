@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="dcterms.date" content="2021-04-14" />
-  <title>Reductions to Maxflow Problems</title>
+  <meta name="dcterms.date" content="2021-03-08" />
+  <title>Test #3 Review</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -456,209 +456,68 @@ document.getElementsByTagName('head')[0].appendChild(style);
     <div class="slides">
 
 <section>
-    <h1 class="title">Reductions to Maxflow Problems</h1>
-    <h3 class="date">April 14, 2021</h3>
+    <h1 class="title">Test #3 Review</h1>
+    <h3 class="date">March 8, 2021</h3>
 </section>
 
 <section>
-<section id="assignment-comments" class="title-slide slide level1">
-<h1>Assignment Comments</h1>
+<section id="assignment-comments-sample-solutions" class="title-slide slide level1">
+<h1>Assignment Comments, Sample Solutions</h1>
 
 </section>
-<section id="ford-fulkerson-method-chapter-10" class="slide level2">
-<h2>Ford-Fulkerson Method (Chapter 10)</h2>
+<section id="maxflow-applications" class="slide level2">
+<h2>Maxflow Applications</h2>
+<p>See Jamboard</p>
+</section></section>
+<section>
+<section id="test-3-contents" class="title-slide slide level1">
+<h1>Test #3 Contents</h1>
+
+</section>
+<section id="study-guide-on-canvas" class="slide level2">
+<h2>Study Guide on Canvas</h2>
 <ul>
-<li>Notice that you need several steps (3?).</li>
-<li>At the end, to find the cut, you need to calculate the final <span class="math inline">\(G_f\)</span>.</li>
-<li>See Jamboard.</li>
+<li>Questions on the <a href="https://westmont.instructure.com/courses/5960/assignments/58549">Study Guide</a>?</li>
+<li>See also the <a href="../slide24-32notes.html">slide summary</a>.</li>
 </ul>
 </section></section>
 <section>
-<section id="reductions-chapter-11" class="title-slide slide level1">
-<h1>Reductions (Chapter 11)</h1>
+<section id="practice-exercises" class="title-slide slide level1">
+<h1>Practice Exercises</h1>
 
 </section>
-<section id="reductions-to-maxflow-problems" class="slide level2">
-<h2>Reductions to Maxflow Problems</h2>
-<ul>
-<li>Can solve using Ford-Fulkerson in <span class="math inline">\(O(E|f^*|)\)</span> time.</li>
-<li>Can solve using really fancy algorithms in <span class="math inline">\(O(VE)\)</span> time.</li>
-<li>So if you can <em>translate a given problem to a maxflow problem</em>, you can solve it in <span class="math inline">\(O(X + VE)\)</span> time, where the translation process takes <span class="math inline">\(O(X)\)</span> time.
-<ul>
-<li>This is called <em>reducing</em> the given problem to a maxflow problem.</li>
-</ul></li>
-<li>Example: Hostile Dogs <em>reduces to</em> maxflow.
-<ul>
-<li>Translation is <span class="math inline">\(O(E)\)</span>. (Put weights on edges.)</li>
-<li><span class="math inline">\(|f^*|\)</span> can be taken to be 2. (Stop when you reach 2.)</li>
-<li>Hostile dogs time: <span class="math inline">\(O(E|f^*|) = O(E)\)</span>. (Can just use FF.)</li>
-</ul></li>
-</ul>
-</section>
-<section id="bipartite-matching" class="slide level2">
-<h2>Bipartite Matching</h2>
-<ul>
-<li>A <strong>bipartite</strong> graph is an <em>undirected</em> graph whose vertex set consists of two partitions, <span class="math inline">\(L\)</span> and <span class="math inline">\(R\)</span>, such that every edge goes from <span class="math inline">\(L\)</span> to <span class="math inline">\(R\)</span>.
-<ul>
-<li>i.e., a bipartite graph is 2-colorable.</li>
-</ul></li>
-<li>A <em>bipartite matching</em> is a selection of edges in a bipartite graph that doesn’t duplicate vertices.
-<ul>
-<li>The edges <em>match</em> a vertex in <span class="math inline">\(L\)</span> with a vertex in <span class="math inline">\(R\)</span>.</li>
-</ul></li>
-</ul>
-<ul>
-<li class="fragment"><em>Example.</em> Given a bipartite graph where <span class="math inline">\(L\)</span> represents workers <span class="math inline">\(R\)</span> represents jobs, and an edge from a worker to a job means the worker can do that job:
-<ul>
-<li class="fragment">Assign each worker a job.</li>
-<li class="fragment">Do so <em>maximally</em> (assign as many jobs as possible)</li>
-</ul></li>
-<li class="fragment">Bipartite matching <strong>reduces</strong> to a maximum flow problem.</li>
-</ul>
-</section>
-<section id="group-exercise" class="slide level2">
-<h2>Group Exercise</h2>
-<p>The flow network on the Jamboard purports to solve a bipartite matching problem by finding a maximum flow. Show that this really is a maximum flow by finding a minimum cut.</p>
-</section></section>
-<section>
-<section id="more-reductions" class="title-slide slide level1">
-<h1>More Reductions</h1>
-
-</section>
-<section id="tuple-selection" class="slide level2">
-<h2>Tuple Selection</h2>
-<ul>
-<li>Extension of bipartite matching.</li>
-<li>Vertex set partitioned: <span class="math inline">\(X_1, X_2, X_3, \ldots\)</span>.</li>
-<li>Each <span class="math inline">\(X_i\)</span> is a different finite resource.</li>
-<li>Edges represent constraints among these resources.</li>
-</ul>
-</section>
-<section id="example-scheduling-finals" class="slide level2">
-<h2>Example: Scheduling Finals</h2>
-<p>You have to assign rooms, times, and proctors for final exams in 9 different classes. There are 5 rooms, 4 exam times, and 7 proctors.</p>
-<ul>
-<li>Each class has one final exam.</li>
-<li>Each class has a list of rooms that are big enough.</li>
-<li>Each proctor has a list of times they are available.</li>
-<li>No proctor should have to give more than 5 exams.</li>
-</ul>
-<p>See Figure 11.5.</p>
-</section>
-<section id="scheduling-finals-time" class="slide level2">
-<h2>Scheduling Finals Time</h2>
-<ul>
-<li>Let <span class="math inline">\(N\)</span> be the total number of classes, rooms, times, proctors combined.</li>
-<li><span class="math inline">\(O(N)\)</span> vertices, <span class="math inline">\(O(N^2)\)</span> edges.</li>
-<li>Translating takes <span class="math inline">\(O(E) = O(N^2)\)</span> time.</li>
-<li>Computing max flow takes <span class="math inline">\(O(VE) = O(N^3)\)</span> time, using Orlin’s algorithm.
-<ul>
-<li>Could also just use Ford-Fulkerson, because <span class="math inline">\(|f^*|\)</span> is bounded by the number of classes.</li>
-</ul></li>
-<li>Time: <span class="math inline">\(O(N^2 + N^3) = O(N^3)\)</span>.</li>
-</ul>
-</section>
-<section id="baseball-elimination" class="slide level2">
-<h2>Baseball Elimination</h2>
-<p>Can a team still finish with the most wins?</p>
-<ul>
-<li>You know how many games each team has left to play.</li>
-<li>You know how many wins each team has.</li>
-<li>You know which team has to play which other team.</li>
-</ul>
-<table>
-<thead>
-<tr class="header">
-<th>Team</th>
-<th>Won–Lost</th>
-<th>Left</th>
-<th>NYY</th>
-<th>BAL</th>
-<th>BOS</th>
-<th>TOR</th>
-<th>DET</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>New York Yankees</td>
-<td>75–59</td>
-<td>28</td>
-<td></td>
-<td>3</td>
-<td>8</td>
-<td>7</td>
-<td>3</td>
-</tr>
-<tr class="even">
-<td>Baltimore Orioles</td>
-<td>71–63</td>
-<td>28</td>
-<td>3</td>
-<td></td>
-<td>2</td>
-<td>7</td>
-<td>4</td>
-</tr>
-<tr class="odd">
-<td>Boston Red Sox</td>
-<td>69–66</td>
-<td>27</td>
-<td>8</td>
-<td>2</td>
-<td></td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr class="even">
-<td>Toronto Blue Jays</td>
-<td>63–72</td>
-<td>27</td>
-<td>7</td>
-<td>7</td>
-<td>0</td>
-<td></td>
-<td>0</td>
-</tr>
-<tr class="odd">
-<td>Detroit Tigers</td>
-<td>49–86</td>
-<td>27</td>
-<td>3</td>
-<td>4</td>
-<td>0</td>
-<td>0</td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<p>See Figure 11.7.</p>
-</section>
-<section id="baseball-elimination-time" class="slide level2">
-<h2>Baseball elimination time?</h2>
-<p>Suppose there are <span class="math inline">\(n\)</span> teams. The flow model has a start vertex <span class="math inline">\(s\)</span>, a list of <em>pairing vertices</em>, a list of <em>team vertices</em>, and a terminal vertex <span class="math inline">\(t\)</span>.</p>
+<section id="mst-algorithms" class="slide level2">
+<h2>MST Algorithms</h2>
 <ol type="1">
-<li><p>How many possible pairings of teams are there? (Give an exact answer, and an asymptotic estimate.)</p></li>
-<li><p>How many vertices are in the flow model? (asymptotically)</p></li>
-<li><p>How many edges leave each pairing vertex? How many edges are in the flow model?</p></li>
-<li><p>What is the running time, using Orlin’s algorithm?</p></li>
-<li><p>Would using the Floyd-Fulkerson algorithm ever have a lower asymptotic running time?</p></li>
+<li>Come up with a <em>small</em> example of a weighted, undirected graph and step through Borůvka’s, Jarník’s, and Kruskal’s algorithm on it. (Make the weights distinct.) Can you come up with an example where the edges are added in three different sequences for these three different algorithms?</li>
 </ol>
 </section>
-<section id="disjoint-path-covers" class="slide level2">
-<h2>Disjoint Path Covers</h2>
-<ul>
-<li>You are given a dag.
-<ul>
-<li>e.g., vertices are tasks with some prerequisite constraints.</li>
-</ul></li>
-<li>What is the fewest number of paths in the dag that cover all the vertices?
-<ul>
-<li>e.g., the tasks in each path can be performed by the same person.</li>
-</ul></li>
-</ul>
-<p><strong>Reduces</strong> to bipartite matching (which reduces to maxflow).</p>
-<p>See Figure 11.6.</p>
+<section id="sssp-algorithms" class="slide level2">
+<h2>SSSP Algorithms</h2>
+<ol start="2" type="1">
+<li>Come up with a <em>small</em> example of a weighted, directed graph and step through the Dijkstra and Bellman-Ford algorithms on it. Can you come up with an example where the SSSP trees are <em>different</em>?</li>
+</ol>
+</section>
+<section id="exchange-arguments" class="slide level2">
+<h2>Exchange Arguments</h2>
+<p>A <strong>maximum spanning tree</strong> of a weighted, undirected graph is a spanning tree of maximum weight. (One way to find one is to replace all the weights <span class="math inline">\(w\)</span> with <span class="math inline">\(N-w\)</span> for some large <span class="math inline">\(N\)</span>, and then use one of the MST algorithms.)</p>
+<p>The <strong>width</strong> of a path in a weighted, undirected graph is the minimum weight of any edge in the path.</p>
+<ol start="3" type="1">
+<li>Prove that the maximum spanning tree of a weighted, undirected graph contains the widest path between <em>every</em> pair of vertices.</li>
+</ol>
+</section>
+<section id="faster-kruskal-and-jarník" class="slide level2">
+<h2>Faster Kruskal and Jarník?</h2>
+<p>Suppose you have a weighted, undirected graph whose edges are have weights <span class="math inline">\(1,2,3,\ldots |E|\)</span>.</p>
+<ol start="4" type="1">
+<li>Which algorithm (with appropriate modifications) is faster in this situation: Kruskal or Jarník? Explain.</li>
+</ol>
+</section>
+<section id="edge-order-in-dijkstra" class="slide level2">
+<h2>Edge order in Dijkstra</h2>
+<ol start="5" type="1">
+<li>Suppose that <span class="math inline">\(s\)</span> and <span class="math inline">\(t\)</span> are vertices in a weighted, undirected graph <span class="math inline">\(G\)</span>. When Dijkstra’s algorithm operates on <span class="math inline">\(G\)</span>, are the edges in the shortest path from <span class="math inline">\(s\)</span> to <span class="math inline">\(t\)</span> always relaxed in the same order as they occur in the shortest path? Prove or disprove.</li>
+</ol>
 </section></section>
     </div>
   </div>

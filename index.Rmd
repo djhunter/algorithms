@@ -68,6 +68,8 @@ This site provides slides, assignments, and other resources that I use in my Spa
 30. [Flow Networks](slides/30flows.html)
 31. [Maxflow-Mincut Theorem](slides/31maxflowmincut.html)
 32. [Reductions to Maxflow Problems](slides/32flowreductions.html)
+    - *Summary:* [Slide notes 24-32, Chapters 7,8,10,11](slide24-32notes.html)
+33. [Review for Test #3](slides/33test3review.html)
 
 # Written Assignments
 
@@ -103,6 +105,8 @@ This site provides slides, assignments, and other resources that I use in my Spa
 30. [Flows and Cuts](assignments/30cutsflows.html)
 31. [Augmenting Paths](assignments/31augmenting.html)
 32. [Applications of Maxflow Algorithms](assignments/32flowapplications.html)
+33. Test #3
+
 
 # Other Resources
 

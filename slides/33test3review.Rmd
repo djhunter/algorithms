@@ -1,0 +1,66 @@
+---
+title: "Test #3 Review"
+date: "March 8, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+library(igraph)
+```
+
+# Assignment Comments, Sample Solutions
+
+## Maxflow Applications
+
+See Jamboard
+
+# Test #3 Contents
+
+## Study Guide on Canvas
+
+- Questions on the [Study Guide](https://westmont.instructure.com/courses/5960/assignments/58549)?
+- See also the [slide summary](../slide24-32notes.html).
+
+# Practice Exercises
+
+## MST Algorithms
+
+1. Come up with a *small* example of a weighted, undirected graph and step through Borůvka’s, Jarník’s, and Kruskal’s algorithm on it. (Make the weights distinct.) Can you come up with an example where the edges are added in three different sequences for these three different algorithms?
+
+## SSSP Algorithms 
+
+2. Come up with a *small* example of a weighted, directed graph and step through the Dijkstra and Bellman-Ford algorithms on it. Can you come up with an example where the SSSP trees are *different*?
+
+## Exchange Arguments
+
+A **maximum spanning tree** of a weighted, undirected graph is a spanning tree of maximum weight. (One way to find one is to replace all the weights $w$ with $N-w$ for some large $N$, and then use one of the MST algorithms.)
+
+The **width** of a path in a weighted, undirected graph is the minimum weight of any edge in the path.
+
+3. Prove that the maximum spanning tree of a weighted, undirected graph contains the widest path between *every* pair of vertices.
+
+## Faster Kruskal and Jarník?
+
+Suppose you have a weighted, undirected graph whose edges are have weights $1,2,3,\ldots |E|$.
+
+4. Which algorithm (with appropriate modifications) is faster in this situation: Kruskal or Jarník? Explain.
+
+## Edge order in Dijkstra
+
+5. Suppose that $s$ and $t$ are vertices in a weighted, undirected graph $G$. When Dijkstra's algorithm operates on $G$, are the edges in the shortest path from $s$ to $t$ always relaxed in the same order as they occur in the shortest path? Prove or disprove.
