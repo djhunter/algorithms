@@ -63,7 +63,7 @@ Two questions:
 Recall: Logical operators
 
 - **and** $\wedge$
-    - $1 \wedge 1 = 1$, $1 \wedge 0 = 0$, $0 \wedge 1 = 1$, $0 \wedge 0 = 0$
+    - $1 \wedge 1 = 1$, $1 \wedge 0 = 0$, $0 \wedge 1 = o$, $0 \wedge 0 = 0$
 - **or** $\vee$
     - $1 \vee 1 = 1$, $1 \vee 0 = 1$, $0 \vee 1 = 1$, $0 \vee 0 = 0$
 - **not** $\overline{\phantom{x}}$
