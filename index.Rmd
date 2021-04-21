@@ -70,6 +70,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 32. [Reductions to Maxflow Problems](slides/32flowreductions.html)
     - *Summary:* [Slide notes 24-32, Chapters 7,8,10,11](slide24-32notes.html)
 33. [Review for Test #3](slides/33test3review.html)
+34. [NP-Hardness](slides/34PvsNP.html)
 
 # Written Assignments
 
@@ -106,6 +107,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 31. [Augmenting Paths](assignments/31augmenting.html)
 32. [Applications of Maxflow Algorithms](assignments/32flowapplications.html)
 33. Test #3
+34. [Satisfiability of Boolean Formulas](assignments/34satisfiability.html)
 
 
 # Other Resources

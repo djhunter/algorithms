@@ -1,0 +1,20 @@
+---
+title: "Satisfiability of Boolean Formulas"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](34satisfiability.html) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+1. Consider the problem SAT: Given a Boolean formula in the variables $x_1, x_2, \ldots, x_n$, using $\wedge$, $\vee$, $\overline{\phantom{x}}$, is there an assignment of 1/0 values to the formula that *satisfies* the formula (i.e., makes the formula evaluate to 1? Evaluate the following instance of SAT.
+$$
+(x_1 \vee x_2 \vee x_3) \wedge (\overline{x_2} \vee \overline{x_3} \vee \overline{x_4}) \wedge (\overline{x_1} \vee x_2 \vee x_4) \wedge (\overline{x_1} \vee \overline{x_3} \vee \overline{x_4})
+$$
+2. The formula given in Exercise #1 is in "3-conjunctive normal form:" it consists of an `AND` of a list of clauses $C_1 \wedge C_2 \wedge \cdots \wedge C_k$ where each clause is an `OR` of three "literals," i.e., variables $x_i$ or their negations. For the following counting problems, assume that no clauses are repeated, and ignore the ordering of the clauses (and within the clauses). Give your answers as asymptotic estimates.
+    a. How many different formulas in 3-conjunctive normal form can be made using $n$ variables $x_1, x_2, \ldots, x_n$? 
+    b. Find an upper bound on the length of a formula (counting literals, connectives, and parentheses). 
+    
+3. Do Exercise 3 on page 416 of [E].

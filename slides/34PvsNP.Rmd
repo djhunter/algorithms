@@ -1,0 +1,185 @@
+---
+title: "P versus NP"
+date: "April 21, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+library(igraph)
+```
+
+# Computational Complexity
+
+## Complexity
+
+- So far, we have explored various types of algorithms and examined their running time (and sometimes space).
+    - **Algorithm complexity**
+- Now we are going to look at some different computational *problems* and explore the theoretical limits of *any* possible algorithm to solve them.
+    - **Computational complexity**
+    
+## Decision problems
+
+**Decision problem:** Given input of size $n$, return Yes or No.
+
+- Is a given graph three-colorable?
+- Is a given boolean formula satisfiable?
+- Does a set of numbers contain a subset that adds up to 32984?
+
+Two questions:
+
+- Given a decision problem, how fast can you *solve it*?
+- Give a decision problem and a possible solution, how fast can you *check the solution*?
+
+## P and NP
+
+- The class **P** is the set of decision problems that can be *solved* in polynomial time.
+    - e.g., Does a given set contain 17? Does a given graph contain an Euler circuit?
+- The class **NP** is the set of decision problems where a possible solution (or "certificate") can be *checked* in polynomial time.
+    - e.g., Does a given set contain a subset that adds up to 32984? Does a given graph contain a Hamilton circuit?
+
+- Obviously, $P \subseteq NP$.
+
+>- The **hardest**, most **famous**, **unsolved** question in the world right now is:
+>    - Does $P = NP$?
+
+## Example: Boolean formula satisfiability (SAT)
+
+Recall: Logical operators
+
+- **and** $\wedge$
+    - $1 \wedge 1 = 1$, $1 \wedge 0 = 0$, $0 \wedge 1 = 1$, $0 \wedge 0 = 0$
+- **or** $\vee$
+    - $1 \vee 1 = 1$, $1 \vee 0 = 1$, $0 \vee 1 = 1$, $0 \vee 0 = 0$
+- **not** $\overline{\phantom{x}}$
+    - $\overline{0} = 1$, $\overline{1} = 0$
+    
+SAT: Given a boolean formula with variables $x_1, x_2, \ldots, x_n$, is there an assignment of 1/0 values that *satisfies* the formula (i.e., makes it equal 1)?
+
+## Exercise: SAT
+
+1. Solve SAT for the formula: $((x_1 \wedge x_4) \vee x_2) \wedge (\overline{x_2} \vee(x_3 \wedge \overline{x_4})) \wedge (\overline{x_5})$
+
+2. Solve SAT for the formula: $(a \vee b \vee c) \wedge (b \vee \overline{c} \vee \overline{d}) \wedge (\overline{a} \vee c \vee d) \wedge (a \vee \overline{b} \vee \overline{d})$.
+
+3. Suppose you are given a formula with $n$ variables of total length $O(n^k)$ for some $k$. Given a possible solution of 1/0 values, estimate the time needed to check the solution.
+
+4. Given a formula with $n$ variables, estimate the time needed to check *all* possible solutions by brute force.
+
+# NP-Hardness
+
+## NP-Complete and NP-Hard
+
+- A decision problem is called **NP-Hard** if a polynomial-time solution to the problem would give us a polynomial-time solution to *any* problem in **NP**.
+    - Notice that if such a solution were found, we would have proved that $P = NP$. 
+- A decision problem is called **NP-Complete** if: 
+    - It is in **NP**, and
+    - It is **NP-Hard**.
+
+## SAT is NP-Complete
+
+**Theorem.** SAT is NP-hard.
+
+- Proof: Take MA/CS-135.
+- Idea of proof: 
+    - Suppose you are given any problem in **NP**. 
+        - So your problem has a polynomial-time "checker."
+    - Devise a clever Boolean formula to simulate the problem. 
+        - i.e., translate the problem to a formula in polynomial time.
+    - Then if you had a polynomial-time way to solve SAT, you'd have a polynomial-time solution to your problem.
+
+Since SAT is in **NP**, SAT is NP-complete.
+
+## 3SAT is NP-Complete
+
+3SAT is like SAT, except the formula is in "3-conjunctive normal form:"
+
+$$
+(x_{i_1} \vee x_{j_1} \vee x_{k_1}) \wedge (x_{i_2} \vee x_{j_2} \vee x_{k_2}) \wedge \cdots \wedge (x_{i_m} \vee x_{j_m} \vee x_{k_m}) 
+$$
+
+
+
+- It isn't hard to show that you can translate any formula to a 3CNF formula in polynomial time. 
+- So if you could solve 3SAT in polynomial time, then you could solve SAT in polynomial time.
+- i.e., SAT *reduces to* 3SAT.
+    - And this is a *polynomial-time reduction*.
+
+**Theorem.** 3SAT is NP-hard. (It's also in **NP**, so it's NP-complete.)
+
+*Proof:* Solving 3SAT in polynomial time would solve SAT in polynomial time, which would solve any problem in **NP** in polynomial time.
+
+# Polynomial-time reductions
+
+## How to show a problem is NP-hard
+
+> **To prove that problem $A$ is NP-hard, reduce a known NP-hard problem to $A$.**
+
+- In other words, show that, if you had a polynomial-time solver for $A$, you could build a polynomial-time solver for some known NP-hard problem.
+- To show a problem is NP-complete, show that it is NP-hard, and also check that it is in NP.
+
+## Maximum Independent Set (MaxIndSet)
+
+Given an undirected graph $G$, what is largest set of vertices in $G$ with no edges between any of them?
+
+- Note: This is not a decision problem.
+- But we will show that a polynomial-time solution to MaxIndSet would give us a polynomial-time solution to 3SAT.
+    - This will be a reduction of 3SAT to MaxIndSet.
+        - This reduction can be constructed in polynomial time.
+    - This will show MaxIndSet is NP-hard.
+
+## Polynomial-time reduction from 3SAT to MaxIndSet
+
+Given: A 3CNF formula $(x_{i_1} \vee x_{j_1} \vee x_{k_1}) \wedge (x_{i_2} \vee x_{j_2} \vee x_{k_2}) \wedge \cdots \wedge (x_{i_m} \vee x_{j_m} \vee x_{k_m})$ with $m$ clauses.
+
+- Make a triangle graph gadget for each clause.
+- Connect logical opposites between clauses.
+    - Make one for $(a \vee b \vee c) \wedge (b \vee \overline{c} \vee \overline{d}) \wedge (\overline{a} \vee c \vee d) \wedge (a \vee \overline{b} \vee \overline{d})$.
+
+## Exercise: Continued
+
+5. Make a graph for the 3CNF formula $(a \vee b \vee c) \wedge (b \vee \overline{c} \vee \overline{d}) \wedge (\overline{a} \vee c \vee d) \wedge (a \vee \overline{b} \vee \overline{d})$.
+
+6. Mark the vertices that were 1 is your assignment from #2. Are these vertices independent?
+
+## Satisfiable iff max ind set of size $m$
+
+*Claim:* The maximum independent set in this graph has size $m$ $\Leftrightarrow$ the formula is satisfiable.
+
+- If this were true, we have reduced 3SAT to MaxIndSet.
+- That is, MaxIndSet is NP-hard.
+
+## Satisfiable implies set of size $m$
+
+Suppose there is a 1/0 assignment that satisfies the formula.
+
+- So each clause has a 1.
+- Put these vertices in the set, and leave out the other two.
+- The negation edges must go to 0's.
+- So we have an independent set of size $m$
+    - Couldn't be bigger than that, because of the triangles.
+    
+## Set of size $m$ implies satisfiable
+
+Suppose the graph has a maximum independent set of size $m$.
+
+- There must be one vertex per triangle gadget (because triangles).
+- Assign these 1's. No contradictions, because of the negation edges.
+    - Now each clause has a 1. So the formula is satisfied. (Any leftover variables can be assigned 0 or 1 -- doesn't matter.)
+    
+    
