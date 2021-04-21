@@ -7,7 +7,7 @@ output:
     theme: spacelab
 ---
 
-Edit the [RMarkdown source file](34satisfiability.html) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+Edit the [RMarkdown source file](34satisfiability.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
 
 1. Consider the problem SAT: Given a Boolean formula in the variables $x_1, x_2, \ldots, x_n$, using $\wedge$, $\vee$, $\overline{\phantom{x}}$, is there an assignment of 1/0 values to the formula that *satisfies* the formula (i.e., makes the formula evaluate to 1? Evaluate the following instance of SAT.
 $$
