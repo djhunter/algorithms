@@ -1,0 +1,23 @@
+---
+title: "Rep Sets"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](35repset.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+1. Let $S$ be a set of positive integers, and let $C$ be a set of subsets of $S$. A *rep set* for $C$ is a subset $H \subseteq S$ such that $H$ contains at least one element from each subset in $C$. For $S = \{1,2,3,\ldots, 25\}$, find the smallest rep set for the following set of subsets of $S$.
+\begin{align}
+C=\{ & \{1,11,14,18,20,23\}, \{5,12,15,18,21,24\}, \{2, 11, 16, 17\}, \\
+& \{4, 5, 10,19,24,25\}, \{2,7,17,18,25\}, \{8,11,12,14,16\}, \\
+& \{4,6,10,11,22,25\}, \{3,7,12,15,16,19\}, \{1, 6, 9, 12, 14, 19, 21, 24\}  
+\}
+\end{align}
+
+2. Consider the problem REP-SET: Given a set $S$ of positive integers, a set $C$ of subsets of $S$, find the smallest rep set for $C$. Prove that REP-SET is NP-hard. (Hint: Read Section 12.14 of [E]: *Choosing the Right Problem*.) Describe a reduction from an appropriate NP-hard problem, explain why the reduction can be done in polynomial time, and explain why a solver for REP-SET would give you a solver for your chosen problem.
+
+
+

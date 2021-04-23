@@ -1,0 +1,138 @@
+---
+title: "More NP-Hard Problems"
+date: "April 23, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+library(igraph)
+```
+
+# Assignment Comments
+
+## Explain your reasoning
+
+- Just giving an answer without any explanation whatsoever is not doing the *exercise*.
+- "Explain your reasoning" has been and continues to be an implicit instruction for all exercises.
+- You learn by trying to explain.
+
+## How many 3CNF formulas?
+
+How many different formulas in 3-conjunctive normal form can be made using $n$ variables $x_1, x_2, \ldots, x_n$? 
+
+- Clauses: $C(2n,3) \in \Theta(n^3)$
+- Formulas: Power set of clauses: $O(2^{n^3})$.
+
+Find an upper bound on the *length* of a formula (counting literals, connectives, and parentheses). 
+
+- Everything is a constant multiple of the number of clauses, so length is $O(n^3)$.
+
+**Note:** Length is polynomial (3SAT is in NP), but the number of instances of 3SAT is superpolynomial.
+
+## DNF-SAT
+
+Polynomial time solver (so DNF-SAT is in P)
+
+```
+for each clause
+  if the clause contains a literal and its negation
+    return false
+return true
+```
+
+Argument is bogus because repeatedly distributing is going to be superpolynomial time.
+
+# Polynomial-time reductions
+
+## How to show a problem is NP-hard
+
+> **To prove that problem $A$ is NP-hard, reduce a known NP-hard problem to $A$.**
+
+- In other words, show that, if you had a polynomial-time solver for $A$, you could build a polynomial-time solver for some known NP-hard problem.
+- To show a problem is NP-complete, show that it is NP-hard, and also check that it is in NP.
+
+## Examples So Far
+
+- SAT is NP-hard (and NP-complete).
+    - First example; proof "from scratch" (CS-135)
+- 3SAT is NP-hard (and NP-complete).
+    - If I could solve 3SAT in polynomial time, I'd be able to solve SAT in polynomial time. But then I could solve any problem in NP in polynomial time.
+- MaxIndSet is NP-hard.
+    - If I had a polynomial time solver for MaxIndSet, I could use it to solve 3SAT in polynomial time.
+        - Given an instance of 3SAT (i.e., a 3CNF formula), convert in to a graph using clever gadgets.
+        - Use your MaxIndSet solver on this graph.
+        - If the size of the independent set equals the number of clauses in your formula, the formula is satisfiable.
+
+# Other NP-Hard Graph Problems
+
+## MinVertexCover (from MaxIndSet)
+
+>- **MinVertexCover:** Given a graph $G$, what is size of the smallest subset of vertices you can select so that every edge is touched?
+>    - Suppose you had a polynomial-time solver for MinVertexCover.
+>    - Given an instance of MaxIndSet (a graph $G$), use your MinVertexCover solver to find a minimum vertex cover $C$.
+>    - Now let $S = V \setminus C$ (the vertices not in $C$).
+>        - No two vertices of $S$ are joined by an edge, because you took away all the vertices in a vertex cover.
+>        - So $S$ is an independent set.
+>            - And $S$ is maximal, because $C$ was minimal.
+>        - So you just solved MaxIndSet!
+>        - Forming the complement takes linear time, so this is a polynomial-time reduction. Therefore MinVertexCover is NP-hard.
+
+## MaxClique (from MaxIndSet)
+
+>- **MaxClique:** What is the size of the largest *complete* subgraph of a given graph?
+>    - Suppose you had a polynomial-time solver for MaxClique.
+>    - Someone asks you to solve an instance of MaxIndSet, i.e., given a graph $G$, can you find a maximum independent set?
+>        - Form the *edge complement* $\overline{G}$ of $G$. ($\overline{G}$ has edges exactly where $G$ doesn't.)
+>            - This takes $O(V^2)$ time (using adjacency matrices).
+>        - Use your MaxClique solver on $\overline{G}$.
+>        - You have found the largest set of vertices that are mutually connected in $\overline{G}$. So none of these vertices are connected in $G$.
+>        - So you just solved MaxIndSet in polynomial time!
+>        - Therefore, MaxClique is NP-hard.
+
+# Graph Coloring
+
+## 3Color
+
+**3Color:** Given a graph $G$, is there a coloring of $G$ that uses only 3 colors?
+
+- 3Color is in NP, because it is easy to check whether a proposed 3-coloring is legal in $O(V^2)$ time.
+
+## Coloring Gadgets
+
+See the Jamboard. 
+
+1. Suppose a 3-coloring (using red, green, blue) of the first gadget makes $u$ and $v$ both green. What color(s) could $z$ be?
+
+2. Suppose a 3-coloring (using red, green, blue) of the first gadget makes $u$ green and $v$ blue. What color(s) could $z$ be?
+
+3. Suppose a 3-coloring (using red, green, blue) of the second gadget makes $w$, $x$, and $y$ all green. What color(s) could $z$ be?
+
+![](../images/tcgadget1.png)
+
+## 3Color (from 3SAT)
+
+- Suppose you have a polynomial-time solver for 3Color.
+- Someone asks to to solve an instance of 3SAT (i.e., you are given a 3CNF formula: is it satisfiable?)
+    - Convert the formula into a graph using gadgets.
+        - Do it in polynomial time. (See Jamboard.)
+    - Use your 3Color solver. (WLOG T=green, F=red)
+        - Graph is 3-colorable $\Leftrightarrow$ formula is satisfiable. (The greens are true.)
+    - You just solved 3SAT in polynomial time!
+    - Therefore 3Color is NP-hard (and NP-complete).
+
