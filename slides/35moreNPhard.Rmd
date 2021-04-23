@@ -51,9 +51,9 @@ Polynomial time solver (so DNF-SAT is in P)
 
 ```
 for each clause
-  if the clause contains a literal and its negation
-    return false
-return true
+  if the clause does not contain a literal and its negation
+    return true
+return false
 ```
 
 Argument is bogus because repeatedly distributing is going to be superpolynomial time.

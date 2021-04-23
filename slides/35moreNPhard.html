@@ -490,9 +490,9 @@ document.getElementsByTagName('head')[0].appendChild(style);
 <h2>DNF-SAT</h2>
 <p>Polynomial time solver (so DNF-SAT is in P)</p>
 <pre><code>for each clause
-  if the clause contains a literal and its negation
-    return false
-return true</code></pre>
+  if the clause does not contain a literal and its negation
+    return true
+return false</code></pre>
 <p>Argument is bogus because repeatedly distributing is going to be superpolynomial time.</p>
 </section></section>
 <section>
