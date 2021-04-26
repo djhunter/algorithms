@@ -1,0 +1,189 @@
+---
+title: "Subset Sum"
+date: "April 23, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+library(igraph)
+```
+
+# Assignment Comments
+
+## REP-SET Example
+
+\begin{align}
+C=\{ & \{1,11,14,18,20,23\}, \{5,12,15,18,21,24\}, \{2, 11, 16, 17\}, \\
+& \{4, 5, 10,19,24,25\}, \{2,7,17,18,25\}, \{8,11,12,14,16\}, \\
+& \{4,6,10,11,22,25\}, \{3,7,12,15,16,19\}, \{1, 6, 9, 12, 14, 19, 21, 24\}  
+\}
+\end{align}
+
+Minimal rep sets: $\{11,24,7\}, \{11, 12, 25\}$, etc.
+
+## REP-SET (from MinVertexCover)
+
+Suppose you have a polynomial-time solver for REP-SET, and you are given an instance of MinVertexCover to solve: a graph $G$.
+
+- Number the vertices $1,2,\ldots, E$.
+- Represent each edge by $\{i,j\}$ if it connects vertex $i$ to vertex $j$. Let $C$ be the set of these sets. $O(E)$ or $O(V^2)$, depending on graph structure.
+    - *If $M$ is a vertex cover* of $G$, then each edge is touched by a vertex in $M$, so $M$ is a rep set for $C$.
+    - *If $M$ is a rep set* for $C$, then every set $\{i,j\}$ contains at least one element of $M$, so the vertices in $M$ touch every edge, so $M$ is a vertex cover of $G$.
+    - So $M$ is a minimal vertex cover **iff** $M$ is a minimal rep set.
+- You just solved MinVertexCover in polynomial time!
+    - Therefore, REP-SET is NP-hard.
+    
+# Decision Problem Versions
+
+## MinVertexCover vs. VertexCover
+
+**MinVertexCover:** Given a graph $G$, what is size of the smallest subset of vertices you can select so that every edge is touched?
+
+**VertexCover:** Given a graph $G$ *and an integer $k$*, is there a vertex cover in $G$ consisting of $k$ vertices?
+
+>- The complexity of these problems is *polynomially equivalent.*
+>    - Clearly, if you can do MinVertexCover, you can answer VertexCover.
+>    - Conversely, if you can do VertexCover, you can just repeat the process for $k = 1,2,\ldots n$ to solve MinVertexCover.
+>        - This multiplies the running time by $n$ (at most) so if you had a polynomial-time solver for VertexCover, you get a polynomial-time solver for MinVertexCover.
+
+## Other Decision Problem Versions
+
+- **MaxIndSet:** Given an undirected graph $G$, what is largest set of vertices in $G$ with no edges between any of them?
+    - **IndSet:** Given an undirected graph $G$ and an integer $k$, is there a set of $k$ vertices in $G$ with no edges between any of them?
+- **MaxClique:** What is the size of the largest complete subgraph of a given graph?
+    - **Clique:** Given a graph $G$ and an integer $k$, does $G$ have a complete subgraph with $k$ vertices?
+
+# Subset Sum
+
+## SubsetSum (from VertexCover)
+
+**SubsetSum:** Given a set $X$ of positive integers and a target integer $T$, is there some subset of $X$ whose elements add up to $T$?
+
+- Suppose we have a polynomial-time solver for SubsetSum.
+    - Given a graph $G$ and and integer $k$:
+        - Turn the graph into a set $X$ of integers and choose a clever target value $T$. (*tricky part*)
+        - Show that $G$ has a vertex cover of size $k$ *if and only if* $X$ has a subset that adds up to $T$. (*hard part*)
+        - Use our SubsetSum solver on this set to find a subset summing to $k$.
+    - We just solved VertexCover in polynomial time!
+        - So SubsetSum is NP-hard.
+
+## Recall: Base 4 Integers
+
+1. Write $311_4$ in base 10.
+
+2. Write your age in base 4.
+
+3. Write $\displaystyle{\sum_{i \in \{0,1,2,3,4\}} i \cdot 4^i}$ in base 4.
+
+4. Write $322222_4$ in base 10 using Sigma notation where convenient.
+
+5. Compute the sum of $111000_4$, $101101_4$, $100011_4$, $110110_4$ in base 4.
+
+## Polynomial-time reduction
+
+Given a graph $G$ and and integer $k$, make a set $X$ of numbers:
+
+- Represent each *edge* with the numbers $4^0, 4^1, 4^2, \ldots, 4^{E-1}$.
+    - $00\cdots 01_4,\, 00\cdots 10_4,\, \ldots,\, 10\cdots 00_4$  
+    - $O(E^2)$ time, because each expression has length $O(E)$.
+- Represent each *vertex* with the number $\displaystyle{a_v = 4^E + \sum_{i\in \Delta(v)} 4^i}$.
+    - $1\delta_{E-1}\delta_{E-2}\cdots\delta_1{\delta_0}$ in base 4, where the $\delta$'s indicate which edges touch the vertex.
+    - $O(VE^2)$ time (conservatively)
+
+This is a polynomial-time reduction (in $V$ and $E$, so also in $n$, the input size).
+
+## Target value $T$
+
+Set $T = \displaystyle{k\cdot 4^E + \sum_{i=0}^{E-1} 2 \cdot 4^i}$.
+
+- $k222\cdots 22_4$, where the leading $k$ may involve several digits.
+    - Mixing base ten and base 4:
+
+$$
+T = k\cdot 4^E + 222\cdots 22_4
+$$
+
+There are two directions to prove:
+
+- If $G$ has a vertex cover of size $k$, then $X$ has a subset that sums to $T$.
+- If $X$ has a subset that sums to $T$, then $G$ has a vertex cover of size $k$.
+
+## Vertex cover $\Rightarrow$ Subset sum
+
+Suppose $G$ has a vertex cover of size $k$. Make a subset of $X$:
+
+- Include all the numbers for all the vertices in the cover.
+- For each edge that touches *only one* vertex in the cover, include it's number.
+
+>- Each place value $E-1, \ldots, 1, 0$ will now have the digit $2$, because each edge touches 1 or 2 vertices.
+>- Each vertex contributes $4^E$ also, i.e., a $1$ in place value $E$. So the total sum will be $T = k\cdot 4^E + 222\cdots 22_4$.
+
+## Subset sum $\Rightarrow$ Vertex cover
+
+Suppose some subset of $X$ sums to $T$.
+
+>- The subset must include exactly $k$ vertex numbers, because there can't be any carries in the lower $E$ digits.
+>    - So the vertex numbers represent $k$ vertices.
+>- Each edge number can only contribute $1$ to any place value.
+>    - So each place value must have at least one $1$ contributed by a vertex number (maybe two).
+>    - So each edge touches at least one vertex (maybe two).
+>- Therefore the represented vertices form a vertex cover of $G$.
+
+# Subset Sum: Dynamic Programming
+
+## Recall: Dynamic Programming SubsetSum
+
+- We have a *set* $X$ of positive integers (so no duplicates).
+- Given a *target* value $T$, is there some *subset* of $X$ that adds up to $T$?
+
+## Subset Sum: Recursive Specification
+
+- For any $x\in X$, the answer is TRUE for target $T$ if
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T$, or
+    - The answer is TRUE for $X \setminus \{x\}$ and target $T-x$.
+- In other words, the cases are:
+    - *without:* There is a subset not containing $x$ that works.
+    - *with:* There is a subset containing $x$ that works.
+- Base Cases:
+    - If $T = 0$, the answer is TRUE. ($\emptyset$ works!)
+    - If $T < 0$, the answer is FALSE. (everything's positive)
+    - If $X = \emptyset$, the answer if FALSE (unless $T=0$, of course.)
+
+## Memoized Dynamic Programming Version
+
+```{javascript, eval=FALSE}
+// X[1..n] is an array of positive integers (n is constant)
+// SS[1..(n+1), 0..T] is a boolean array
+
+FastSubsetSum(T):
+    Initialize SS[*, 0] to TRUE
+    Initialize SS[n + 1, *] to FALSE for * > 0
+    Initialize SS[* , *] to FALSE for * < 0    // hmmm...
+    for i <- n downto 1
+        for t <- 1 to T
+            with <- SS[i + 1, t - X[i]]
+            wout <- SS[i + 1, t]
+            SS[i, t] <- (with OR wout)
+    return S[1, T]
+```
+
+- Space and Time are both $O(nT)$.
+- However, $O(nT)$ is bad when $T$ is large.
+    - If $m$ is the number of *bits* in $T$, then $T \in O(2^m)$, so the space and time become $O(n\cdot 2^m)$.
+    - So in terms of the *size* of the input, this algorithm is still exponential.

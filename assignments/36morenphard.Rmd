@@ -1,0 +1,30 @@
+---
+title: "SUBGRAPH and SplitSum"
+output:
+  html_document:
+    toc: false
+    df_print: paged
+    theme: spacelab
+---
+
+Edit the [RMarkdown source file](36morenphard.Rmd) for this assignment in RStudio. When you finish, Knit the file to HTML and upload the `.html` output to Canvas.
+
+## Reduction Arguments
+
+To prove that a new problem $\mathcal{A}$ is NP-hard, you must show that a known NP-hard problem $\mathcal{B}$ can be solved in polynomial time, given a polynomial time solver for $\mathcal{A}$. This is called "a reduction from $\mathcal{B}$."
+
+In a reduction argument for decision problems, make sure you include three things:
+
+- A clear description of how to solve an instance of $\mathcal{B}$ using your hypothetical polynomial-time solver for $\mathcal{A}$.
+- An explanation of why it only takes polynomial time to construct this reduction.
+- An *if-and-only-if* argument demonstrating both directions:
+    - If the answer to an instance of $\mathcal{A}$ is YES, then the answer to the corresponding instance of $\mathcal{B}$ is YES.
+    - If the answer to an instance of $\mathcal{B}$ is YES, then the answer to the corresponding instance of $\mathcal{A}$ is YES.
+    
+So far we have a library of NP-hard decision problems you can reduce from: SAT, 3SAT, IndSet, VertexCover, Clique, 3Color, REP-SET, SubsetSum, etc.
+
+1. Consider the decision problem SUBGRAPH: Given a graph $G$ and another graph $H$, is there a subgraph of $G$ that has the same structure as $H$? Prove that SUBGRAPH is NP-hard.
+
+2. Consider the decision problem SplitSum: Given a set $X$ of positive integers, is there a way to split $X$ into disjoint subsets $A$ and $B$ such that the sum of the elements in $A$ equals the sum of the elements in $B$? Prove that SplitSum is NP-hard.
+
+
