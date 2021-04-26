@@ -1,6 +1,6 @@
 ---
 title: "Subset Sum"
-date: "April 23, 2021"
+date: "April 26, 2021"
 output: 
   revealjs::revealjs_presentation:
     fig_width: 14
