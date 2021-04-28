@@ -1,0 +1,98 @@
+---
+title: "An NP-Hard Puzzle"
+date: "April 28, 2021"
+output: 
+  revealjs::revealjs_presentation:
+    fig_width: 14
+    fig_height: 7
+    self_contained: true
+    theme: night
+    highlight: zenburn
+    css: slidesdjh.css
+    center: false
+    transition: slide
+    reveal_options:
+      controls: true
+      progress: false
+      width: 1080
+      height: 540
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(comment = NA)
+library(igraph)
+```
+
+# Assignment Comments
+
+## What do you have and what do you need to be able to do with it?
+
+To prove that a new problem $\mathcal{A}$ is NP-hard, you must show that a known NP-hard problem $\mathcal{B}$ can be solved in polynomial time, given a polynomial time solver for $\mathcal{A}$. This is called "a reduction from $\mathcal{B}$."
+
+- *You have* a polynomial-time solver for $\mathcal{A}$.
+- You need to *use it to solve* an instance of $\mathcal{B}$.
+
+## SUBGRAPH
+
+- You have a solver for SUBGRAPH.
+    - Note: The SUBGRAPH solver consumes a graph $G$ and a graph $H$.
+- Use it to solve an instance of Clique: *Given a graph $G$ and an integer $k$,* does $G$ have a Clique of size $k$?
+    - Let $H$ be the complete graph on $k$ vertices.
+    - If your SUBGRAPH solver returns YES, the answer to the Clique instance is YES.
+    - If your SUBGRAPH solver returns NO, the answer to the Clique instance is NO.
+       - Note: This is the *contrapositive* of "If the answer to the Clique instance is YES, the answer the SUBGRAPH solver returns is YES."
+       
+## SplitSum
+
+- You have a solver for SplitSum.
+    - Note: the SplitSum solver consumes a set $X$. 
+- Use it to solve an instance of SubsetSum: *Given a set $Y$ and a target value $T$,* does $Y$ have a subset that sums to $T$?
+- You need to somehow use both $Y$ and $T$ to make a set $X$, and then feed that set to the SplitSum solver.
+
+(On board.)
+
+# Final Exam Content
+
+## Study Guide
+
+- Approximately 30% NP-hardness
+- 70% Selected Review (see study guide)
+    - Previous tests would be good to review and *correct*.
+    - Also previous assignments. 
+    
+# An NP-Hard Puzzle
+
+## Problem 34
+
+1. Find another solution, besides the one shown at left.
+
+2. Explain why the configuration on the right has no solution.
+
+3. We are going to reduce from puzzle configurea3SAT. What do we assume that we have, and what do we need to be able to do with it?
+
+## The Reduction
+
+Given a 3CNF formula, we need to make a puzzle configuration out of it.
+
+- The rows correspond to clauses $C_1 \wedge C_2 \wedge \cdots \wedge C_n$.
+- The columns correspond to variables $x_1, x_2, \ldots, x_m$.
+- The stones correspond to literals: blue is $x_j$, red is $\overline{x_j}$.
+
+4. Find a 3CNF formula that gets translated into the puzzle on the left.
+
+5. Find a 3CNF formula that gets translated into the puzzle on the right.
+
+## If and only if
+
+6. Prove: If the formula is satisfiable, then the puzzle has a solution.
+
+7. Prove: If the puzzle is solvable, then the formula is satisfiable.
+
+8. Polynomial time?
+
+## Could we reduce the other way?
+
+9. Could we do this reduction in reverse? That is, if we knew in advance that this puzzle is NP-Hard, would we be able to use this correspondence to give a new proof that 3SAT is NP-Hard? Why or why not?
+
+

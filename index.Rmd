@@ -73,6 +73,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 34. [NP-Hardness](slides/34PvsNP.html)
 35. [More NP-Hard Problems](slides/35moreNPhard.html)
 36. [Subset Sum](slides/36subsetsum.html)
+37. [An NP-Hard Puzzle](slides/37nphardpuzzle.html)
 
 # Written Assignments
 
@@ -112,6 +113,7 @@ This site provides slides, assignments, and other resources that I use in my Spa
 34. [Satisfiability of Boolean Formulas](assignments/34satisfiability.html)
 35. [Rep Sets](assignments/35repset.html)
 36. [SUBGRAPH and SplitSum](assignments/36morenphard.html)
+37. Test #4
 
 # Other Resources
 
